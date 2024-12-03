@@ -1,34 +1,46 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> localizer
+
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - CourseProject</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/CourseProject.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">CourseProject</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
+    <header class="d-flex justify-content-between align-items-center p-3 mb-4 border-bottom">
+        <button id="theme-toggle" class="btn btn-secondary">@localizer["SwitchTheme"]</button>
+
+        <div class="language-switcher">
+            <a asp-controller="Home" asp-action="ChangeLanguage" asp-route-culture="en" class="btn btn-link">English</a>
+            <a asp-controller="Home" asp-action="ChangeLanguage" asp-route-culture="ru" class="btn btn-link">Русский</a>
+        </div>
+
+        <div class="dropdown">
+            @if (User.Identity.IsAuthenticated)
+            {
+                <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    @User.Identity.Name
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+                <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                    <li><a class="dropdown-item" href="/Profile">@localizer["Profile"]</a></li>
+                    <li>
+                        <form asp-controller="Account" asp-action="Logout" method="post">
+                            <button type="submit" class="dropdown-item">@localizer["Logout"]</button>
+                        </form>
+                    </li>
+                </ul>
+            }
+            else
+            {
+                <a asp-controller="Account" asp-action="Login" class="btn btn-outline-primary me-2">@localizer["Login"]</a>
+                <a asp-controller="Account" asp-action="Register" class="btn btn-primary">@localizer["Register"]</a>
+            }
+        </div>
     </header>
     <div class="container">
         <main role="main" class="pb-3">
@@ -38,12 +50,36 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2024 - CourseProject - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2024 - CourseProject
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        const themeToggle = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+
+        // Проверка темы из cookies
+        const savedTheme = document.cookie.split('; ').find(row => row.startsWith('theme='))?.split('=')[1];
+        if (savedTheme) {
+            htmlElement.setAttribute('data-bs-theme', savedTheme);
+        } else {
+            const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
+            htmlElement.setAttribute('data-bs-theme', prefersDarkScheme ? 'dark' : 'light');
+        }
+
+        // Переключение темы
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.getAttribute('data-bs-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            htmlElement.setAttribute('data-bs-theme', newTheme);
+            document.cookie = `theme=${newTheme}; path=/; max-age=31536000`;
+        });
+    </script>
+
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

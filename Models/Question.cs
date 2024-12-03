@@ -11,10 +11,9 @@
     {
         public int Id { get; set; }
         public string Title { get; set; }
-        public string Description { get; set; }
-        public QuestionType Type { get; set; } // Enum
+        public QuestionType Type { get; set; } // Enum: SingleLineText, Integer, Checkbox
         public bool ShowInResults { get; set; }
-        public int TemplateId { get; set; }
-        public Template Template { get; set; }
+        public int FormId { get; set; }
+        public Form Form { get; set; }
     }
 }

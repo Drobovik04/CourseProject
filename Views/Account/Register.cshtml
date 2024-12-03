@@ -1,0 +1,31 @@
+﻿@using CourseProject.ViewModels
+@using Microsoft.Extensions.Localization
+@model RegisterViewModel
+@inject IStringLocalizer<SharedResources> localizer
+
+<div class="container mt-5">
+    <h2>@localizer["Register"]</h2>
+    <form asp-action="Register" method="post">
+        <div class="mb-3">
+            <label asp-for="Email" class="form-label">@localizer["Email"]</label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="UserName" class="form-label">@localizer["Username"]</label>
+            <input asp-for="UserName" class="form-control" />
+            <span asp-validation-for="UserName" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Password" class="form-label">@localizer["Password"]</label>
+            <input asp-for="Password" type="password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="ConfirmPassword" class="form-label">@localizer["ConfirmPassword"]</label>
+            <input asp-for="ConfirmPassword" type="password" class="form-control" />
+            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary">@localizer["Register"]</button>
+    </form>
+</div>

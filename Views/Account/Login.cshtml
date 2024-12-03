@@ -1,0 +1,21 @@
+﻿@using CourseProject.ViewModels
+@using Microsoft.Extensions.Localization
+@model LoginViewModel
+@inject IStringLocalizer<SharedResources> localizer
+
+<div class="container mt-5">
+    <h2>@localizer["Login"]</h2>
+    <form asp-action="Login" method="post">
+        <div class="mb-3">
+            <label asp-for="UserNameOrEmail" class="form-label">@localizer["EmailOrUsername"]</label>
+            <input asp-for="UserNameOrEmail" class="form-control" />
+            <span asp-validation-for="UserNameOrEmail" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Password" class="form-label">@localizer["Password"]</label>
+            <input asp-for="Password" type="password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary">@localizer["Login"]</button>
+    </form>
+</div>
