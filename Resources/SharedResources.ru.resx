@@ -135,9 +135,6 @@
   <data name="EmailAddress" xml:space="preserve">
     <value>Поле {0} должно быть корректным email-адресом</value>
   </data>
-  <data name="EmailOrUsername" xml:space="preserve">
-    <value>Электронная почта или логин</value>
-  </data>
   <data name="InvalidEmail" xml:space="preserve">
     <value>Почта '{0}' недопустима</value>
   </data>
@@ -198,7 +195,10 @@
   <data name="UserLockoutNotEnabled" xml:space="preserve">
     <value>Блокировка не включена для этого пользователя</value>
   </data>
-  <data name="Username" xml:space="preserve">
+  <data name="UserName" xml:space="preserve">
     <value>Логин</value>
+  </data>
+  <data name="UserNameOrEmail" xml:space="preserve">
+    <value>Логин или электронная почта</value>
   </data>
 </root>

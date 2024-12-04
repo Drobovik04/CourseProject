@@ -1,13 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using CourseProject.Attributes;
+using System.ComponentModel.DataAnnotations;
 
 namespace CourseProject.ViewModels
 {
     public class LoginViewModel
     {
-        [Required]
-        public string UserNameOrEmail { get; set; }  // Поле для логина или email
+        [LocalizedRequired(ResourceKey = "Required")]
+        public string UserNameOrEmail { get; set; }
 
-        [Required]
+        [LocalizedRequired(ResourceKey = "Required")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
     }

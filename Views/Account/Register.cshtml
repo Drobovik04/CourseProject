@@ -6,13 +6,15 @@
 <div class="container mt-5">
     <h2>@localizer["Register"]</h2>
     <form asp-action="Register" method="post">
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
         <div class="mb-3">
             <label asp-for="Email" class="form-label">@localizer["Email"]</label>
             <input asp-for="Email" type ="email" class="form-control" />
             <span asp-validation-for="Email" class="text-danger"></span>
         </div>
         <div class="mb-3">
-            <label asp-for="UserName" class="form-label">@localizer["Username"]</label>
+            <label asp-for="UserName" class="form-label">@localizer["UserName"]</label>
             <input asp-for="UserName" class="form-control" />
             <span asp-validation-for="UserName" class="text-danger"></span>
         </div>

@@ -6,8 +6,10 @@
 <div class="container mt-5">
     <h2>@localizer["Login"]</h2>
     <form asp-action="Login" method="post">
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
         <div class="mb-3">
-            <label asp-for="UserNameOrEmail" class="form-label">@localizer["EmailOrUsername"]</label>
+            <label asp-for="UserNameOrEmail" class="form-label">@localizer["UserNameOrEmail"]</label>
             <input asp-for="UserNameOrEmail" class="form-control" />
             <span asp-validation-for="UserNameOrEmail" class="text-danger"></span>
         </div>

@@ -135,9 +135,6 @@
   <data name="EmailAddress" xml:space="preserve">
     <value>The {0} field must be a valid email address</value>
   </data>
-  <data name="EmailOrUsername" xml:space="preserve">
-    <value>Email or Username</value>
-  </data>
   <data name="InvalidEmail" xml:space="preserve">
     <value>The email '{0}' is invalid</value>
   </data>
@@ -198,7 +195,10 @@
   <data name="UserLockoutNotEnabled" xml:space="preserve">
     <value>Lockout is not enabled for this user</value>
   </data>
-  <data name="Username" xml:space="preserve">
+  <data name="UserName" xml:space="preserve">
     <value>Username</value>
+  </data>
+  <data name="UserNameOrEmail" xml:space="preserve">
+    <value>Username or Email</value>
   </data>
 </root>
