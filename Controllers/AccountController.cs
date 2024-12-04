@@ -54,6 +54,7 @@ public class AccountController : Controller
     {
         if (!ModelState.IsValid) return View(model);
 
+
         var user = new IdentityUser { UserName = model.UserName, Email = model.Email };
         var result = await _userManager.CreateAsync(user, model.Password);
 
@@ -65,7 +66,7 @@ public class AccountController : Controller
 
         foreach (var error in result.Errors)
         {
-            ModelState.AddModelError("", _localizer[error.Description]);
+            ModelState.AddModelError("", error.Description);
         }
 
         return View(model);

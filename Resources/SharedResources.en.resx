@@ -117,17 +117,35 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Compare" xml:space="preserve">
+    <value>The {0} and {1} fields must match</value>
+  </data>
   <data name="ConfirmPassword" xml:space="preserve">
     <value>Confirm Password</value>
+  </data>
+  <data name="DuplicateEmail" xml:space="preserve">
+    <value>Email '{0}' is already taken</value>
+  </data>
+  <data name="DuplicateUserName" xml:space="preserve">
+    <value>Username {0} is already taken</value>
   </data>
   <data name="Email" xml:space="preserve">
     <value>Email</value>
   </data>
+  <data name="EmailAddress" xml:space="preserve">
+    <value>The {0} field must be a valid email address</value>
+  </data>
   <data name="EmailOrUsername" xml:space="preserve">
     <value>Email or Username</value>
   </data>
+  <data name="InvalidEmail" xml:space="preserve">
+    <value>The email '{0}' is invalid</value>
+  </data>
   <data name="InvalidLoginAttempt" xml:space="preserve">
     <value>Invalid login attempt</value>
+  </data>
+  <data name="InvalidUserName" xml:space="preserve">
+    <value>The username '{0}' is invalid</value>
   </data>
   <data name="Login" xml:space="preserve">
     <value>Login</value>
@@ -135,17 +153,50 @@
   <data name="Logout" xml:space="preserve">
     <value>Logout</value>
   </data>
+  <data name="MaxLength" xml:space="preserve">
+    <value>The field {0} must be not greater than {1} characters long</value>
+  </data>
+  <data name="MinLength" xml:space="preserve">
+    <value>The field {0} must be at least {1} characters long</value>
+  </data>
   <data name="Password" xml:space="preserve">
     <value>Password</value>
+  </data>
+  <data name="PasswordRequiresDigit" xml:space="preserve">
+    <value>Passwords must have at least one digit ('0'-'9')</value>
+  </data>
+  <data name="PasswordRequiresLower" xml:space="preserve">
+    <value>Passwords must have at least one lowercase letter ('a'-'z')</value>
+  </data>
+  <data name="PasswordRequiresNonAlphanumeric" xml:space="preserve">
+    <value>Passwords must have at least one non-alphanumeric character</value>
+  </data>
+  <data name="PasswordRequiresUpper" xml:space="preserve">
+    <value>Passwords must have at least one uppercase letter ('A'-'Z')</value>
+  </data>
+  <data name="PasswordTooShort" xml:space="preserve">
+    <value>Password must be at least {0} characters long</value>
   </data>
   <data name="Profile" xml:space="preserve">
     <value>Profile</value>
   </data>
+  <data name="RecoveryCodeRedemptionFailed" xml:space="preserve">
+    <value>Recovery code redemption failed</value>
+  </data>
   <data name="Register" xml:space="preserve">
     <value>Register</value>
   </data>
+  <data name="Required" xml:space="preserve">
+    <value>The {0} field is required</value>
+  </data>
   <data name="SwitchTheme" xml:space="preserve">
     <value>Switch Theme</value>
+  </data>
+  <data name="UserAlreadyHasPassword" xml:space="preserve">
+    <value>User already has a password set</value>
+  </data>
+  <data name="UserLockoutNotEnabled" xml:space="preserve">
+    <value>Lockout is not enabled for this user</value>
   </data>
   <data name="Username" xml:space="preserve">
     <value>Username</value>
