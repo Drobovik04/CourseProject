@@ -18,10 +18,9 @@ namespace CourseProject.Controllers
             _roleManager = roleManager;
         }
 
-        // Страница админ панели с пользователями
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortColumn, string sortOrder)
         {
-            var users = _userManager.Users.ToList(); // Получаем всех пользователей
+            var users = _userManager.Users.ToList(); 
             var model = new List<UserViewModel>();
 
             foreach (var user in users)
@@ -31,15 +30,28 @@ namespace CourseProject.Controllers
                 {
                     UserId = user.Id,
                     UserName = user.UserName,
+                    Email = user.Email,
                     IsAdmin = roles.Contains("Admin"),
-                    IsLockedOut = user.LockoutEnd != null && user.LockoutEnd > DateTime.UtcNow // Проверка на блокировку
+                    IsLockedOut = user.LockoutEnd != null && user.LockoutEnd > DateTime.UtcNow
                 });
             }
+
+
+            ViewData["SortOrder"] = sortOrder == "asc" ? "desc" : "asc";
+            ViewData["SortColumn"] = sortColumn;
+
+            model = (sortColumn switch
+            {
+                "UserName" => sortOrder == "asc" ? model.OrderBy(u => u.UserName) : model.OrderByDescending(u => u.UserName),
+                "Email" => sortOrder == "asc" ? model.OrderBy(u => u.Email) : model.OrderByDescending(u => u.Email),
+                "IsAdmin" => sortOrder == "asc" ? model.OrderBy(u => u.IsAdmin) : model.OrderByDescending(u => u.IsAdmin),
+                "IsLockedOut" => sortOrder == "asc" ? model.OrderBy(u => u.IsLockedOut) : model.OrderByDescending(u => u.IsLockedOut),
+                _ => model.OrderBy(u => u.UserId),
+            }).ToList();
 
             return View(model);
         }
 
-        // Обновление роли пользователя (назначить/снять роль Admin)
         [HttpPost]
         public async Task<IActionResult> UpdateRole(string userId, bool isAdmin)
         {
@@ -52,48 +64,43 @@ namespace CourseProject.Controllers
 
             if (isAdmin)
             {
-                // Назначаем роль Admin
                 await _userManager.AddToRoleAsync(user, "Admin");
             }
             else
             {
-                // Снимаем роль Admin
                 await _userManager.RemoveFromRoleAsync(user, "Admin");
             }
 
             return RedirectToAction("Index");
         }
 
-        // Блокировка пользователя
         [HttpPost]
         public async Task<IActionResult> BlockUser(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null) return NotFound();
 
-            await _userManager.SetLockoutEndDateAsync(user, DateTime.UtcNow.AddYears(100)); // Блокировка на очень долгий срок
+            await _userManager.SetLockoutEndDateAsync(user, DateTime.UtcNow.AddYears(100));
             return RedirectToAction("Index");
         }
 
-        // Разблокировка пользователя
         [HttpPost]
         public async Task<IActionResult> UnblockUser(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null) return NotFound();
 
-            await _userManager.SetLockoutEndDateAsync(user, null); // Разблокировка
+            await _userManager.SetLockoutEndDateAsync(user, null);
             return RedirectToAction("Index");
         }
 
-        // Удаление пользователя
         [HttpPost]
         public async Task<IActionResult> DeleteUser(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null) return NotFound();
 
-            var result = await _userManager.DeleteAsync(user); // Удаляем пользователя
+            var result = await _userManager.DeleteAsync(user);
             if (result.Succeeded)
             {
                 return RedirectToAction("Index");

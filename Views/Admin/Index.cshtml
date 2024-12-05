@@ -4,13 +4,54 @@
 @inject IStringLocalizer<SharedResources> localizer
 
 <div class="container mt-5">
-    <h2>@localizer["Admin Panel"]</h2>
+    <h2>@localizer["AdminPanel"]</h2>
     <table class="table">
         <thead>
             <tr>
-                <th>@localizer["UserName"]</th>
-                <th>@localizer["IsAdmin"]</th>
-                <th>@localizer["IsLockedOut"]</th>
+                <th>
+                    <a asp-controller="Admin" asp-action="Index" asp-route-sortColumn="UserName" asp-route-sortOrder="@ViewData["SortOrder"]">
+                        @localizer["UserName"]
+                        @if (ViewData["SortColumn"] as string == "UserName")
+                        {
+                            <span>
+                                @(ViewData["SortOrder"] as string == "asc" ? "↑" : "↓")
+                            </span>
+                        }
+                    </a>
+                </th>
+                <th>
+                    <a asp-controller="Admin" asp-action="Index" asp-route-sortColumn="Email" asp-route-sortOrder="@ViewData["SortOrder"]">
+                        @localizer["Email"]
+                        @if (ViewData["SortColumn"] as string == "Email")
+                        {
+                            <span>
+                                @(ViewData["SortOrder"] as string == "asc" ? "↑" : "↓")
+                            </span>
+                        }
+                    </a>
+                </th>
+                <th>
+                    <a asp-controller="Admin" asp-action="Index" asp-route-sortColumn="IsAdmin" asp-route-sortOrder="@ViewData["SortOrder"]">
+                        @localizer["IsAdmin"]
+                        @if (ViewData["SortColumn"] as string == "IsAdmin")
+                        {
+                            <span>
+                                @(ViewData["SortOrder"] as string == "asc" ? "↑" : "↓")
+                            </span>
+                        }
+                    </a>
+                </th>
+                <th>
+                    <a asp-controller="Admin" asp-action="Index" asp-route-sortColumn="IsLockedOut" asp-route-sortOrder="@ViewData["SortOrder"]">
+                        @localizer["IsLockedOut"]
+                        @if (ViewData["SortColumn"] as string == "IsLockedOut")
+                        {
+                            <span>
+                                @(ViewData["SortOrder"] as string == "asc" ? "↑" : "↓")
+                            </span>
+                        }
+                    </a>
+                </th>
                 <th>@localizer["Actions"]</th>
             </tr>
         </thead>
@@ -19,6 +60,7 @@
             {
                 <tr>
                     <td>@user.UserName</td>
+                    <td>@user.Email</td>
                     <td>@if (user.IsAdmin) 
                         {
                             <i class="fa-solid fa-check"></i>
@@ -46,19 +88,22 @@
                             </button>
                             <input type="hidden" name="isAdmin" value="@(user.IsAdmin ? "false" : "true")" />
                         </form>
-
-                        <form method="post" asp-action="BlockUser" asp-route-userId="@user.UserId">
-                            <button type="submit" class="btn btn-warning">
-                                @localizer["Block"]
-                            </button>
-                        </form>
-
-                        <form method="post" asp-action="UnblockUser" asp-route-userId="@user.UserId">
-                            <button type="submit" class="btn btn-info">
-                                @localizer["Unblock"]
-                            </button>
-                        </form>
-
+                        @if (!user.IsLockedOut)
+                        {
+                            <form method="post" asp-action="BlockUser" asp-route-userId="@user.UserId">
+                                <button type="submit" class="btn btn-warning">
+                                    @localizer["Block"]
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <form method="post" asp-action="UnblockUser" asp-route-userId="@user.UserId">
+                                <button type="submit" class="btn btn-info">
+                                    @localizer["Unblock"]
+                                </button>
+                            </form>
+                        }
                         <form method="post" asp-action="DeleteUser" asp-route-userId="@user.UserId">
                             <button type="submit" class="btn btn-danger">
                                 @localizer["Delete"]

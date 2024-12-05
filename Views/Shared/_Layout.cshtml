@@ -14,11 +14,12 @@
 </head>
 <body>
     <header class="d-flex justify-content-between align-items-center p-3 mb-4 border-bottom">
-        <button id="theme-toggle" class="btn btn-secondary">@localizer["SwitchTheme"]</button>
-
-        <div class="language-switcher">
-            <a asp-controller="Home" asp-action="ChangeLanguage" asp-route-culture="en" class="btn btn-link">English</a>
-            <a asp-controller="Home" asp-action="ChangeLanguage" asp-route-culture="ru" class="btn btn-link">Русский</a>
+        <div class="d-flex">
+            <button id="theme-toggle" class="btn btn-secondary">@localizer["SwitchTheme"]</button>
+            <div class="language-switcher">
+                <a asp-controller="Home" asp-action="ChangeLanguage" asp-route-culture="en" class="btn btn-link">English</a>
+                <a asp-controller="Home" asp-action="ChangeLanguage" asp-route-culture="ru" class="btn btn-link">Русский</a>
+            </div>
         </div>
 
         <div class="dropdown">
@@ -28,7 +29,11 @@
                     @User.Identity.Name
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="userDropdown">
-                    <li><a class="dropdown-item" href="/Profile">@localizer["Profile"]</a></li>
+                    <li><a class="dropdown-item" asp-controller="Account" asp-action="Index">@localizer["Profile"]</a></li>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li><a class="dropdown-item" asp-controller="Admin" asp-action="Index">@localizer["AdminPanel"]</a></li>
+                    }
                     <li>
                         <form asp-controller="Account" asp-action="Logout" method="post">
                             <button type="submit" class="dropdown-item">@localizer["Logout"]</button>

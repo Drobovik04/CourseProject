@@ -120,6 +120,9 @@
   <data name="Actions" xml:space="preserve">
     <value>Действия</value>
   </data>
+  <data name="AdminPanel" xml:space="preserve">
+    <value>Панель администратора</value>
+  </data>
   <data name="Block" xml:space="preserve">
     <value>Заблокировать пользователя</value>
   </data>
