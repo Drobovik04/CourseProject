@@ -117,11 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Actions" xml:space="preserve">
+    <value>Действия</value>
+  </data>
+  <data name="Block" xml:space="preserve">
+    <value>Заблокировать пользователя</value>
+  </data>
   <data name="Compare" xml:space="preserve">
     <value>Поля {0} и {1} должны совпадать</value>
   </data>
   <data name="ConfirmPassword" xml:space="preserve">
     <value>Подтверждение пароля</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Удалить пользователя</value>
   </data>
   <data name="DuplicateEmail" xml:space="preserve">
     <value>Почта '{0}' уже используется</value>
@@ -144,11 +153,20 @@
   <data name="InvalidUserName" xml:space="preserve">
     <value>Имя пользователя '{0}' недопустимо</value>
   </data>
+  <data name="IsAdmin" xml:space="preserve">
+    <value>Имеет права администратора?</value>
+  </data>
+  <data name="IsLockedOut" xml:space="preserve">
+    <value>Заблокирован?</value>
+  </data>
   <data name="Login" xml:space="preserve">
     <value>Вход</value>
   </data>
   <data name="Logout" xml:space="preserve">
     <value>Выход</value>
+  </data>
+  <data name="MakeAdmin" xml:space="preserve">
+    <value>Выдать права администратора</value>
   </data>
   <data name="MaxLength" xml:space="preserve">
     <value>Поле {0} должно содержать не более  {1} символов</value>
@@ -183,11 +201,17 @@
   <data name="Register" xml:space="preserve">
     <value>Регистрация</value>
   </data>
+  <data name="RemoveAdmin" xml:space="preserve">
+    <value>Отозвать права администратора</value>
+  </data>
   <data name="Required" xml:space="preserve">
     <value>Поле {0} обязательно для заполнения</value>
   </data>
   <data name="SwitchTheme" xml:space="preserve">
     <value>Переключить тему</value>
+  </data>
+  <data name="Unblock" xml:space="preserve">
+    <value>Разблокировать пользователя</value>
   </data>
   <data name="UserAlreadyHasPassword" xml:space="preserve">
     <value>У пользователя уже есть пароль</value>

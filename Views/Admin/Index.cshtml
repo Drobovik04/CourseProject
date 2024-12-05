@@ -1,0 +1,72 @@
+﻿@using CourseProject.ViewModels
+@using Microsoft.Extensions.Localization
+@model IEnumerable<UserViewModel>
+@inject IStringLocalizer<SharedResources> localizer
+
+<div class="container mt-5">
+    <h2>@localizer["Admin Panel"]</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>@localizer["UserName"]</th>
+                <th>@localizer["IsAdmin"]</th>
+                <th>@localizer["IsLockedOut"]</th>
+                <th>@localizer["Actions"]</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td>@user.UserName</td>
+                    <td>@if (user.IsAdmin) 
+                        {
+                            <i class="fa-solid fa-check"></i>
+                        }
+                        else
+                        {
+                            <i class="fa-solid fa-xmark"></i>
+                        }
+                    </td>
+                    <td>
+                        @if (user.IsLockedOut)
+                        {
+                            <i class="fa-solid fa-check"></i>
+                        }
+                        else
+                        {
+                            <i class="fa-solid fa-xmark"></i>
+                        }
+                    </td>
+                    <td>
+                        <form method="post" asp-action="UpdateRole" asp-route-userId="@user.UserId">
+                            <input type="hidden" name="userId" value="@user.UserId" />
+                            <button type="submit" class="btn @(user.IsAdmin ? "btn-danger" : "btn-success")">
+                                @(user.IsAdmin ? @localizer["RemoveAdmin"] : @localizer["MakeAdmin"])
+                            </button>
+                            <input type="hidden" name="isAdmin" value="@(user.IsAdmin ? "false" : "true")" />
+                        </form>
+
+                        <form method="post" asp-action="BlockUser" asp-route-userId="@user.UserId">
+                            <button type="submit" class="btn btn-warning">
+                                @localizer["Block"]
+                            </button>
+                        </form>
+
+                        <form method="post" asp-action="UnblockUser" asp-route-userId="@user.UserId">
+                            <button type="submit" class="btn btn-info">
+                                @localizer["Unblock"]
+                            </button>
+                        </form>
+
+                        <form method="post" asp-action="DeleteUser" asp-route-userId="@user.UserId">
+                            <button type="submit" class="btn btn-danger">
+                                @localizer["Delete"]
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

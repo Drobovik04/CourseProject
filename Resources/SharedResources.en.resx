@@ -117,11 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Actions" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="Block" xml:space="preserve">
+    <value>Block user</value>
+  </data>
   <data name="Compare" xml:space="preserve">
     <value>The {0} and {1} fields must match</value>
   </data>
   <data name="ConfirmPassword" xml:space="preserve">
     <value>Confirm Password</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete user</value>
   </data>
   <data name="DuplicateEmail" xml:space="preserve">
     <value>Email '{0}' is already taken</value>
@@ -144,11 +153,20 @@
   <data name="InvalidUserName" xml:space="preserve">
     <value>The username '{0}' is invalid</value>
   </data>
+  <data name="IsAdmin" xml:space="preserve">
+    <value>Is has an admin role?</value>
+  </data>
+  <data name="IsLockedOut" xml:space="preserve">
+    <value>Is blocked?</value>
+  </data>
   <data name="Login" xml:space="preserve">
     <value>Login</value>
   </data>
   <data name="Logout" xml:space="preserve">
     <value>Logout</value>
+  </data>
+  <data name="MakeAdmin" xml:space="preserve">
+    <value>Grant admin role</value>
   </data>
   <data name="MaxLength" xml:space="preserve">
     <value>The field {0} must be not greater than {1} characters long</value>
@@ -183,11 +201,17 @@
   <data name="Register" xml:space="preserve">
     <value>Register</value>
   </data>
+  <data name="RemoveAdmin" xml:space="preserve">
+    <value>Remove admin role</value>
+  </data>
   <data name="Required" xml:space="preserve">
     <value>The {0} field is required</value>
   </data>
   <data name="SwitchTheme" xml:space="preserve">
     <value>Switch Theme</value>
+  </data>
+  <data name="Unblock" xml:space="preserve">
+    <value>Unblock user</value>
   </data>
   <data name="UserAlreadyHasPassword" xml:space="preserve">
     <value>User already has a password set</value>
