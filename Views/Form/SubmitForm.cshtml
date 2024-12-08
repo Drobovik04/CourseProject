@@ -1,0 +1,49 @@
+﻿@using CourseProject
+@using CourseProject.ViewModels
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> localizer
+@model SubmitFormViewModel
+
+<div class="container mt-5">
+    <h2>@localizer["YourAnswers"]</h2>
+    <p>@localizer["FillAnswers"]</p>
+
+    <form method="post" asp-action="SubmitForm">
+        <input type="hidden" name="FormId" value="@Model.FormId" />
+
+        @foreach (var question in Model.Questions)
+        {
+            <div class="mb-3">
+                <label>@question.Value.Title</label>
+                @switch (question.Value.Type)
+                {
+                    case QuestionType.SingleLineText:
+                        <input type="text" name="Answers[@question.Value.QuestionId].Answer" class="form-control" />
+                        break;
+
+                    case QuestionType.MultiLineText:
+                        <textarea name="Answers[@question.Value.QuestionId].Answer" class="form-control"></textarea>
+                        break;
+
+                    case QuestionType.Integer:
+                        <input type="number" name="Answers[@question.Value.QuestionId].Answer" class="form-control" />
+                        break;
+
+                    case QuestionType.Checkbox:
+                        <input type="hidden" name="Answers[@question.Value.QuestionId].Answer" value="false" />
+                        <input type="checkbox" name="Answers[@question.Value.QuestionId].Answer" class="form-check-input" value="true" />
+                        break;
+                }
+
+                <input type="hidden" name="Answers[@question.Value.QuestionId].Type" value="@question.Value.Type" />
+                <input type="hidden" name="Answers[@question.Value.QuestionId].QuestionId" value="@question.Value.QuestionId" />
+
+                <input type="hidden" name="Questions[@question.Value.QuestionId].QuestionId" value="@question.Value.QuestionId" />
+                <input type="hidden" name="Questions[@question.Value.QuestionId].Title" value="@question.Value.Title" />
+                <input type="hidden" name="Questions[@question.Value.QuestionId].Type" value="@question.Value.Type" />
+            </div>
+        }
+
+        <button type="submit" class="btn btn-primary">@localizer["Submit"]</button>
+    </form>
+</div>

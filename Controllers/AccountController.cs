@@ -1,17 +1,21 @@
 ﻿using CourseProject;
+using CourseProject.Database;
 using CourseProject.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 
 public class AccountController : Controller
 {
+    private readonly AppDbContext _context;
     private readonly UserManager<IdentityUser> _userManager;
     private readonly SignInManager<IdentityUser> _signInManager;
     private readonly IStringLocalizer<SharedResources> _localizer;
 
-    public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IStringLocalizer<SharedResources> localizer)
+    public AccountController(AppDbContext context, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IStringLocalizer<SharedResources> localizer)
     {
+        _context = context;
         _userManager = userManager;
         _signInManager = signInManager;
         _localizer = localizer;
@@ -24,8 +28,7 @@ public class AccountController : Controller
     {
         if (!ModelState.IsValid) return View(model);
 
-        var user = await _userManager.FindByEmailAsync(model.UserNameOrEmail)
-                   ?? await _userManager.FindByNameAsync(model.UserNameOrEmail);
+        var user = await _userManager.FindByEmailAsync(model.UserNameOrEmail) ?? await _userManager.FindByNameAsync(model.UserNameOrEmail);
 
         if (user == null)
         {
@@ -37,7 +40,7 @@ public class AccountController : Controller
 
         if (result.Succeeded)
         {
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Form");
         }
 
         ModelState.AddModelError("", _localizer["InvalidLoginAttempt"]);
@@ -60,7 +63,7 @@ public class AccountController : Controller
         {
             await _userManager.AddToRoleAsync(user, "User");
             await _signInManager.SignInAsync(user, isPersistent: false);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Form");
         }
 
         foreach (var error in result.Errors)
@@ -77,5 +80,23 @@ public class AccountController : Controller
     {
         await _signInManager.SignOutAsync();
         return RedirectToAction("Index", "Home");
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Index()
+    {
+        var currentUser = await _userManager.GetUserAsync(User);
+
+        var createdForms = await _context.Forms.Where(f => f.Author.Id == currentUser.Id).ToListAsync();
+
+        var answeredForms = await _context.FormAnswers.Where(fa => fa.UserId == currentUser.Id).Include(fa => fa.Form).ToListAsync();
+
+        var model = new ProfileViewModel
+        {
+            CreatedForms = createdForms,
+            AnsweredForms = answeredForms
+        };
+
+        return View(model);
     }
 }

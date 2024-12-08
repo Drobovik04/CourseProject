@@ -17,8 +17,8 @@
         <div class="d-flex">
             <button id="theme-toggle" class="btn btn-secondary">@localizer["SwitchTheme"]</button>
             <div class="language-switcher">
-                <a asp-controller="Home" asp-action="ChangeLanguage" asp-route-culture="en" class="btn btn-link">English</a>
-                <a asp-controller="Home" asp-action="ChangeLanguage" asp-route-culture="ru" class="btn btn-link">Русский</a>
+                <a asp-controller="Home" asp-action="ChangeLanguage" asp-route-culture="en" class="btn btn-link">@localizer["English"]</a>
+                <a asp-controller="Home" asp-action="ChangeLanguage" asp-route-culture="ru" class="btn btn-link">@localizer["Russian"]</a>
             </div>
         </div>
 

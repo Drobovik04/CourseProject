@@ -1,0 +1,30 @@
+﻿@using CourseProject
+@using CourseProject.ViewModels
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> localizer
+@model FormDetailsViewModel
+
+<div class="container mt-5">
+    <h2>@Model.Form.Title</h2>
+    <p>@Model.Form.Description</p>
+
+    <a asp-controller="Form" asp-action="SubmitForm" asp-route-id="@Model.Form.Id" class="btn btn-primary mb-3">@localizer["FillForm"]</a>
+
+    <h3>@localizer["YourAnswers"]</h3>
+    @if (Model.UserAnswers.Any())
+    {
+        <ul class="list-group">
+            @foreach (var answer in Model.UserAnswers)
+            {
+                <li class="list-group-item">
+                    <strong>@localizer["SubmittedAt"]:</strong> @answer.SubmittedAt.ToString("g")
+                    <a asp-controller="Form" asp-action="ViewAnswer" asp-route-id="@answer.Id" asp-route-returnUrl="@Url.Action("Details", "Form", new { id = answer.FormId })" class="btn btn-link">@localizer["View"]</a>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>@localizer["NoAnswers"]</p>
+    }
+</div>

@@ -117,14 +117,38 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AccessType" xml:space="preserve">
+    <value>Тип доступа</value>
+  </data>
   <data name="Actions" xml:space="preserve">
     <value>Действия</value>
+  </data>
+  <data name="AddQuestion" xml:space="preserve">
+    <value>Добавить вопрос</value>
   </data>
   <data name="AdminPanel" xml:space="preserve">
     <value>Панель администратора</value>
   </data>
+  <data name="AllowedUsers" xml:space="preserve">
+    <value>Разрешенные пользователи</value>
+  </data>
+  <data name="AnsweredForms" xml:space="preserve">
+    <value>Ответы</value>
+  </data>
+  <data name="Answers" xml:space="preserve">
+    <value>Ответы</value>
+  </data>
   <data name="Block" xml:space="preserve">
     <value>Заблокировать пользователя</value>
+  </data>
+  <data name="Checkbox" xml:space="preserve">
+    <value>Чекбокс</value>
+  </data>
+  <data name="Comma-SeparatedTags" xml:space="preserve">
+    <value>Разделенные запятой теги</value>
+  </data>
+  <data name="Comma-SeparatedUserNames" xml:space="preserve">
+    <value>Разделенные запятой пользователи</value>
   </data>
   <data name="Compare" xml:space="preserve">
     <value>Поля {0} и {1} должны совпадать</value>
@@ -132,8 +156,23 @@
   <data name="ConfirmPassword" xml:space="preserve">
     <value>Подтверждение пароля</value>
   </data>
+  <data name="CreatedBy" xml:space="preserve">
+    <value>Создано</value>
+  </data>
+  <data name="CreatedForms" xml:space="preserve">
+    <value>Созданные формы</value>
+  </data>
+  <data name="CreateForm" xml:space="preserve">
+    <value>Создать форму</value>
+  </data>
   <data name="Delete" xml:space="preserve">
     <value>Удалить пользователя</value>
+  </data>
+  <data name="DeleteAnswer" xml:space="preserve">
+    <value>Удалить ответ</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Описание</value>
   </data>
   <data name="DuplicateEmail" xml:space="preserve">
     <value>Почта '{0}' уже используется</value>
@@ -146,6 +185,24 @@
   </data>
   <data name="EmailAddress" xml:space="preserve">
     <value>Поле {0} должно быть корректным email-адресом</value>
+  </data>
+  <data name="English" xml:space="preserve">
+    <value>Английский</value>
+  </data>
+  <data name="FillAnswers" xml:space="preserve">
+    <value>Пожалуйста, введите ответы на вопросы</value>
+  </data>
+  <data name="FillForm" xml:space="preserve">
+    <value>Заполнить форму</value>
+  </data>
+  <data name="Forms" xml:space="preserve">
+    <value>Формы</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>Общее</value>
+  </data>
+  <data name="ImageURL" xml:space="preserve">
+    <value>Ссылка на картинку</value>
   </data>
   <data name="InvalidEmail" xml:space="preserve">
     <value>Почта '{0}' недопустима</value>
@@ -177,6 +234,18 @@
   <data name="MinLength" xml:space="preserve">
     <value>Поле {0} должно содержать не менее {1} символов</value>
   </data>
+  <data name="MultiLineText" xml:space="preserve">
+    <value>Многострочный текст</value>
+  </data>
+  <data name="NoAnswers" xml:space="preserve">
+    <value>Вы еще не давали ответов</value>
+  </data>
+  <data name="NoCreated" xml:space="preserve">
+    <value>Вы еще не создали ни одной формы</value>
+  </data>
+  <data name="Number" xml:space="preserve">
+    <value>Число</value>
+  </data>
   <data name="Password" xml:space="preserve">
     <value>Пароль</value>
   </data>
@@ -198,11 +267,23 @@
   <data name="Profile" xml:space="preserve">
     <value>Профиль</value>
   </data>
+  <data name="Public" xml:space="preserve">
+    <value>Публичный</value>
+  </data>
+  <data name="Questions" xml:space="preserve">
+    <value>Вопросы</value>
+  </data>
+  <data name="QuestionText" xml:space="preserve">
+    <value>Текст вопроса</value>
+  </data>
   <data name="RecoveryCodeRedemptionFailed" xml:space="preserve">
     <value>Сбой при использовании кода восстановления</value>
   </data>
   <data name="Register" xml:space="preserve">
     <value>Регистрация</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Удалить</value>
   </data>
   <data name="RemoveAdmin" xml:space="preserve">
     <value>Отозвать права администратора</value>
@@ -210,8 +291,47 @@
   <data name="Required" xml:space="preserve">
     <value>Поле {0} обязательно для заполнения</value>
   </data>
+  <data name="Restricted" xml:space="preserve">
+    <value>Ограниченный</value>
+  </data>
+  <data name="Results" xml:space="preserve">
+    <value>Результаты</value>
+  </data>
+  <data name="Russian" xml:space="preserve">
+    <value>Русский</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Сохранить</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Поиск</value>
+  </data>
+  <data name="ShowInResults" xml:space="preserve">
+    <value>Показывать в результатах</value>
+  </data>
+  <data name="SingleLineText" xml:space="preserve">
+    <value>Однострочный текст</value>
+  </data>
+  <data name="Statistics" xml:space="preserve">
+    <value>Статистика</value>
+  </data>
+  <data name="Submit" xml:space="preserve">
+    <value>Подтвердить</value>
+  </data>
+  <data name="SubmitAnswers" xml:space="preserve">
+    <value>Предоставление ответа</value>
+  </data>
+  <data name="SubmittedAt" xml:space="preserve">
+    <value>Ответ дан</value>
+  </data>
   <data name="SwitchTheme" xml:space="preserve">
     <value>Переключить тему</value>
+  </data>
+  <data name="Tags" xml:space="preserve">
+    <value>Теги</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Заголовок</value>
   </data>
   <data name="Unblock" xml:space="preserve">
     <value>Разблокировать пользователя</value>
@@ -227,5 +347,11 @@
   </data>
   <data name="UserNameOrEmail" xml:space="preserve">
     <value>Логин или электронная почта</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>Посмотреть</value>
+  </data>
+  <data name="YourAnswers" xml:space="preserve">
+    <value>Ваши ответы</value>
   </data>
 </root>

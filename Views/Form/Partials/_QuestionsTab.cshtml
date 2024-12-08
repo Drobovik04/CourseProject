@@ -1,0 +1,121 @@
+﻿@using CourseProject
+@using CourseProject.ViewModels
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> localizer
+@model CourseProject.ViewModels.FormViewModel
+
+<div>
+    <h4>@localizer["Questions"]</h4>
+    <ul id="questions-container" class="list-group">
+
+    </ul>
+    <button type="button" id="add-question" class="btn btn-secondary mt-2">@localizer["AddQuestion"]</button>
+</div>
+<script>
+    const questionsContainer = document.getElementById("questions-container");
+
+    var draggedItem = null;
+
+    document.getElementById("add-question").addEventListener("click", function () {
+        const index = questionsContainer.children.length;
+        const questionHTML = `
+                <li class="list-group-item d-flex align-items-center" data-index="${index}" draggable="true">
+                    <div class="flex-grow-1">
+                        <input type="text" name="Questions[${index}].Title" class="form-control mb-2" placeholder="@localizer["QuestionText"]" />
+                        <input type="hidden" name="Questions[${index}].Order" value="${index}" />
+                        <select name="Questions[${index}].Type" class="form-select">
+                            <option value="SingleLineText">@localizer["SingleLineText"]</option>
+                            <option value="MultiLineText">@localizer["MultiLineText"]</option>
+                            <option value="Checkbox">@localizer["Checkbox"]</option>
+                            <option value="Integer">@localizer["Number"]</option>
+                        </select>
+                        <div class="form-check">
+                            <input type="checkbox" name="Questions[${index}].ShowInResults" class="form-check-input" />
+                            <label class="form-check-label">@localizer["ShowInResults"]</label>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-danger btn-sm ms-2" onclick="this.parentElement.remove()">@localizer["Remove"]</button>
+                </li>`;
+        questionsContainer.insertAdjacentHTML("beforeend", questionHTML);
+    });
+
+    questionsContainer.addEventListener("dragstart", function (e) {
+        draggedItem = e.target;
+        e.target.style.opacity = "0.5";
+    });
+
+    questionsContainer.addEventListener("dragend", function (e) {
+        e.target.style.opacity = "1";
+        draggedItem = null;
+
+        updateIndexes();
+    });
+
+    questionsContainer.addEventListener("dragover", function (e) {
+        e.preventDefault();
+        const afterElement = getDragAfterElement(questionsContainer, e.clientY);
+        if (afterElement == null) {
+            questionsContainer.appendChild(draggedItem);
+        } else {
+            questionsContainer.insertBefore(draggedItem, afterElement);
+        }
+        applyTransition(questionsContainer);
+    });
+
+    function getDragAfterElement(container, y) {
+        const draggableElements = [...container.querySelectorAll(".list-group-item:not(.dragging)")];
+
+        return draggableElements.reduce((closest, child) => {
+            const box = child.getBoundingClientRect();
+            const offset = y - box.top - box.height / 2;
+            if (offset < 0 && offset > closest.offset) {
+                return { offset: offset, element: child };
+            } else {
+                return closest;
+            }
+        }, { offset: Number.NEGATIVE_INFINITY }).element;
+    }
+
+    function updateIndexes() {
+        [...questionsContainer.children].forEach((child, index) => {
+            child.dataset.index = index;
+
+            const inputs = child.querySelectorAll("input, select");
+            inputs.forEach(input => {
+                if (input.name.includes("Questions[")) {
+                    input.name = input.name.replace(/Questions\[\d+\]/, `Questions[${index}]`);
+                    if (input.name.includes(".Order"){
+                        input.value = index;
+                    }
+                }
+            });
+        });
+    }
+
+    function applyTransition(container) {
+        [...container.children].forEach((item) => {
+            item.style.transition = "transform 0.2s ease";
+        });
+
+        setTimeout(() => {
+            [...container.children].forEach((item) => {
+                item.style.transition = "";
+            });
+        }, 200);
+    }
+</script>
+<style>
+    #questions-container .list-group-item {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    #questions-container .list-group-item.dragging {
+        opacity: 0.7;
+        transform: scale(1.05);
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    #questions-container .list-group-item:not(.dragging) {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+</style>

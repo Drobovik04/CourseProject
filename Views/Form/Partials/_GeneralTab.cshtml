@@ -1,0 +1,44 @@
+﻿@using CourseProject
+@using CourseProject.ViewModels
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> localizer
+@model FormViewModel
+
+<div>
+    <div class="mb-3">
+        <label asp-for="Title" class="form-label">@localizer["Title"]</label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label">@localizer["Description"]</label>
+        <textarea asp-for="Description" id="description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ImageUrl" class="form-label">@localizer["ImageURL"]</label>
+        <input asp-for="ImageUrl" class="form-control" />
+        <span asp-validation-for="ImageUrl" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Tags" class="form-label">@localizer["Tags"]</label>
+        <input asp-for="Tags" class="form-control" placeholder="@localizer["Comma-SeparatedTags"]" />
+        <span asp-validation-for="Tags" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="AccessType" class="form-label">@localizer["AccessType"]</label>
+        <select asp-for="AccessType" class="form-select">
+            <option value="Public">@localizer["Public"]</option>
+            <option value="Restricted">@localizer["Restricted"]</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label>@localizer["AllowedUsers"]</label>
+        <input type="text" asp-for="AllowedUserNames" class="form-control" placeholder="@localizer["Comma-SeparatedUserNames"]" />
+    </div>
+</div>

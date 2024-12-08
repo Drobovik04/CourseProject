@@ -1,0 +1,25 @@
+﻿@using CourseProject
+@using CourseProject.ViewModels
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> localizer
+@model IEnumerable<QuestionStatisticsViewModel>
+
+<div class="container mt-5">
+    <h2>@localizer["Statistics"]</h2>
+    <ul class="list-group">
+        @foreach (var stat in Model)
+        {
+            <li class="list-group-item">
+                <strong>@stat.Question.Title</strong>
+                @if (stat.AverageValue.HasValue)
+                {
+                    <p>@localizer["Average"]: @stat.AverageValue.Value</p>
+                }
+                @if (!string.IsNullOrEmpty(stat.MostFrequentAnswer))
+                {
+                    <p>@localizer["MostFrequentAnswer"]: @stat.MostFrequentAnswer</p>
+                }
+            </li>
+        }
+    </ul>
+</div>

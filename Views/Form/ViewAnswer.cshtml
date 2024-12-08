@@ -1,0 +1,34 @@
+﻿@using CourseProject
+@using CourseProject.ViewModels
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> localizer
+@model FormAnswer
+
+<div class="container mt-5">
+    <h2>@Model.Form.Title</h2>
+    <p><strong>@localizer["SubmittedAt"]:</strong> @Model.SubmittedAt.ToString("g")</p>
+    <form method="post" asp-controller="Form" asp-action="DeleteAnswer" asp-route-id="@Model.Id" asp-route-returnUrl="@ViewData["returnUrl"]" class="mt-1 mb-1">
+        <button type="submit" class="btn btn-danger">@localizer["DeleteAnswer"]</button>
+    </form>
+    <h3>@localizer["Answers"]</h3>
+    <ul class="list-group">
+        @foreach (var answer in Model.Answers)
+        {
+            <li class="list-group-item">
+                <strong>@answer.Question.Title:</strong>
+                @switch (answer)
+                {
+                    case TextAnswer textAnswer:
+                        @textAnswer.TextAnswerValue
+                        break;
+                    case IntegerAnswer integerAnswer:
+                        @integerAnswer.IntegerAnswerValue
+                        break;
+                    case CheckboxAnswer checkboxAnswer:
+                        <i class="@(checkboxAnswer.CheckboxAnswerValue ? "fa-solid fa-check" : "fa-solid fa-xmark")"></i>
+                        break;
+                }
+            </li>
+        }
+    </ul>
+</div>

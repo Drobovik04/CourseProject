@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CourseProject.Controllers
 {
-    public class QuestionsController : Controller
+    public class QuestionController : Controller
     {
         // GET: QuestionsController
         public ActionResult Index()
