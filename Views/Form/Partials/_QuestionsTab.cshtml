@@ -2,7 +2,7 @@
 @using CourseProject.ViewModels
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<SharedResources> localizer
-@model CourseProject.ViewModels.FormViewModel
+@model FormViewModel
 
 <div>
     <h4>@localizer["Questions"]</h4>
@@ -84,7 +84,7 @@
             inputs.forEach(input => {
                 if (input.name.includes("Questions[")) {
                     input.name = input.name.replace(/Questions\[\d+\]/, `Questions[${index}]`);
-                    if (input.name.includes(".Order"){
+                    if (input.name.includes(".Order")) {
                         input.value = index;
                     }
                 }

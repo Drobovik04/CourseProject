@@ -171,6 +171,9 @@
   <data name="DeleteAnswer" xml:space="preserve">
     <value>Удалить ответ</value>
   </data>
+  <data name="DeleteForm" xml:space="preserve">
+    <value>Удалить форму</value>
+  </data>
   <data name="Description" xml:space="preserve">
     <value>Описание</value>
   </data>
@@ -179,6 +182,9 @@
   </data>
   <data name="DuplicateUserName" xml:space="preserve">
     <value>Логин {0} уже занят</value>
+  </data>
+  <data name="EditForm" xml:space="preserve">
+    <value>Изменить форму</value>
   </data>
   <data name="Email" xml:space="preserve">
     <value>Электронная почта</value>
@@ -353,5 +359,8 @@
   </data>
   <data name="YourAnswers" xml:space="preserve">
     <value>Ваши ответы</value>
+  </data>
+  <data name="YourProfile" xml:space="preserve">
+    <value>Ваш профиль</value>
   </data>
 </root>

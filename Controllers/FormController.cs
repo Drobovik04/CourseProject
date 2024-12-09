@@ -62,15 +62,12 @@ namespace CourseProject.Controllers
                 form.FormTags.Add(new FormTag { Form = form, Tag = tag });
             }
 
-            if (model.AccessType == AccessType.Restricted)
+            foreach (var userName in model.AllowedUserNames)
             {
-                foreach (var userName in model.AllowedUserNames)
+                var user = await _userManager.FindByNameAsync(userName);
+                if (user != null)
                 {
-                    var user = await _userManager.FindByNameAsync(userName);
-                    if (user != null)
-                    {
-                        form.AllowedUsers.Add(new FormAccess { Form = form, User = user });
-                    }
+                    form.AllowedUsers.Add(new FormAccess { Form = form, User = user });
                 }
             }
 
@@ -109,7 +106,7 @@ namespace CourseProject.Controllers
                 Form = form,
                 IsEditable = isOwner || isAdmin,
                 UserAnswers = form.FormAnswers.Where(fa => fa.UserId == currentUser?.Id).ToList()
-        };
+            };
 
             return View(model);
         }
@@ -214,7 +211,7 @@ namespace CourseProject.Controllers
         }
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> EditForm(int id)
         {
             var form = await _context.Forms.Include(f => f.Questions.OrderBy(q => q.Order)).FirstOrDefaultAsync(f => f.Id == id);
 
@@ -242,6 +239,7 @@ namespace CourseProject.Controllers
                     Id = q.Id,
                     Title = q.Title,
                     Type = q.Type,
+                    ShowInResults = q.ShowInResults,
                     Order = q.Order
                 }).ToList()
             };
@@ -250,7 +248,7 @@ namespace CourseProject.Controllers
         }
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Edit(FormUpdateViewModel model)
+        public async Task<IActionResult> EditForm(FormUpdateViewModel model)
         {
             var form = await _context.Forms.Include(f => f.Questions).FirstOrDefaultAsync(f => f.Id == model.Id);
 
@@ -258,6 +256,9 @@ namespace CourseProject.Controllers
             {
                 return NotFound();
             }
+
+            model.Tags = model.Tags?.Where(tag => !string.IsNullOrWhiteSpace(tag)).ToList() ?? new List<string>();
+            model.AllowedUserNames = model.AllowedUserNames?.Where(user => !string.IsNullOrWhiteSpace(user)).ToList() ?? new List<string>();
 
             var currentUser = await _userManager.GetUserAsync(User);
             var isAdmin = await _userManager.IsInRoleAsync(currentUser, "Admin");
@@ -270,6 +271,33 @@ namespace CourseProject.Controllers
             form.Description = model.Description;
             form.ImageUrl = model.ImageUrl;
             form.AccessType = model.AccessType;
+
+            model.Tags = model.Tags?.FirstOrDefault()?.Split(',').ToList();
+            model.AllowedUserNames = model.AllowedUserNames?.FirstOrDefault()?.Split(',').ToList();
+
+            if(model.Tags != null)
+            {
+                foreach (var tagName in model.Tags)
+                {
+                    if (!form.FormTags.Any(x => x.Tag.Name == tagName))
+                    {
+                        var tag = await _context.Tags.FirstOrDefaultAsync(t => t.Name == tagName) ?? new Tag { Name = tagName };
+                        form.FormTags.Add(new FormTag { Form = form, Tag = tag });
+                    }
+                }
+            }
+
+            if(model.AllowedUserNames != null)
+            {
+                foreach (var userName in model.AllowedUserNames)
+                {
+                    var user = await _userManager.FindByNameAsync(userName);
+                    if (user != null && !form.AllowedUsers.Any(x => x.User == user))
+                    {
+                        form.AllowedUsers.Add(new FormAccess { Form = form, User = user });
+                    }
+                }
+            }
 
             var existingQuestions = form.Questions.ToDictionary(q => q.Id);
             foreach (var questionModel in model.Questions)
@@ -369,6 +397,37 @@ namespace CourseProject.Controllers
             }
 
             return RedirectToAction("Details", "Form", new { id = formAnswer.FormId });
+        }
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> DeleteForm(int id, string? returnUrl = null)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+
+            var formAnswer = await _context.FormAnswers.Include(fa => fa.Form).Include(fa => fa.Answers).FirstOrDefaultAsync(fa => fa.Id == id);
+
+            var isAdmin = await _userManager.IsInRoleAsync(currentUser, "Admin");
+            if (!isAdmin && currentUser != formAnswer.User)
+            {
+                return Forbid();
+            }
+
+            if (formAnswer == null)
+            {
+                return NotFound();
+            }
+
+            _context.Answers.RemoveRange(formAnswer.Answers);
+            //_context.FormAnswers.Remove(formAnswer);
+            _context.Forms.Remove(formAnswer.Form);
+            await _context.SaveChangesAsync();
+
+            if (!string.IsNullOrEmpty(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+
+            return RedirectToAction("Index", "Account");
         }
     }
 

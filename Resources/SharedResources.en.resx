@@ -171,6 +171,9 @@
   <data name="DeleteAnswer" xml:space="preserve">
     <value>Delete answer</value>
   </data>
+  <data name="DeleteForm" xml:space="preserve">
+    <value>Delete form</value>
+  </data>
   <data name="Description" xml:space="preserve">
     <value>Description</value>
   </data>
@@ -179,6 +182,9 @@
   </data>
   <data name="DuplicateUserName" xml:space="preserve">
     <value>Username {0} is already taken</value>
+  </data>
+  <data name="EditForm" xml:space="preserve">
+    <value>Edit form</value>
   </data>
   <data name="Email" xml:space="preserve">
     <value>Email</value>
@@ -353,5 +359,8 @@
   </data>
   <data name="YourAnswers" xml:space="preserve">
     <value>Your answers</value>
+  </data>
+  <data name="YourProfile" xml:space="preserve">
+    <value>Your profile</value>
   </data>
 </root>
