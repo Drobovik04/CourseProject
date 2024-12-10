@@ -30,6 +30,7 @@ namespace CourseProject
             {
                 options.LoginPath = "/Account/Login";
                 options.LogoutPath = "/Account/Logout";
+                options.ExpireTimeSpan = TimeSpan.FromDays(7);
             });
 
             builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
@@ -71,7 +72,8 @@ namespace CourseProject
                 var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
                 var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
                 var context = services.GetRequiredService<AppDbContext>();
-
+                //context.Database.EnsureDeleted();
+                //context.Database.EnsureCreated();
                 await DatabaseInitializer.SeedAsync(userManager, roleManager, context);
             }
 

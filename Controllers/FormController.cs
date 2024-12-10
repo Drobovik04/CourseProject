@@ -56,18 +56,30 @@ namespace CourseProject.Controllers
                 CreatedAt = DateTime.UtcNow
             };
 
-            foreach (var tagName in model.Tags)
+            model.Tags = model.Tags?.FirstOrDefault()?.Split(',').Select(x => x.Trim()).ToList();
+            model.AllowedUserNames = model.AllowedUserNames?.FirstOrDefault()?.Split(',').Select(x => x.Trim()).ToList();
+
+            if (model.Tags != null)
             {
-                var tag = await _context.Tags.FirstOrDefaultAsync(t => t.Name == tagName) ?? new Tag { Name = tagName };
-                form.FormTags.Add(new FormTag { Form = form, Tag = tag });
+                foreach (var tagName in model.Tags)
+                {
+                    if (!form.FormTags.Any(x => x.Tag.Name == tagName))
+                    {
+                        var tag = await _context.Tags.FirstOrDefaultAsync(t => t.Name == tagName) ?? new Tag { Name = tagName };
+                        form.FormTags.Add(new FormTag { Form = form, Tag = tag });
+                    }
+                }
             }
 
-            foreach (var userName in model.AllowedUserNames)
+            if (model.AllowedUserNames != null)
             {
-                var user = await _userManager.FindByNameAsync(userName);
-                if (user != null)
+                foreach (var userName in model.AllowedUserNames)
                 {
-                    form.AllowedUsers.Add(new FormAccess { Form = form, User = user });
+                    var user = await _userManager.FindByNameAsync(userName);
+                    if (user != null)
+                    {
+                        form.AllowedUsers.Add(new FormAccess { Form = form, User = user });
+                    }
                 }
             }
 
@@ -90,7 +102,11 @@ namespace CourseProject.Controllers
         [Authorize]
         public async Task<IActionResult> Details(int id)
         {
-            var form = await _context.Forms.Include(f => f.Questions.OrderBy(q => q.Order)).Include(f => f.FormAnswers).ThenInclude(fa => fa.Answers).FirstOrDefaultAsync(f => f.Id == id);
+            var form = await _context.Forms
+                .Include(f => f.Questions.OrderBy(q => q.Order))
+                .Include(f => f.FormAnswers)
+                    .ThenInclude(fa => fa.Answers)
+                .FirstOrDefaultAsync(f => f.Id == id);
 
             if (form == null)
             {
@@ -113,7 +129,11 @@ namespace CourseProject.Controllers
         [Authorize]
         public async Task<IActionResult> ViewAnswer(int id, string? returnUrl = null)
         {
-            var formAnswer = await _context.FormAnswers.Include(fa => fa.Form).ThenInclude(f => f.Questions.OrderBy(q => q.Order)).Include(fa => fa.Answers).FirstOrDefaultAsync(fa => fa.Id == id);
+            var formAnswer = await _context.FormAnswers
+                .Include(fa => fa.Form)
+                .ThenInclude(f => f.Questions.OrderBy(q => q.Order))
+                .Include(fa => fa.Answers)
+                .FirstOrDefaultAsync(fa => fa.Id == id);
 
             if (formAnswer == null)
             {
@@ -195,7 +215,7 @@ namespace CourseProject.Controllers
                         QuestionId = question.Value.Value.QuestionId,
                         CheckboxAnswerValue = bool.TryParse(userAnswer.Answer, out var boolValue) && boolValue
                     },
-                    _ => null
+                    _ => null!
                 };
 
                 if (answer != null)
@@ -213,7 +233,13 @@ namespace CourseProject.Controllers
         [HttpGet]
         public async Task<IActionResult> EditForm(int id)
         {
-            var form = await _context.Forms.Include(f => f.Questions.OrderBy(q => q.Order)).FirstOrDefaultAsync(f => f.Id == id);
+            var form = await _context.Forms
+                .Include(f => f.Questions.OrderBy(q => q.Order))
+                .Include(f => f.AllowedUsers)
+                    .ThenInclude(au => au.User)
+                .Include(f => f.FormTags)
+                    .ThenInclude(ft => ft.Tag)
+                .FirstOrDefaultAsync(f => f.Id == id);
 
             if (form == null)
             {
@@ -241,7 +267,9 @@ namespace CourseProject.Controllers
                     Type = q.Type,
                     ShowInResults = q.ShowInResults,
                     Order = q.Order
-                }).ToList()
+                }).ToList(),
+                Tags = form.FormTags.Select(x => x.Tag.Name).ToList(),
+                AllowedUserNames = form.AllowedUsers.Select(x => x.User.UserName).ToList()!
             };
 
             return View(model);
@@ -250,7 +278,13 @@ namespace CourseProject.Controllers
         [HttpPost]
         public async Task<IActionResult> EditForm(FormUpdateViewModel model)
         {
-            var form = await _context.Forms.Include(f => f.Questions).FirstOrDefaultAsync(f => f.Id == model.Id);
+            var form = await _context.Forms
+                .Include(f => f.Questions.OrderBy(q => q.Order))
+                .Include(f => f.AllowedUsers)
+                    .ThenInclude(au => au.User)
+                .Include(f => f.FormTags)
+                    .ThenInclude(ft => ft.Tag)
+                .FirstOrDefaultAsync(f => f.Id == model.Id);
 
             if (form == null)
             {
@@ -272,11 +306,20 @@ namespace CourseProject.Controllers
             form.ImageUrl = model.ImageUrl;
             form.AccessType = model.AccessType;
 
-            model.Tags = model.Tags?.FirstOrDefault()?.Split(',').ToList();
-            model.AllowedUserNames = model.AllowedUserNames?.FirstOrDefault()?.Split(',').ToList();
+            model.Tags = model.Tags?.FirstOrDefault()?.Split(',').Select(x => x.Trim()).ToList();
+            model.AllowedUserNames = model.AllowedUserNames?.FirstOrDefault()?.Split(',').Select(x => x.Trim()).ToList();
 
             if(model.Tags != null)
             {
+                var tagsToRemove = form.FormTags
+                    .Where(ft => !model.Tags.Contains(ft.Tag.Name))
+                    .ToList();
+
+                foreach (var tagToRemove in tagsToRemove)
+                {
+                    form.FormTags.Remove(tagToRemove);
+                }
+
                 foreach (var tagName in model.Tags)
                 {
                     if (!form.FormTags.Any(x => x.Tag.Name == tagName))
@@ -286,17 +329,34 @@ namespace CourseProject.Controllers
                     }
                 }
             }
+            else
+            {
+                form.FormTags.Clear();
+            }
 
             if(model.AllowedUserNames != null)
             {
+                var usersToRemove = form.AllowedUsers
+                    .Where(au => !model.AllowedUserNames.Contains(au.User.UserName))
+                    .ToList();
+
+                foreach (var userToRemove in usersToRemove)
+                {
+                    form.AllowedUsers.Remove(userToRemove);
+                }
+
                 foreach (var userName in model.AllowedUserNames)
                 {
                     var user = await _userManager.FindByNameAsync(userName);
-                    if (user != null && !form.AllowedUsers.Any(x => x.User == user))
+                    if (user != null && !form.AllowedUsers.Any(x => x.User.Id == user.Id))
                     {
                         form.AllowedUsers.Add(new FormAccess { Form = form, User = user });
                     }
                 }
+            }
+            else
+            {
+                form.AllowedUsers.Clear();
             }
 
             var existingQuestions = form.Questions.ToDictionary(q => q.Id);
@@ -355,7 +415,7 @@ namespace CourseProject.Controllers
                     .Where(a => a.QuestionId == q.Id)
                     .Select(a => (double)a.IntegerAnswerValue)
                     .DefaultIfEmpty()
-                    .Average() : (double?)null,
+                    .Average() : null,
                 MostFrequentAnswer = q.Type == QuestionType.SingleLineText ? form.FormAnswers
                     .SelectMany(fa => fa.Answers.OfType<TextAnswer>())
                     .Where(a => a.QuestionId == q.Id)

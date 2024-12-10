@@ -21,7 +21,10 @@
         {
             <div class="col">
                 <div class="card h-100">
-                    <img src="@form.ImageUrl" class="card-img-top" alt="Form Image" style="max-height: 150px; object-fit: cover;" />
+                    @if (!string.IsNullOrEmpty(form.ImageUrl))
+                    {
+                        <img src="@form.ImageUrl" class="card-img-top" alt="Form Image" style="max-height: 150px; object-fit: cover;" />
+                    }
                     <div class="card-body">
                         <h5 class="card-title">@form.Title</h5>
                         <p class="card-text text-truncate">@form.Description</p>

@@ -39,15 +39,34 @@
         questionsContainer.insertAdjacentHTML("beforeend", questionHTML);
     });
 
+    questionsContainer.querySelectorAll("input, textarea, select, button").forEach(element => {
+        element.setAttribute("draggable", "false");
+        element.addEventListener("dragstart", (e) => {
+            e.preventDefault();
+        });
+    });
+
+    function canDrag(target, event) {
+        const elementAtPoint = document.elementFromPoint(event.clientX, event.clientY);
+
+        return !elementAtPoint.closest("input, textarea, select, button");
+    }
+
     questionsContainer.addEventListener("dragstart", function (e) {
+        if (!e.target.classList.contains("list-group-item") || !canDrag(e.target, e)) {
+            e.preventDefault();
+            return;
+        }
+
         draggedItem = e.target;
         e.target.style.opacity = "0.5";
+        e.target.classList.add("dragging");
     });
 
     questionsContainer.addEventListener("dragend", function (e) {
         e.target.style.opacity = "1";
         draggedItem = null;
-
+        e.target.classList.remove("dragging");
         updateIndexes();
     });
 
