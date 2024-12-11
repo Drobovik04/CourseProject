@@ -11,24 +11,28 @@
         <button type="submit" class="btn btn-danger">@localizer["DeleteAnswer"]</button>
     </form>
     <h3>@localizer["Answers"]</h3>
-    <ul class="list-group">
+    <div class="list-group">
         @foreach (var answer in Model.Answers)
         {
-            <li class="list-group-item">
-                <strong>@answer.Question.Title:</strong>
-                @switch (answer)
-                {
-                    case TextAnswer textAnswer:
-                        @textAnswer.TextAnswerValue
-                        break;
-                    case IntegerAnswer integerAnswer:
-                        @integerAnswer.IntegerAnswerValue
-                        break;
-                    case CheckboxAnswer checkboxAnswer:
-                        <i class="@(checkboxAnswer.CheckboxAnswerValue ? "fa-solid fa-check" : "fa-solid fa-xmark")"></i>
-                        break;
-                }
-            </li>
+            <div class="list-group-item">
+                <div class="mb-2">
+                    <label class="form-label fw-bold">@answer.Question.Title</label>
+                </div>
+                <div>
+                    @switch (answer)
+                    {
+                        case TextAnswer textAnswer:
+                            <textarea class="form-control" disabled readonly>@textAnswer.TextAnswerValue</textarea>
+                            break;
+                        case IntegerAnswer integerAnswer:
+                            <input type="number" class="form-control" value="@integerAnswer.IntegerAnswerValue" disabled readonly />
+                            break;
+                        case CheckboxAnswer checkboxAnswer:
+                            <i class="@(checkboxAnswer.CheckboxAnswerValue ? "fa-solid fa-check" : "fa-solid fa-xmark")"></i>
+                            break;
+                    }
+                </div>
+            </div>
         }
-    </ul>
+    </div>
 </div>

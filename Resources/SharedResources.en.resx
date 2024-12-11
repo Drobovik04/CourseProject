@@ -249,6 +249,9 @@
   <data name="NoCreated" xml:space="preserve">
     <value>You haven't created any form yet</value>
   </data>
+  <data name="NoData" xml:space="preserve">
+    <value>No data</value>
+  </data>
   <data name="Number" xml:space="preserve">
     <value>Number</value>
   </data>

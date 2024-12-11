@@ -1,7 +1,10 @@
-﻿@using CourseProject.ViewModels
+﻿@using CourseProject.Database
+@using CourseProject.ViewModels
+@using Microsoft.EntityFrameworkCore
 @using Microsoft.Extensions.Localization
 @model CourseProject.ViewModels.FormViewModel
 @inject IStringLocalizer<SharedResources> localizer
+@inject AppDbContext _context
 
 <div class="container mt-5">
     <h2>@localizer["CreateForm"]</h2>
@@ -12,28 +15,195 @@
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="questions-tab" data-bs-toggle="tab" data-bs-target="#questions" type="button" role="tab" aria-controls="questions" aria-selected="false">@localizer["Questions"]</button>
         </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="results-tab" data-bs-toggle="tab" data-bs-target="#results" type="button" role="tab" aria-controls="results" aria-selected="false">@localizer["Results"]</button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="statistics-tab" data-bs-toggle="tab" data-bs-target="#statistics" type="button" role="tab" aria-controls="statistics" aria-selected="false">@localizer["Statistics"]</button>
-        </li>
     </ul>
     <form asp-action="Create" method="post" >
         <div class="tab-content mt-4">
             <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
-                @await Html.PartialAsync("Partials/_GeneralTab", Model)
+                <div>
+                    <div class="mb-3">
+                        <label asp-for="Title" class="form-label">@localizer["Title"]</label>
+                        <input asp-for="Title" class="form-control" />
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label">@localizer["Description"]</label>
+                        <textarea asp-for="Description" id="description" class="form-control"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="ImageUrl" class="form-label">@localizer["ImageURL"]</label>
+                        <input asp-for="ImageUrl" class="form-control" />
+                        <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Tags" class="form-label">@localizer["Tags"]</label>
+                        <input asp-for="Tags" class="form-control" placeholder="@localizer["Comma-SeparatedTags"]" />
+                        <span asp-validation-for="Tags" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="AccessType" class="form-label">@localizer["AccessType"]</label>
+                        <select asp-for="AccessType" class="form-select">
+                            <option value="Public">@localizer["Public"]</option>
+                            <option value="Restricted">@localizer["Restricted"]</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label>@localizer["AllowedUsers"]</label>
+                        <input type="text" asp-for="AllowedUserNames" class="form-control" placeholder="@localizer["Comma-SeparatedUserNames"]" />
+                    </div>
+                </div>
             </div>
             <div class="tab-pane fade" id="questions" role="tabpanel" aria-labelledby="questions-tab">
-                @await Html.PartialAsync("Partials/_QuestionsTab", Model)
+                <div>
+                    <h4>@localizer["Questions"]</h4>
+                    <ul id="questions-container" class="list-group">
+
+                    </ul>
+                    <button type="button" id="add-question" class="btn btn-secondary mt-2">@localizer["AddQuestion"]</button>
+                </div>
             </div>
-            <div class="tab-pane fade" id="results" role="tabpanel" aria-labelledby="results-tab">
-                @await Html.PartialAsync("Partials/_ResultsTab", Model)
+@*             <div class="tab-pane fade" id="results" role="tabpanel" aria-labelledby="results-tab">
+                @{
+                    var formAnswers = _context.FormAnswers.Include(x => x.User).Where(x => x.FormId == Model.Id);
+                    await Html.PartialAsync("Partials/_ResultsTab", Model);
+                }
             </div>
             <div class="tab-pane fade" id="statistics" role="tabpanel" aria-labelledby="statistics-tab">
                 @await Html.PartialAsync("Partials/_StatisticsTab", Model)
-            </div>
+            </div> *@
         </div>
         <button type="submit" class="btn btn-primary mt-1">@localizer["Save"]</button>
     </form>
 </div>
+<script>
+    const questionsContainer = document.getElementById("questions-container");
+
+    var draggedItem = null;
+
+    document.getElementById("add-question").addEventListener("click", function () {
+        const index = questionsContainer.children.length;
+        const questionHTML = `
+                    <li class="list-group-item d-flex align-items-center" data-index="${index}" draggable="true">
+                        <div class="flex-grow-1">
+                            <input type="text" name="Questions[${index}].Title" class="form-control mb-2" placeholder="@localizer["QuestionText"]" />
+                            <input type="hidden" name="Questions[${index}].Order" value="${index}" />
+                            <select name="Questions[${index}].Type" class="form-select">
+                                <option value="SingleLineText">@localizer["SingleLineText"]</option>
+                                <option value="MultiLineText">@localizer["MultiLineText"]</option>
+                                <option value="Checkbox">@localizer["Checkbox"]</option>
+                                <option value="Integer">@localizer["Number"]</option>
+                            </select>
+                            <div class="form-check">
+                                <input type="checkbox" name="Questions[${index}].ShowInResults" class="form-check-input" />
+                                <label class="form-check-label">@localizer["ShowInResults"]</label>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-danger btn-sm ms-2" onclick="this.parentElement.remove()">@localizer["Remove"]</button>
+                    </li>`;
+        questionsContainer.insertAdjacentHTML("beforeend", questionHTML);
+    });
+
+    questionsContainer.querySelectorAll("input, textarea, select, button").forEach(element => {
+        element.setAttribute("draggable", "false");
+        element.addEventListener("dragstart", (e) => {
+            e.preventDefault();
+        });
+    });
+
+    function canDrag(target, event) {
+        const elementAtPoint = document.elementFromPoint(event.clientX, event.clientY);
+
+        return !elementAtPoint.closest("input, textarea, select, button");
+    }
+
+    questionsContainer.addEventListener("dragstart", function (e) {
+        if (!e.target.classList.contains("list-group-item") || !canDrag(e.target, e)) {
+            e.preventDefault();
+            return;
+        }
+
+        draggedItem = e.target;
+        e.target.style.opacity = "0.5";
+        e.target.classList.add("dragging");
+    });
+
+    questionsContainer.addEventListener("dragend", function (e) {
+        e.target.style.opacity = "1";
+        draggedItem = null;
+        e.target.classList.remove("dragging");
+        updateIndexes();
+    });
+
+    questionsContainer.addEventListener("dragover", function (e) {
+        e.preventDefault();
+        const afterElement = getDragAfterElement(questionsContainer, e.clientY);
+        if (afterElement == null) {
+            questionsContainer.appendChild(draggedItem);
+        } else {
+            questionsContainer.insertBefore(draggedItem, afterElement);
+        }
+        applyTransition(questionsContainer);
+    });
+
+    function getDragAfterElement(container, y) {
+        const draggableElements = [...container.querySelectorAll(".list-group-item:not(.dragging)")];
+
+        return draggableElements.reduce((closest, child) => {
+            const box = child.getBoundingClientRect();
+            const offset = y - box.top - box.height / 2;
+            if (offset < 0 && offset > closest.offset) {
+                return { offset: offset, element: child };
+            } else {
+                return closest;
+            }
+        }, { offset: Number.NEGATIVE_INFINITY }).element;
+    }
+
+    function updateIndexes() {
+        [...questionsContainer.children].forEach((child, index) => {
+            child.dataset.index = index;
+
+            const inputs = child.querySelectorAll("input, select");
+            inputs.forEach(input => {
+                if (input.name.includes("Questions[")) {
+                    input.name = input.name.replace(/Questions\[\d+\]/, `Questions[${index}]`);
+                    if (input.name.includes(".Order")) {
+                        input.value = index;
+                    }
+                }
+            });
+        });
+    }
+
+    function applyTransition(container) {
+        [...container.children].forEach((item) => {
+            item.style.transition = "transform 0.2s ease";
+        });
+
+        setTimeout(() => {
+            [...container.children].forEach((item) => {
+                item.style.transition = "";
+            });
+        }, 200);
+    }
+</script>
+<style>
+    #questions-container .list-group-item {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        #questions-container .list-group-item.dragging {
+            opacity: 0.7;
+            transform: scale(1.05);
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        #questions-container .list-group-item:not(.dragging) {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+</style>

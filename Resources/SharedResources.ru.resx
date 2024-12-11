@@ -249,6 +249,9 @@
   <data name="NoCreated" xml:space="preserve">
     <value>Вы еще не создали ни одной формы</value>
   </data>
+  <data name="NoData" xml:space="preserve">
+    <value>Нет данных</value>
+  </data>
   <data name="Number" xml:space="preserve">
     <value>Число</value>
   </data>

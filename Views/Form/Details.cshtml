@@ -12,6 +12,8 @@
     @if (Model.IsEditable)
     {
         <a asp-controller="Form" asp-action="EditForm" asp-route-id="@Model.Form.Id" class="btn btn-primary mb-3">@localizer["EditForm"]</a>
+        <a asp-controller="Form" asp-action="Answers" asp-route-id="@Model.Form.Id" class="btn btn-primary mb-3">@localizer["Answers"]</a>
+        <a asp-controller="Form" asp-action="Statistics" asp-route-id="@Model.Form.Id" class="btn btn-primary mb-3">@localizer["Statistics"]</a>
         <a asp-controller="Form" asp-action="DeleteForm" asp-route-id="@Model.Form.Id" class="btn btn-primary mb-3">@localizer["DeleteForm"]</a>
     }
     <h3>@localizer["YourAnswers"]</h3>

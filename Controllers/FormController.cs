@@ -104,6 +104,7 @@ namespace CourseProject.Controllers
         {
             var form = await _context.Forms
                 .Include(f => f.Questions.OrderBy(q => q.Order))
+                .Include(f => f.Author)
                 .Include(f => f.FormAnswers)
                     .ThenInclude(fa => fa.Answers)
                 .FirstOrDefaultAsync(f => f.Id == id);
@@ -131,8 +132,8 @@ namespace CourseProject.Controllers
         {
             var formAnswer = await _context.FormAnswers
                 .Include(fa => fa.Form)
-                .ThenInclude(f => f.Questions.OrderBy(q => q.Order))
-                .Include(fa => fa.Answers)
+                    .ThenInclude(f => f.Questions.OrderBy(q => q.Order))
+                .Include(fa => fa.Answers.OrderBy(a => a.Question.Order))
                 .FirstOrDefaultAsync(fa => fa.Id == id);
 
             if (formAnswer == null)
@@ -488,6 +489,22 @@ namespace CourseProject.Controllers
             }
 
             return RedirectToAction("Index", "Account");
+        }
+        [Authorize]
+        public async Task<ActionResult> Answers(int id)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+
+            var formAnswers = _context.FormAnswers.Include(x => x.User).Where(x => x.FormId == id).ToList();
+
+            var isAdmin = await _userManager.IsInRoleAsync(currentUser, "Admin");
+
+            if (!isAdmin && currentUser != formAnswers.FirstOrDefault().User)
+            {
+                return Forbid();
+            }
+
+            return View(formAnswers);
         }
     }
 
