@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 namespace CourseProject.Controllers
 {
@@ -46,11 +47,18 @@ namespace CourseProject.Controllers
 
             var currentUser = await _userManager.GetUserAsync(User);
 
+            string? uploadedImageUrl = null;
+
+            if (model.ImageFile != null)
+            {
+                uploadedImageUrl = await UploadImageToImgBB(model.ImageFile);
+            }
+
             var form = new Form
             {
                 Title = model.Title,
                 Description = model.Description,
-                ImageUrl = model.ImageUrl,
+                ImageUrl = uploadedImageUrl,
                 AccessType = model.AccessType,
                 Author = currentUser,
                 CreatedAt = DateTime.UtcNow
@@ -261,7 +269,7 @@ namespace CourseProject.Controllers
                 Author = form.Author,
                 Title = form.Title,
                 Description = form.Description,
-                ImageUrl = form.ImageUrl,
+                CurrentImageUrl = form.ImageUrl,
                 AccessType = form.AccessType,
                 Questions = form.Questions.Select(q => new QuestionUpdateViewModel
                 {
@@ -306,13 +314,21 @@ namespace CourseProject.Controllers
 
             form.Title = model.Title;
             form.Description = model.Description;
-            form.ImageUrl = model.ImageUrl;
             form.AccessType = model.AccessType;
 
             model.Tags = model.Tags?.FirstOrDefault()?.Split(',').Select(x => x.Trim()).ToList();
             model.AllowedUserNames = model.AllowedUserNames?.FirstOrDefault()?.Split(',').Select(x => x.Trim()).ToList();
 
-            if(model.Tags != null)
+            if (model.NewImageFile != null)
+            {
+                var newImageUrl = await UploadImageToImgBB(model.NewImageFile);
+                if (!string.IsNullOrEmpty(newImageUrl))
+                {
+                    form.ImageUrl = newImageUrl;
+                }
+            }
+
+            if (model.Tags != null)
             {
                 var tagsToRemove = form.FormTags
                     .Where(ft => !model.Tags.Contains(ft.Tag.Name))
@@ -537,7 +553,7 @@ namespace CourseProject.Controllers
 
             var isAdmin = await _userManager.IsInRoleAsync(currentUser, "Admin");
 
-            if (!isAdmin && currentUser != formAnswers.FirstOrDefault().User)
+            if (!isAdmin && currentUser != _context.Forms.Where(x => x.Id == id).FirstOrDefault().Author)
             {
                 return Forbid();
             }
@@ -586,6 +602,33 @@ namespace CourseProject.Controllers
             var mean = CalculateMean(numbers);
             var dispersion = CalculateMean(numbers.Select(x => x * x).ToList()) - (mean * mean);
             return Math.Sqrt(dispersion);
+        }
+        private async Task<string?> UploadImageToImgBB(IFormFile imageFile)
+        {
+            const string apiKey = "870bece3125067607ba26de2f9349f40";
+            const string uploadUrl = "https://api.imgbb.com/1/upload";
+
+            using var memoryStream = new MemoryStream();
+            await imageFile.CopyToAsync(memoryStream);
+            var imageBytes = memoryStream.ToArray();
+            var base64Image = Convert.ToBase64String(imageBytes);
+
+            using var client = new HttpClient();
+            var content = new MultipartFormDataContent
+            {
+                { new StringContent(apiKey), "key" },
+                { new StringContent(base64Image), "image" }
+            };
+
+            var response = await client.PostAsync(uploadUrl, content);
+            if (response.IsSuccessStatusCode)
+            {
+                var responseBody = await response.Content.ReadAsStringAsync();
+                var json = JsonSerializer.Deserialize<JsonElement>(responseBody);
+                return json.GetProperty("data").GetProperty("url").GetString();
+            }
+
+            return null;
         }
     }
 

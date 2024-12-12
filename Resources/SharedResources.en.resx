@@ -165,6 +165,9 @@
   <data name="CreateForm" xml:space="preserve">
     <value>Create form</value>
   </data>
+  <data name="CurrentImage" xml:space="preserve">
+    <value>Current image</value>
+  </data>
   <data name="Delete" xml:space="preserve">
     <value>Delete user</value>
   </data>
@@ -368,6 +371,12 @@
   </data>
   <data name="Unblock" xml:space="preserve">
     <value>Unblock user</value>
+  </data>
+  <data name="UploadImage" xml:space="preserve">
+    <value>Upload image</value>
+  </data>
+  <data name="UploadNewImage" xml:space="preserve">
+    <value>Upload new image</value>
   </data>
   <data name="UserAlreadyHasPassword" xml:space="preserve">
     <value>User already has a password set</value>

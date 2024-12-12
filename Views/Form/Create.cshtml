@@ -16,7 +16,7 @@
             <button class="nav-link" id="questions-tab" data-bs-toggle="tab" data-bs-target="#questions" type="button" role="tab" aria-controls="questions" aria-selected="false">@localizer["Questions"]</button>
         </li>
     </ul>
-    <form asp-action="Create" method="post" >
+    <form asp-action="Create" method="post" enctype="multipart/form-data">
         <div class="tab-content mt-4">
             <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
                 <div>
@@ -33,9 +33,9 @@
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="ImageUrl" class="form-label">@localizer["ImageURL"]</label>
-                        <input asp-for="ImageUrl" class="form-control" />
-                        <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                        <label asp-for="ImageFile" class="form-label">@localizer["UploadImage"]</label>
+                        <input type="file" accept="image/*" asp-for="ImageFile" class="form-control" />
+                        <span asp-validation-for="ImageFile" class="text-danger"></span>
                     </div>
 
                     <div class="mb-3">
@@ -67,15 +67,6 @@
                     <button type="button" id="add-question" class="btn btn-secondary mt-2">@localizer["AddQuestion"]</button>
                 </div>
             </div>
-@*             <div class="tab-pane fade" id="results" role="tabpanel" aria-labelledby="results-tab">
-                @{
-                    var formAnswers = _context.FormAnswers.Include(x => x.User).Where(x => x.FormId == Model.Id);
-                    await Html.PartialAsync("Partials/_ResultsTab", Model);
-                }
-            </div>
-            <div class="tab-pane fade" id="statistics" role="tabpanel" aria-labelledby="statistics-tab">
-                @await Html.PartialAsync("Partials/_StatisticsTab", Model)
-            </div> *@
         </div>
         <button type="submit" class="btn btn-primary mt-1">@localizer["Save"]</button>
     </form>

@@ -165,6 +165,9 @@
   <data name="CreateForm" xml:space="preserve">
     <value>Создать форму</value>
   </data>
+  <data name="CurrentImage" xml:space="preserve">
+    <value>Текущее изображение</value>
+  </data>
   <data name="Delete" xml:space="preserve">
     <value>Удалить пользователя</value>
   </data>
@@ -368,6 +371,12 @@
   </data>
   <data name="Unblock" xml:space="preserve">
     <value>Разблокировать пользователя</value>
+  </data>
+  <data name="UploadImage" xml:space="preserve">
+    <value>Загрузить изображение</value>
+  </data>
+  <data name="UploadNewImage" xml:space="preserve">
+    <value>Загрузить новое изображение</value>
   </data>
   <data name="UserAlreadyHasPassword" xml:space="preserve">
     <value>У пользователя уже есть пароль</value>

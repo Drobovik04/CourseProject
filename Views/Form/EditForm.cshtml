@@ -13,18 +13,18 @@
             <button class="nav-link" id="questions-tab" data-bs-toggle="tab" data-bs-target="#questions" type="button" role="tab" aria-controls="questions" aria-selected="false">@localizer["Questions"]</button>
         </li>
     </ul>
-    <form asp-action="EditForm" method="post">
+    <form asp-action="EditForm" method="post" enctype="multipart/form-data">
         <div class="tab-content mt-4">
             <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
                 <div>
                     <div class="mb-3">
                         <label asp-for="Id" class="form-label">@localizer["Id"]</label>
-                        <input asp-for="Id" class="form-control" disabled readonly value="@Model.Id"/>
+                        <input asp-for="Id" class="form-control" readonly value="@Model.Id"/>
                         <span asp-validation-for="Id" class="text-danger"></span>
                     </div>
                     <div class="mb-3">
                         <label asp-for="Author.UserName" class="form-label">@localizer["Author"]</label>
-                        <input asp-for="Author.UserName" class="form-control" disabled readonly value="@Model.Author.UserName" />
+                        <input asp-for="Author.UserName" class="form-control" readonly value="@Model.Author.UserName" />
                         <span asp-validation-for="Author.UserName" class="text-danger"></span>
                     </div>
                     <div class="mb-3">
@@ -40,9 +40,20 @@
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="ImageUrl" class="form-label">@localizer["ImageURL"]</label>
-                        <input asp-for="ImageUrl" class="form-control" />
-                        <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                        <label asp-for="CurrentImageUrl" class="form-label">@localizer["CurrentImage"]</label>
+                        @if (!string.IsNullOrEmpty(Model.CurrentImageUrl))
+                        {
+                            <div>
+                                <img src="@Model.CurrentImageUrl" alt="Current Image" class="img-fluid mb-2" style="max-height: 200px; object-fit: cover;" />
+                            </div>
+                        }
+                        <input type="hidden" asp-for="CurrentImageUrl" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="NewImageFile" class="form-label">@localizer["UploadNewImage"]</label>
+                        <input type="file" asp-for="NewImageFile" class="form-control" accept="image/*" />
+                        <span asp-validation-for="NewImageFile" class="text-danger"></span>
                     </div>
 
                     <div class="mb-3">
