@@ -236,6 +236,7 @@ namespace CourseProject.Controllers
         {
             var form = await _context.Forms
                 .Include(f => f.Questions.OrderBy(q => q.Order))
+                .Include(f => f.Author)
                 .Include(f => f.AllowedUsers)
                     .ThenInclude(au => au.User)
                 .Include(f => f.FormTags)
@@ -257,6 +258,7 @@ namespace CourseProject.Controllers
             var model = new FormUpdateViewModel
             {
                 Id = form.Id,
+                Author = form.Author,
                 Title = form.Title,
                 Description = form.Description,
                 ImageUrl = form.ImageUrl,
@@ -393,7 +395,11 @@ namespace CourseProject.Controllers
         [HttpGet]
         public async Task<IActionResult> Statistics(int id)
         {
-            var form = await _context.Forms.Include(f => f.Questions).Include(f => f.FormAnswers).ThenInclude(fa => fa.Answers).FirstOrDefaultAsync(f => f.Id == id);
+            var form = await _context.Forms
+                .Include(f => f.Questions)
+                .Include(f => f.FormAnswers)
+                    .ThenInclude(fa => fa.Answers)
+                .FirstOrDefaultAsync(f => f.Id == id);
             var currentUser = await _userManager.GetUserAsync(User);
             var isAdmin = await _userManager.IsInRoleAsync(currentUser, "Admin");
 
@@ -408,22 +414,54 @@ namespace CourseProject.Controllers
             }
 
 
-            var statistics = form.Questions.Select(q => new QuestionStatisticsViewModel
+            var statistics = form.Questions.Select(question =>
             {
-                Question = q,
-                AverageValue = q.Type == QuestionType.Integer ? form.FormAnswers
-                    .SelectMany(fa => fa.Answers.OfType<IntegerAnswer>())
-                    .Where(a => a.QuestionId == q.Id)
-                    .Select(a => (double)a.IntegerAnswerValue)
-                    .DefaultIfEmpty()
-                    .Average() : null,
-                MostFrequentAnswer = q.Type == QuestionType.SingleLineText ? form.FormAnswers
-                    .SelectMany(fa => fa.Answers.OfType<TextAnswer>())
-                    .Where(a => a.QuestionId == q.Id)
-                    .GroupBy(a => a.TextAnswerValue)
-                    .OrderByDescending(g => g.Count())
-                    .Select(g => g.Key)
-                    .FirstOrDefault() : null
+                var answers = form.FormAnswers
+                    .SelectMany(fa => fa.Answers)
+                    .Where(a => a.QuestionId == question.Id)
+                    .ToList();
+
+                var result = new QuestionStatisticsViewModel
+                {
+                    QuestionTitle = question.Title,
+                    QuestionType = question.Type
+                };
+
+                switch (question.Type)
+                {
+                    case QuestionType.Integer:
+                        var integerAnswers = answers.OfType<IntegerAnswer>().Select(a => a.IntegerAnswerValue).ToList();
+                        result.IntegerStats = integerAnswers.Any() ? new IntegerStatistics
+                        {
+                            Min = integerAnswers.Min(),
+                            Max = integerAnswers.Max(),
+                            Mean = CalculateMean(integerAnswers),
+                            Median = CalculateMedian(integerAnswers),
+                            StdDev = CalculateStandardDeviation(integerAnswers)
+                        } : null;
+                        break;
+
+                    case QuestionType.SingleLineText:
+                    case QuestionType.MultiLineText:
+                        var textAnswers = answers.OfType<TextAnswer>().Select(a => a.TextAnswerValue).ToList();
+                        result.TextStats = textAnswers.Any() ? new TextStatistics
+                        {
+                            MostFrequent = textAnswers.GroupBy(x => x)
+                                .OrderByDescending(g => g.Count())
+                                .FirstOrDefault()?.Key
+                        } : null;
+                        break;
+
+                    case QuestionType.Checkbox:
+                        var checkboxAnswers = answers.OfType<CheckboxAnswer>().Select(a => a.CheckboxAnswerValue).ToList();
+                        result.CheckboxStats = checkboxAnswers.Any() ? new CheckboxStatistics
+                        {
+                            SelectionPercentage = (checkboxAnswers.Count(x => x) / (double)checkboxAnswers.Count()) * 100
+                        } : null;
+                        break;
+                }
+
+                return result;
             }).ToList();
 
             return View(statistics);
@@ -505,6 +543,49 @@ namespace CourseProject.Controllers
             }
 
             return View(formAnswers);
+        }
+
+        private double CalculateMean(List<int> numbers)
+        {
+            Dictionary<int, double> xAndFreq = new Dictionary<int, double>();
+            for (int i = 0; i < numbers.Count; i++)
+            {
+                if (!xAndFreq.ContainsKey(numbers[i]))
+                {
+                    xAndFreq.Add(numbers[i], 1);
+                }
+                else
+                {
+                    xAndFreq[numbers[i]]++;
+                }
+            }
+
+            double mean = 0;
+            int count = numbers.Count;
+
+            foreach (var item in xAndFreq)
+            {
+                mean += item.Key * (item.Value / count);
+            }
+            return mean;
+        }
+        private double CalculateMedian(List<int> numbers)
+        {
+            var sorted = numbers.OrderBy(n => n).ToList();
+            int count = sorted.Count;
+
+            if (count % 2 == 0)
+            {
+                return (sorted[count / 2 - 1] + sorted[count / 2]) / 2.0;
+            }
+            return sorted[count / 2];
+        }
+
+        private double CalculateStandardDeviation(List<int> numbers)
+        {
+            var mean = CalculateMean(numbers);
+            var dispersion = CalculateMean(numbers.Select(x => x * x).ToList()) - (mean * mean);
+            return Math.Sqrt(dispersion);
         }
     }
 

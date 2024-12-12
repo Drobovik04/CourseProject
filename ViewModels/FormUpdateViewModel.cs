@@ -1,10 +1,12 @@
 ﻿using CourseProject.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace CourseProject.ViewModels
 {
     public class FormUpdateViewModel
     {
         public int Id { get; set; }
+        public IdentityUser Author { get; set; }
         public string Title { get; set; }
         public string? Description { get; set; }
         public string? ImageUrl { get; set; }

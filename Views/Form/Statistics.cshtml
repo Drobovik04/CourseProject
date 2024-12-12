@@ -1,25 +1,41 @@
-﻿@using CourseProject
-@using CourseProject.ViewModels
+﻿@using CourseProject.ViewModels
 @using Microsoft.Extensions.Localization
+@model List<QuestionStatisticsViewModel>
 @inject IStringLocalizer<SharedResources> localizer
-@model IEnumerable<QuestionStatisticsViewModel>
 
 <div class="container mt-5">
     <h2>@localizer["Statistics"]</h2>
-    <ul class="list-group">
-        @foreach (var stat in Model)
-        {
-            <li class="list-group-item">
-                <strong>@stat.Question.Title</strong>
-                @if (stat.AverageValue.HasValue)
+    <div class="list-group">
+        <div>
+            <h4>@localizer["QuestionsStatistics"]</h4>
+                @foreach (var stat in Model)
                 {
-                    <p>@localizer["Average"]: @stat.AverageValue.Value</p>
+                    <div class="list-group-item">
+                        <div class="mb-2">
+                            <label class="form-label fw-bold">@stat.QuestionTitle</label>
+                        </div>
+                        <div>
+                            @if (stat.QuestionType == QuestionType.Integer)
+                            {
+                                <ul>
+                                    <li>@localizer["Min"]: @(stat.IntegerStats?.Min)</li>
+                                    <li>@localizer["Max"]: @(stat.IntegerStats?.Max)</li>
+                                    <li>@localizer["Mean"]: @(stat.IntegerStats?.Mean)</li>
+                                    <li>@localizer["Median"]: @(stat.IntegerStats?.Median)</li>
+                                    <li>@localizer["StdDev"]: @(stat.IntegerStats?.StdDev)</li>
+                                </ul>
+                            }
+                            else if (stat.QuestionType == QuestionType.SingleLineText || stat.QuestionType == QuestionType.MultiLineText)
+                            {
+                                <p>@localizer["MostFrequentAnswer"]: @(stat.TextStats?.MostFrequent)</p>
+                            }
+                            else if (stat.QuestionType == QuestionType.Checkbox)
+                            {
+                                <p>@localizer["SelectionPercentage"]: @(stat.CheckboxStats?.SelectionPercentage)%</p>
+                            }
+                        </div>
+                    </div>
                 }
-                @if (!string.IsNullOrEmpty(stat.MostFrequentAnswer))
-                {
-                    <p>@localizer["MostFrequentAnswer"]: @stat.MostFrequentAnswer</p>
-                }
-            </li>
-        }
-    </ul>
+        </div>
+    </div>
 </div>
