@@ -1,10 +1,14 @@
 using CourseProject.Database;
+using CourseProject.Hubs;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.WebEncoders;
 using System.Globalization;
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
 
 namespace CourseProject
 {
@@ -43,6 +47,13 @@ namespace CourseProject
                 options.SupportedUICultures = supportedCultures;
             });
 
+            builder.Services.Configure<WebEncoderOptions>(options =>
+            {
+                options.TextEncoderSettings = new TextEncoderSettings(UnicodeRanges.All);
+            });
+
+            builder.Services.AddSignalR();
+
             var app = builder.Build();
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -61,9 +72,11 @@ namespace CourseProject
 
             app.UseAuthorization();
 
+            app.MapHub<CommentHub>("/CommentHub");
+
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Form}/{action=Index}/{searchQuery?}");
+                pattern: "{controller=Template}/{action=Index}/{searchQuery?}");
 
             using (var scope = app.Services.CreateScope())
             {

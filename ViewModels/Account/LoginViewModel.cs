@@ -1,7 +1,7 @@
 ﻿using CourseProject.Attributes;
 using System.ComponentModel.DataAnnotations;
 
-namespace CourseProject.ViewModels
+namespace CourseProject.ViewModels.Account
 {
     public class LoginViewModel
     {

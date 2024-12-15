@@ -123,6 +123,9 @@
   <data name="Actions" xml:space="preserve">
     <value>Действия</value>
   </data>
+  <data name="AddComment" xml:space="preserve">
+    <value>Добавить комментарий</value>
+  </data>
   <data name="AddQuestion" xml:space="preserve">
     <value>Добавить вопрос</value>
   </data>
@@ -135,11 +138,23 @@
   <data name="AnsweredForms" xml:space="preserve">
     <value>Ответы</value>
   </data>
+  <data name="AnsweredTemplates" xml:space="preserve">
+    <value>Заполненные формы</value>
+  </data>
   <data name="Answers" xml:space="preserve">
     <value>Ответы</value>
   </data>
+  <data name="AreYouSure?" xml:space="preserve">
+    <value>Вы уверены?</value>
+  </data>
   <data name="Block" xml:space="preserve">
     <value>Заблокировать пользователя</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Отменить</value>
+  </data>
+  <data name="CannotBeEmpty" xml:space="preserve">
+    <value>Не может быть пустым</value>
   </data>
   <data name="Checkbox" xml:space="preserve">
     <value>Чекбокс</value>
@@ -150,11 +165,20 @@
   <data name="Comma-SeparatedUserNames" xml:space="preserve">
     <value>Разделенные запятой пользователи</value>
   </data>
+  <data name="Comments" xml:space="preserve">
+    <value>Комментарии</value>
+  </data>
   <data name="Compare" xml:space="preserve">
     <value>Поля {0} и {1} должны совпадать</value>
   </data>
   <data name="ConfirmPassword" xml:space="preserve">
     <value>Подтверждение пароля</value>
+  </data>
+  <data name="CreatedAnswers" xml:space="preserve">
+    <value>Созданные ответы</value>
+  </data>
+  <data name="CreatedAt" xml:space="preserve">
+    <value>Создано</value>
   </data>
   <data name="CreatedBy" xml:space="preserve">
     <value>Создано</value>
@@ -162,20 +186,32 @@
   <data name="CreatedForms" xml:space="preserve">
     <value>Созданные формы</value>
   </data>
+  <data name="CreatedTemplates" xml:space="preserve">
+    <value>Созданные шаблоны</value>
+  </data>
   <data name="CreateForm" xml:space="preserve">
     <value>Создать форму</value>
+  </data>
+  <data name="CreateTemplate" xml:space="preserve">
+    <value>Создать шаблон</value>
   </data>
   <data name="CurrentImage" xml:space="preserve">
     <value>Текущее изображение</value>
   </data>
   <data name="Delete" xml:space="preserve">
-    <value>Удалить пользователя</value>
+    <value>Удалить</value>
   </data>
   <data name="DeleteAnswer" xml:space="preserve">
     <value>Удалить ответ</value>
   </data>
   <data name="DeleteForm" xml:space="preserve">
     <value>Удалить форму</value>
+  </data>
+  <data name="DeleteTemplate" xml:space="preserve">
+    <value>Удалить шаблон</value>
+  </data>
+  <data name="DeleteUser" xml:space="preserve">
+    <value>Удалить пользователя</value>
   </data>
   <data name="Description" xml:space="preserve">
     <value>Описание</value>
@@ -186,8 +222,14 @@
   <data name="DuplicateUserName" xml:space="preserve">
     <value>Логин {0} уже занят</value>
   </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Изменить</value>
+  </data>
   <data name="EditForm" xml:space="preserve">
     <value>Изменить форму</value>
+  </data>
+  <data name="EditTemplate" xml:space="preserve">
+    <value>Изменить шаблон</value>
   </data>
   <data name="Email" xml:space="preserve">
     <value>Электронная почта</value>
@@ -197,6 +239,24 @@
   </data>
   <data name="English" xml:space="preserve">
     <value>Английский</value>
+  </data>
+  <data name="ErrorDelete" xml:space="preserve">
+    <value>Ошиба при удалении</value>
+  </data>
+  <data name="ErrorDeleteComment" xml:space="preserve">
+    <value>Появилась ошибка при удалении комментария</value>
+  </data>
+  <data name="ErrorEdit" xml:space="preserve">
+    <value>Появилась ошибка при редактировании</value>
+  </data>
+  <data name="ErrorProcessingLike" xml:space="preserve">
+    <value>Ошибка при обработке лайка</value>
+  </data>
+  <data name="ErrorSaveComment" xml:space="preserve">
+    <value>Появилась ошибка при сохранении комментария</value>
+  </data>
+  <data name="FileNotSelected" xml:space="preserve">
+    <value>Файл не выбра</value>
   </data>
   <data name="FillAnswers" xml:space="preserve">
     <value>Пожалуйста, введите ответы на вопросы</value>
@@ -227,6 +287,12 @@
   </data>
   <data name="IsLockedOut" xml:space="preserve">
     <value>Заблокирован?</value>
+  </data>
+  <data name="Like" xml:space="preserve">
+    <value>Нравится</value>
+  </data>
+  <data name="LikesCount" xml:space="preserve">
+    <value>Лайков</value>
   </data>
   <data name="Login" xml:space="preserve">
     <value>Вход</value>
@@ -269,6 +335,12 @@
   </data>
   <data name="NoData" xml:space="preserve">
     <value>Нет данных</value>
+  </data>
+  <data name="NoPermission" xml:space="preserve">
+    <value>У вас нету права на выполнение операции</value>
+  </data>
+  <data name="NoTopicSelected" xml:space="preserve">
+    <value>Тема не выбрана</value>
   </data>
   <data name="Number" xml:space="preserve">
     <value>Число</value>
@@ -336,8 +408,14 @@
   <data name="Search" xml:space="preserve">
     <value>Поиск</value>
   </data>
+  <data name="SelectFile" xml:space="preserve">
+    <value>Выберите файл</value>
+  </data>
   <data name="SelectionPercentage" xml:space="preserve">
     <value>Процент выбора</value>
+  </data>
+  <data name="SelectTopic" xml:space="preserve">
+    <value>Выберите тему</value>
   </data>
   <data name="ShowInResults" xml:space="preserve">
     <value>Показывать в результатах</value>
@@ -366,11 +444,20 @@
   <data name="Tags" xml:space="preserve">
     <value>Теги</value>
   </data>
+  <data name="Templates" xml:space="preserve">
+    <value>Шаблоны</value>
+  </data>
   <data name="Title" xml:space="preserve">
     <value>Заголовок</value>
   </data>
+  <data name="Topic" xml:space="preserve">
+    <value>Тема</value>
+  </data>
   <data name="Unblock" xml:space="preserve">
     <value>Разблокировать пользователя</value>
+  </data>
+  <data name="Unlike" xml:space="preserve">
+    <value>Не нравится</value>
   </data>
   <data name="UploadImage" xml:space="preserve">
     <value>Загрузить изображение</value>

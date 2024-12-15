@@ -1,6 +1,6 @@
 ﻿using CourseProject;
 using CourseProject.Database;
-using CourseProject.ViewModels;
+using CourseProject.ViewModels.Account;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -40,7 +40,7 @@ public class AccountController : Controller
 
         if (result.Succeeded)
         {
-            return RedirectToAction("Index", "Form");
+            return RedirectToAction("Index", "Template");
         }
 
         ModelState.AddModelError("", _localizer["InvalidLoginAttempt"]);
@@ -63,7 +63,7 @@ public class AccountController : Controller
         {
             await _userManager.AddToRoleAsync(user, "User");
             await _signInManager.SignInAsync(user, isPersistent: false);
-            return RedirectToAction("Index", "Form");
+            return RedirectToAction("Index", "Template");
         }
 
         foreach (var error in result.Errors)
@@ -79,7 +79,7 @@ public class AccountController : Controller
     public async Task<IActionResult> Logout()
     {
         await _signInManager.SignOutAsync();
-        return RedirectToAction("Index", "Home");
+        return RedirectToAction("Index", "Template");
     }
 
     [HttpGet]
@@ -87,14 +87,14 @@ public class AccountController : Controller
     {
         var currentUser = await _userManager.GetUserAsync(User);
 
-        var createdForms = await _context.Forms.Where(f => f.Author.Id == currentUser.Id).ToListAsync();
+        var createdTemplates = await _context.Templates.Where(x => x.Author.Id == currentUser.Id).ToListAsync();
 
-        var answeredForms = await _context.FormAnswers.Where(fa => fa.UserId == currentUser.Id).Include(fa => fa.Form).ToListAsync();
+        var answeredTemplates = await _context.Forms.Where(fa => fa.UserId == currentUser.Id).Include(x => x.Template).ToListAsync();
 
         var model = new ProfileViewModel
         {
-            CreatedForms = createdForms,
-            AnsweredForms = answeredForms
+            CreatedTemplates = createdTemplates,
+            AnsweredTemplates = answeredTemplates
         };
 
         return View(model);

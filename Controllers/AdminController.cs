@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 
 namespace CourseProject.Controllers
 {
@@ -11,11 +12,13 @@ namespace CourseProject.Controllers
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IStringLocalizer<SharedResources> _localizer;
 
-        public AdminController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
+        public AdminController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, IStringLocalizer<SharedResources> localizer)
         {
             _userManager = userManager;
             _roleManager = roleManager;
+            _localizer = localizer;
         }
 
         public async Task<IActionResult> Index(string sortColumn, string sortOrder)
@@ -106,7 +109,7 @@ namespace CourseProject.Controllers
                 return RedirectToAction("Index");
             }
 
-            ModelState.AddModelError("", "Error deleting user");
+            ModelState.AddModelError("", _localizer["ErrorDelete"]) ;
             return RedirectToAction("Index");
         }
     }

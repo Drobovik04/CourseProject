@@ -1,34 +1,67 @@
 ﻿@using CourseProject
 @using CourseProject.ViewModels
+@using CourseProject.ViewModels.Form
 @using Microsoft.Extensions.Localization
+@using System.Security.Claims
 @inject IStringLocalizer<SharedResources> localizer
-@model FormAnswer
+@model ViewAnswerViewModel
 
 <div class="container mt-5">
-    <h2>@Model.Form.Title</h2>
+    <h2>@Model.Template.Title</h2>
     <p><strong>@localizer["SubmittedAt"]:</strong> @Model.SubmittedAt.ToString("g")</p>
-    <form method="post" asp-controller="Form" asp-action="DeleteAnswer" asp-route-id="@Model.Id" asp-route-returnUrl="@ViewData["returnUrl"]" class="mt-1 mb-1">
-        <button type="submit" class="btn btn-danger">@localizer["DeleteAnswer"]</button>
-    </form>
+    <div class="d-inline-block">
+        <form method="post" asp-controller="Form" asp-action="DeleteAnswer" asp-route-id="@Model.Form.Id" asp-route-returnUrl="@ViewData["returnUrl"]" class="mt-1 mb-3 d-inline-block">
+            <button type="submit" class="btn btn-danger">@localizer["DeleteAnswer"]</button>
+        </form>
+        @if (User.IsInRole("Admin") || Model.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier))
+        {
+            <button id="edit-btn" class="btn btn-primary" style="display:inline-block;">@localizer["Edit"]</button>
+        }
+        <button id="save-btn" class="btn btn-success" style="display:none;">@localizer["Save"]</button>
+        <button id="cancel-btn" class="btn btn-secondary" style="display:none;">@localizer["Cancel"]</button>
+    </div>
     <h3>@localizer["Answers"]</h3>
-    <div class="list-group">
-        @foreach (var answer in Model.Answers)
+    <div id="answers-container" data-form-Id="@Model.Form.Id" class="list-group">
+        @foreach (var pair in Model.QuestionAnswerMap)
         {
             <div class="list-group-item">
                 <div class="mb-2">
-                    <label class="form-label fw-bold">@answer.Question.Title</label>
+                    <label class="form-label fw-bold">@pair.Question.Title</label>
                 </div>
                 <div>
-                    @switch (answer)
+                    @switch (pair.Answer)
                     {
                         case TextAnswer textAnswer:
-                            <textarea class="form-control" disabled readonly>@textAnswer.TextAnswerValue</textarea>
+                            <textarea data-id="@textAnswer.Id" data-type="TextAnswer" class="form-control" disabled readonly>@textAnswer.TextAnswerValue</textarea>
                             break;
                         case IntegerAnswer integerAnswer:
-                            <input type="number" class="form-control" value="@integerAnswer.IntegerAnswerValue" disabled readonly />
+                            <input data-id="@integerAnswer.Id" data-type="Integer" type="number" class="form-control" value="@integerAnswer.IntegerAnswerValue" disabled readonly />
                             break;
                         case CheckboxAnswer checkboxAnswer:
-                            <i class="@(checkboxAnswer.CheckboxAnswerValue ? "fa-solid fa-check" : "fa-solid fa-xmark")"></i>
+                            if (checkboxAnswer.CheckboxAnswerValue == false)
+                            {
+                                <input data-id="@checkboxAnswer.Id" data-type="Checkbox" type="checkbox" class="form-check-input mt-0" value="false" disabled readonly />
+                            }
+                            else
+                            {
+                                <input data-id="@checkboxAnswer.Id" data-type="Checkbox" type="checkbox" class="form-check-input mt-0" value="false" checked disabled readonly />
+                            }
+                            break;
+                        default:
+                            {
+                                switch (pair.Question.Type)
+                                {
+                                    case QuestionType.SingleLineText | QuestionType.MultiLineText:
+                                        <textarea data-question-id="@pair.Question.Id" data-type="TextAnswer" class="form-control" disabled readonly></textarea>
+                                        break;
+                                    case QuestionType.Integer:
+                                        <input data-question-id="@pair.Question.Id" data-type="Integer" type="number" class="form-control" disabled readonly />
+                                        break;
+                                    case QuestionType.Checkbox:
+                                        <input data-question-id="@pair.Question.Id" data-type="Checkbox" type="checkbox" class="form-check-input mt-0" value="false" disabled readonly />
+                                        break;
+                                }
+                            }
                             break;
                     }
                 </div>
@@ -36,3 +69,105 @@
         }
     </div>
 </div>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const editBtn = document.getElementById("edit-btn");
+    const saveBtn = document.getElementById("save-btn");
+    const cancelBtn = document.getElementById("cancel-btn");
+    const answersContainer = document.getElementById("answers-container");
+
+    let originalAnswers = {};
+
+    function toggleEditMode(event) {
+        event.preventDefault();
+        editBtn.style.display = "none";
+        saveBtn.style.display = "inline-block";
+        cancelBtn.style.display = "inline-block";
+
+        answersContainer.querySelectorAll("textarea, input").forEach(input => {
+            input.disabled = false;
+            input.readOnly = false;
+
+            if (input.type === "checkbox") {
+                input.readOnly = false;
+            }
+
+            originalAnswers[input.dataset.id] = input.type === "checkbox" ? input.checked : input.value;
+        });
+    }
+
+    function cancelEdit(event) {
+        event.preventDefault();
+        editBtn.style.display = "inline-block";
+        saveBtn.style.display = "none";
+        cancelBtn.style.display = "none";
+
+        answersContainer.querySelectorAll("textarea, input").forEach(input => {
+            if (input.type === "checkbox") {
+                input.checked = originalAnswers[input.dataset.id];
+            } else {
+                input.value = originalAnswers[input.dataset.id];
+            }
+            input.disabled = true;
+            input.readOnly = true;
+        });
+    }
+
+    async function saveChanges(event) {
+        event.preventDefault();
+        const updatedAnswers = [];
+        const newAnswers = [];
+
+        answersContainer.querySelectorAll("textarea, input").forEach(input => {
+            if (input.dataset.id) {
+                updatedAnswers.push({
+                    id: input.dataset.id,
+                    type: input.dataset.type,
+                    value: input.type === "checkbox" ? input.checked : input.value,
+                });
+            }
+        });
+
+        answersContainer.querySelectorAll("textarea, input").forEach(input => {
+            if (input.dataset.questionId) {
+                newAnswers.push({
+                    questionId: input.dataset.questionId,
+                    type: input.dataset.type,
+                    value: input.type === "checkbox" ? input.checked : input.value,
+                });
+            }
+        });
+
+        const response = await fetch(`/Form/UpdateAnswer`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                formId: answersContainer.dataset.formId,
+                answers: updatedAnswers,
+                newAnswers: newAnswers
+            }),
+        });
+
+        if (response.ok) {
+            location.reload();
+            // answersContainer.querySelectorAll("textarea, input").forEach(input => {
+            //     originalAnswers[input.dataset.id] = input.type === "checkbox" ? input.checked : input.value;
+            //     input.disabled = true;
+            //     input.readOnly = true;
+            // });
+            // editBtn.style.display = "inline-block";
+            // saveBtn.style.display = "none";
+            // cancelBtn.style.display = "none";
+        } 
+        else {
+            alert('@localizer["ErrorEdit"]');
+        }
+    }
+
+    editBtn.addEventListener("click", toggleEditMode);
+    saveBtn.addEventListener("click", saveChanges);
+    cancelBtn.addEventListener("click", cancelEdit);
+});
+</script>

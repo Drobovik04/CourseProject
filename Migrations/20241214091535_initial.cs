@@ -170,23 +170,23 @@ namespace CourseProject.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Forms",
+                name: "Templates",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AccessType = table.Column<int>(type: "int", nullable: false),
                     AuthorId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Forms", x => x.Id);
+                    table.PrimaryKey("PK_Templates", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Forms_AspNetUsers_AuthorId",
+                        name: "FK_Templates_AspNetUsers_AuthorId",
                         column: x => x.AuthorId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
@@ -198,7 +198,7 @@ namespace CourseProject.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FormId = table.Column<int>(type: "int", nullable: false),
+                    TemplateId = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -213,84 +213,36 @@ namespace CourseProject.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Comments_Forms_FormId",
-                        column: x => x.FormId,
-                        principalTable: "Forms",
+                        name: "FK_Comments_Templates_TemplateId",
+                        column: x => x.TemplateId,
+                        principalTable: "Templates",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "FormAccesses",
-                columns: table => new
-                {
-                    FormId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_FormAccesses", x => new { x.FormId, x.UserId });
-                    table.ForeignKey(
-                        name: "FK_FormAccesses_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_FormAccesses_Forms_FormId",
-                        column: x => x.FormId,
-                        principalTable: "Forms",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "FormAnswers",
+                name: "Forms",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FormId = table.Column<int>(type: "int", nullable: false),
+                    TemplateId = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     SubmittedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FormAnswers", x => x.Id);
+                    table.PrimaryKey("PK_Forms", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_FormAnswers_AspNetUsers_UserId",
+                        name: "FK_Forms_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_FormAnswers_Forms_FormId",
-                        column: x => x.FormId,
-                        principalTable: "Forms",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "FormTags",
-                columns: table => new
-                {
-                    FormId = table.Column<int>(type: "int", nullable: false),
-                    TagId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_FormTags", x => new { x.FormId, x.TagId });
-                    table.ForeignKey(
-                        name: "FK_FormTags_Forms_FormId",
-                        column: x => x.FormId,
-                        principalTable: "Forms",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_FormTags_Tags_TagId",
-                        column: x => x.TagId,
-                        principalTable: "Tags",
+                        name: "FK_Forms_Templates_TemplateId",
+                        column: x => x.TemplateId,
+                        principalTable: "Templates",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -301,7 +253,7 @@ namespace CourseProject.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FormId = table.Column<int>(type: "int", nullable: false),
+                    TemplateId = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
@@ -314,9 +266,9 @@ namespace CourseProject.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Likes_Forms_FormId",
-                        column: x => x.FormId,
-                        principalTable: "Forms",
+                        name: "FK_Likes_Templates_TemplateId",
+                        column: x => x.TemplateId,
+                        principalTable: "Templates",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -330,15 +282,64 @@ namespace CourseProject.Migrations
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Type = table.Column<int>(type: "int", nullable: false),
                     ShowInResults = table.Column<bool>(type: "bit", nullable: false),
-                    FormId = table.Column<int>(type: "int", nullable: false)
+                    TemplateId = table.Column<int>(type: "int", nullable: false),
+                    Order = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Questions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Questions_Forms_FormId",
-                        column: x => x.FormId,
-                        principalTable: "Forms",
+                        name: "FK_Questions_Templates_TemplateId",
+                        column: x => x.TemplateId,
+                        principalTable: "Templates",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TemplateAccesses",
+                columns: table => new
+                {
+                    TemplateId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TemplateAccesses", x => new { x.TemplateId, x.UserId });
+                    table.ForeignKey(
+                        name: "FK_TemplateAccesses_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TemplateAccesses_Templates_TemplateId",
+                        column: x => x.TemplateId,
+                        principalTable: "Templates",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TemplateTags",
+                columns: table => new
+                {
+                    TemplateId = table.Column<int>(type: "int", nullable: false),
+                    TagId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TemplateTags", x => new { x.TemplateId, x.TagId });
+                    table.ForeignKey(
+                        name: "FK_TemplateTags_Tags_TagId",
+                        column: x => x.TagId,
+                        principalTable: "Tags",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TemplateTags_Templates_TemplateId",
+                        column: x => x.TemplateId,
+                        principalTable: "Templates",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -349,7 +350,7 @@ namespace CourseProject.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FormAnswerId = table.Column<int>(type: "int", nullable: false),
+                    FormId = table.Column<int>(type: "int", nullable: false),
                     QuestionId = table.Column<int>(type: "int", nullable: false),
                     AnswerType = table.Column<string>(type: "nvarchar(8)", maxLength: 8, nullable: false),
                     CheckboxAnswerValue = table.Column<bool>(type: "bit", nullable: true),
@@ -360,9 +361,9 @@ namespace CourseProject.Migrations
                 {
                     table.PrimaryKey("PK_Answers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Answers_FormAnswers_FormAnswerId",
-                        column: x => x.FormAnswerId,
-                        principalTable: "FormAnswers",
+                        name: "FK_Answers_Forms_FormId",
+                        column: x => x.FormId,
+                        principalTable: "Forms",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -374,9 +375,9 @@ namespace CourseProject.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Answers_FormAnswerId",
+                name: "IX_Answers_FormId",
                 table: "Answers",
-                column: "FormAnswerId");
+                column: "FormId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Answers_QuestionId",
@@ -423,9 +424,9 @@ namespace CourseProject.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comments_FormId",
+                name: "IX_Comments_TemplateId",
                 table: "Comments",
-                column: "FormId");
+                column: "TemplateId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Comments_UserId",
@@ -433,34 +434,19 @@ namespace CourseProject.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FormAccesses_UserId",
-                table: "FormAccesses",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_FormAnswers_FormId",
-                table: "FormAnswers",
-                column: "FormId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_FormAnswers_UserId",
-                table: "FormAnswers",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Forms_AuthorId",
+                name: "IX_Forms_TemplateId",
                 table: "Forms",
-                column: "AuthorId");
+                column: "TemplateId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FormTags_TagId",
-                table: "FormTags",
-                column: "TagId");
+                name: "IX_Forms_UserId",
+                table: "Forms",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Likes_FormId",
+                name: "IX_Likes_TemplateId",
                 table: "Likes",
-                column: "FormId");
+                column: "TemplateId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Likes_UserId",
@@ -468,9 +454,24 @@ namespace CourseProject.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Questions_FormId",
+                name: "IX_Questions_TemplateId",
                 table: "Questions",
-                column: "FormId");
+                column: "TemplateId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TemplateAccesses_UserId",
+                table: "TemplateAccesses",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Templates_AuthorId",
+                table: "Templates",
+                column: "AuthorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TemplateTags_TagId",
+                table: "TemplateTags",
+                column: "TagId");
         }
 
         /// <inheritdoc />
@@ -498,16 +499,16 @@ namespace CourseProject.Migrations
                 name: "Comments");
 
             migrationBuilder.DropTable(
-                name: "FormAccesses");
-
-            migrationBuilder.DropTable(
-                name: "FormTags");
-
-            migrationBuilder.DropTable(
                 name: "Likes");
 
             migrationBuilder.DropTable(
-                name: "FormAnswers");
+                name: "TemplateAccesses");
+
+            migrationBuilder.DropTable(
+                name: "TemplateTags");
+
+            migrationBuilder.DropTable(
+                name: "Forms");
 
             migrationBuilder.DropTable(
                 name: "Questions");
@@ -519,7 +520,7 @@ namespace CourseProject.Migrations
                 name: "Tags");
 
             migrationBuilder.DropTable(
-                name: "Forms");
+                name: "Templates");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

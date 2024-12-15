@@ -1,11 +1,10 @@
-﻿@using CourseProject
-@using CourseProject.Models
+﻿@using CourseProject.Models
 @using Microsoft.Extensions.Localization
+@model IEnumerable<Form>
 @inject IStringLocalizer<SharedResources> localizer
-@model IEnumerable<FormAnswer>
 
 <div class="container mt-5">
-    <h2>@localizer["Statistics"]</h2>
+    <h2>@localizer["Answers"]</h2>
 
     <div class="table-responsive">
         <table class="table table-striped">
@@ -22,7 +21,7 @@
                     foreach (var answer in Model)
                     {
                         <tr>
-                            <td>@(answer.User?.UserName)</td>
+                            <td>@answer.User?.UserName</td>
                             <td>@answer.SubmittedAt.ToString("g")</td>
                             <td>
                                 <a asp-controller="Form" asp-action="ViewAnswer" asp-route-id="@answer.Id" class="btn btn-primary btn-sm">

@@ -3,7 +3,7 @@ using Microsoft.Extensions.Localization;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 
-namespace CourseProject.ViewModels
+namespace CourseProject.ViewModels.Account
 {
     public class RegisterViewModel
     {

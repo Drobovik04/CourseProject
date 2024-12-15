@@ -9,7 +9,7 @@
     <p>@localizer["FillAnswers"]</p>
 
     <form method="post" asp-action="SubmitForm">
-        <input type="hidden" name="FormId" value="@Model.FormId" />
+        <input type="hidden" name="TemplateId" value="@Model.TemplateId" />
 
         @foreach (var question in Model.Questions)
         {

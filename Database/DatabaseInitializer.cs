@@ -50,6 +50,18 @@ namespace CourseProject.Database
                 }
             }
 
+            if (!context.Topics.Any())
+            {
+                context.Topics.AddRange(
+                    new Topic { Name = "Education" },
+                    new Topic { Name = "Health" },
+                    new Topic { Name = "Technology" },
+                    new Topic { Name = "Science" }
+                );
+
+                await context.SaveChangesAsync();
+            }
+
             await context.SaveChangesAsync();
         }
     }

@@ -18,20 +18,20 @@
                             @if (stat.QuestionType == QuestionType.Integer)
                             {
                                 <ul>
-                                    <li>@localizer["Min"]: @(stat.IntegerStats?.Min)</li>
-                                    <li>@localizer["Max"]: @(stat.IntegerStats?.Max)</li>
-                                    <li>@localizer["Mean"]: @(stat.IntegerStats?.Mean)</li>
-                                    <li>@localizer["Median"]: @(stat.IntegerStats?.Median)</li>
-                                    <li>@localizer["StdDev"]: @(stat.IntegerStats?.StdDev)</li>
+                                    <li>@localizer["Min"]: @(stat.IntegerStats != null ? stat.IntegerStats?.Min : localizer["NoData"])</li>
+                                    <li>@localizer["Max"]: @(stat.IntegerStats != null ? stat.IntegerStats?.Max : localizer["NoData"])</li>
+                                    <li>@localizer["Mean"]: @(stat.IntegerStats != null ? stat.IntegerStats?.Mean : localizer["NoData"])</li>
+                                    <li>@localizer["Median"]: @(stat.IntegerStats != null ? stat.IntegerStats?.Median : localizer["NoData"])</li>
+                                    <li>@localizer["StdDev"]: @(stat.IntegerStats != null ? stat.IntegerStats?.StdDev : localizer["NoData"])</li>
                                 </ul>
                             }
                             else if (stat.QuestionType == QuestionType.SingleLineText || stat.QuestionType == QuestionType.MultiLineText)
                             {
-                                <p>@localizer["MostFrequentAnswer"]: @(stat.TextStats?.MostFrequent)</p>
+                                <p>@localizer["MostFrequentAnswer"]: @(stat.TextStats != null ? stat.TextStats?.MostFrequent : localizer["NoData"])</p>
                             }
                             else if (stat.QuestionType == QuestionType.Checkbox)
                             {
-                                <p>@localizer["SelectionPercentage"]: @(stat.CheckboxStats?.SelectionPercentage)%</p>
+                                <p>@localizer["SelectionPercentage"]: @(stat.CheckboxStats!=null?stat.CheckboxStats.SelectionPercentage + " %":"")</p>
                             }
                         </div>
                     </div>

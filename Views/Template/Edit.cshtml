@@ -1,0 +1,434 @@
+﻿@using CourseProject.ViewModels
+@using CourseProject.ViewModels.Template
+@using Microsoft.Extensions.Localization
+@using System.Globalization
+@model TemplateUpdateViewModel
+@inject IStringLocalizer<SharedResources> localizer
+
+<div class="container mt-5">
+    <h2>@localizer["EditTemplate"]</h2>
+    <ul class="nav nav-tabs" id="formTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="general-tab" data-bs-toggle="tab" data-bs-target="#general" type="button" role="tab" aria-controls="general" aria-selected="true">@localizer["General"]</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="questions-tab" data-bs-toggle="tab" data-bs-target="#questions" type="button" role="tab" aria-controls="questions" aria-selected="false">@localizer["Questions"]</button>
+        </li>
+    </ul>
+    <form asp-action="Edit" method="post" enctype="multipart/form-data">
+        <div class="tab-content mt-4">
+            <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
+                <div>
+                    <div class="mb-3">
+                        <label asp-for="Id" class="form-label">@localizer["Id"]</label>
+                        <input asp-for="Id" class="form-control" readonly value="@Model.Id"/>
+                        <span asp-validation-for="Id" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Author.UserName" class="form-label">@localizer["Author"]</label>
+                        <input asp-for="Author.UserName" class="form-control" readonly value="@Model.Author.UserName" />
+                        <span asp-validation-for="Author.UserName" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Title" class="form-label">@localizer["Title"]</label>
+                        <input asp-for="Title" class="form-control" />
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label">@localizer["Description"]</label>
+                        <textarea asp-for="Description" id="description" class="form-control"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="CurrentImageUrl" class="form-label">@localizer["CurrentImage"]</label>
+                        @if (!string.IsNullOrEmpty(Model.CurrentImageUrl))
+                        {
+                            <div>
+                                <img src="@Model.CurrentImageUrl" alt="Current Image" class="img-fluid mb-2" style="max-height: 200px; object-fit: cover;" />
+                            </div>
+                        }
+                        <input type="hidden" asp-for="CurrentImageUrl" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="NewImageFile" class="form-label">@localizer["UploadNewImage"]</label>
+                        <input type="file" asp-for="NewImageFile" class="form-control" accept="image/*" />
+                        <span asp-validation-for="NewImageFile" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="TopicId" class="form-label">@localizer["Topic"]</label>
+                        <select asp-for="TopicId" class="form-select">
+                            <option value="">@localizer["SelectTopic"]</option>
+                            @foreach (var topic in Model.Topics)
+                            {
+                                if (Model.TopicId == topic.Id)
+                                {
+                                    <option value="@topic.Id" selected>@topic.Name</option>
+                                }
+                                else
+                                {
+                                    <option value="@topic.Id">@topic.Name</option>
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="TopicId" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Tags" class="form-label">@localizer["Tags"]</label>
+                        <input asp-for="Tags" id="tags-input" class="form-control" placeholder="@localizer["Comma-SeparatedTags"]" value="@string.Join(", ", Model.Tags)" />
+                        <div id="tags-dropdown" class="dropdown-menu" style="display: none;"></div>
+                        <span asp-validation-for="Tags" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="AccessType" class="form-label">@localizer["AccessType"]</label>
+                        <select asp-for="AccessType" class="form-select">
+                            @if (Model.AccessType == AccessType.Public)
+                            {
+                                <option selected value="Public">@localizer["Public"]</option>
+                            }
+                            else
+                            {
+                                <option value="Public">@localizer["Public"]</option>
+                            }
+                            @if (Model.AccessType == AccessType.Restricted)
+                            {
+                                <option selected value="Restricted">@localizer["Restricted"]</option>
+                            }
+                            else
+                            {
+                                <option value="Restricted">@localizer["Restricted"]</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label>@localizer["AllowedUsers"]</label>
+                        <input type="text" asp-for="AllowedUserNames" id="users-input" class="form-control" placeholder="@localizer["Comma-SeparatedUserNames"]" value="@string.Join(", ", Model.AllowedUserNames)" />
+                        <div id="users-dropdown" class="dropdown-menu" style="display: none;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="questions" role="tabpanel" aria-labelledby="questions-tab">
+                <div>
+                    <h4>@localizer["Questions"]</h4>
+                    <ul id="questions-container" class="list-group">
+                        @foreach (var item in Model.Questions.OrderBy(x => x.Order).Select((q, i) => new {i, q}))
+                        {
+                            <li class="list-group-item d-flex align-items-center" data-index="@item.i" draggable="true">
+                                <div class="flex-grow-1">
+                                    <input type="hidden" name="Questions[@item.i].Id" value="@item.q.Id" />
+                                    <input type="text" name="Questions[@item.i].Title" class="form-control mb-2" placeholder="@localizer["QuestionText"]" value="@item.q.Title" />
+                                    <input type="hidden" name="Questions[@item.i].Order" value="@item.i" />
+                                    <select name="Questions[@item.i].Type" class="form-select">
+                                        @if (item.q.Type == QuestionType.SingleLineText)
+                                        {
+                                            <option selected value="SingleLineText">@localizer["SingleLineText"]</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="SingleLineText">@localizer["SingleLineText"]</option>
+                                        }
+                                        @if (item.q.Type == QuestionType.MultiLineText)
+                                        {
+                                            <option selected value="MultiLineText">@localizer["MultiLineText"]</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="MultiLineText">@localizer["MultiLineText"]</option>
+                                        }
+                                        @if (item.q.Type == QuestionType.Checkbox)
+                                        {
+                                            <option selected value="Checkbox">@localizer["Checkbox"]</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="Checkbox">@localizer["Checkbox"]</option>
+                                        }
+                                        @if (item.q.Type == QuestionType.Integer)
+                                        {
+                                            <option selected value="Integer">@localizer["Number"]</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="Integer">@localizer["Number"]</option>
+                                        }
+                                    </select>
+                                    <div class="form-check">
+                                        @if (item.q.ShowInResults)
+                                        {
+                                            <input type="checkbox" name="Questions[@item.i].ShowInResults" class="form-check-input" value="true" checked />
+                                        }
+                                        else
+                                        {
+                                            <input type="checkbox" name="Questions[@item.i].ShowInResults" class="form-check-input" value="true" />
+                                        }
+                                        <input type="hidden" name="Questions[@item.i].ShowInResults" value="false" />
+                                        <label class="form-check-label">@localizer["ShowInResults"]</label>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-danger btn-sm ms-2" onclick="this.parentElement.remove()">@localizer["Remove"]</button>
+                            </li>
+                        }
+                    </ul>
+                    <button type="button" id="add-question" class="btn btn-secondary mt-2">@localizer["AddQuestion"]</button>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary mt-1">@localizer["Save"]</button>
+    </form>
+</div>
+<script>
+    const questionsContainer = document.getElementById("questions-container");
+
+    var draggedItem = null;
+
+    document.getElementById("add-question").addEventListener("click", function () {
+        const index = questionsContainer.children.length;
+        const questionHTML = `
+                    <li class="list-group-item d-flex align-items-center" data-index="${index}" draggable="true">
+                        <div class="flex-grow-1">
+                            <input type="text" name="Questions[${index}].Title" class="form-control mb-2" placeholder="@localizer["QuestionText"]" />
+                            <input type="hidden" name="Questions[${index}].Order" value="${index}" />
+                            <select name="Questions[${index}].Type" class="form-select">
+                                <option value="SingleLineText">@localizer["SingleLineText"]</option>
+                                <option value="MultiLineText">@localizer["MultiLineText"]</option>
+                                <option value="Checkbox">@localizer["Checkbox"]</option>
+                                <option value="Integer">@localizer["Number"]</option>
+                            </select>
+                            <div class="form-check">
+                                <input type="checkbox" name="Questions[${index}].ShowInResults" class="form-check-input" value="true" />
+                                <input type="hidden" name="Questions[${index}].ShowInResults" value="false"/>
+                                <label class="form-check-label">@localizer["ShowInResults"]</label>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-danger btn-sm ms-2" onclick="this.parentElement.remove()">@localizer["Remove"]</button>
+                    </li>`;
+        questionsContainer.insertAdjacentHTML("beforeend", questionHTML);
+    });
+
+    questionsContainer.querySelectorAll("input, textarea, select, button").forEach(element => {
+        element.setAttribute("draggable", "false");
+        element.addEventListener("dragstart", (e) => {
+            e.preventDefault();
+        });
+    });
+
+    function canDrag(target, event) {
+        const elementAtPoint = document.elementFromPoint(event.clientX, event.clientY);
+
+        return !elementAtPoint.closest("input, textarea, select, button");
+    }
+
+    questionsContainer.addEventListener("dragstart", function (e) {
+        if (!e.target.classList.contains("list-group-item") || !canDrag(e.target, e)) {
+            e.preventDefault();
+            return;
+        }
+
+        draggedItem = e.target;
+        e.target.style.opacity = "0.5";
+        e.target.classList.add("dragging");
+    });
+
+    questionsContainer.addEventListener("dragend", function (e) {
+        e.target.style.opacity = "1";
+        draggedItem = null;
+        e.target.classList.remove("dragging");
+        updateIndexes();
+    });
+
+    questionsContainer.addEventListener("dragover", function (e) {
+        e.preventDefault();
+        const afterElement = getDragAfterElement(questionsContainer, e.clientY);
+        if (afterElement == null) {
+            questionsContainer.appendChild(draggedItem);
+        } else {
+            questionsContainer.insertBefore(draggedItem, afterElement);
+        }
+        applyTransition(questionsContainer);
+    });
+
+    function getDragAfterElement(container, y) {
+        const draggableElements = [...container.querySelectorAll(".list-group-item:not(.dragging)")];
+
+        return draggableElements.reduce((closest, child) => {
+            const box = child.getBoundingClientRect();
+            const offset = y - box.top - box.height / 2;
+            if (offset < 0 && offset > closest.offset) {
+                return { offset: offset, element: child };
+            } else {
+                return closest;
+            }
+        }, { offset: Number.NEGATIVE_INFINITY }).element;
+    }
+
+    function updateIndexes() {
+        [...questionsContainer.children].forEach((child, index) => {
+            child.dataset.index = index;
+
+            const inputs = child.querySelectorAll("input, select");
+            inputs.forEach(input => {
+                if (input.name.includes("Questions[")) {
+                    input.name = input.name.replace(/Questions\[\d+\]/, `Questions[${index}]`);
+                    if (input.name.includes(".Order")) {
+                        input.value = index;
+                    }
+                }
+            });
+        });
+    }
+
+    function applyTransition(container) {
+        [...container.children].forEach((item) => {
+            item.style.transition = "transform 0.2s ease";
+        });
+
+        setTimeout(() => {
+            [...container.children].forEach((item) => {
+                item.style.transition = "";
+            });
+        }, 200);
+    };
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const tagsInput = document.getElementById("tags-input");
+        const usersInput = document.getElementById("users-input");
+        const tagsDropdown = document.getElementById("tags-dropdown");
+        const usersDropdown = document.getElementById("users-dropdown");
+
+        function displayResults(input, dropdown, results) {
+            dropdown.innerHTML = '';
+            if (results.length > 0) {
+                results.forEach(result => {
+                    const item = document.createElement('a');
+                    item.classList.add('dropdown-item');
+                    item.href = '#';
+                    item.textContent = result;
+                    item.addEventListener('click', function () {
+                        const currentValue = input.value;
+                        const lastCommaIndex = currentValue.lastIndexOf(',');
+                        input.value = (lastCommaIndex !== -1 ? currentValue.slice(0, lastCommaIndex) + ', ' : '') + result;
+                        input.focus();
+                        dropdown.style.display = 'none';
+                    });
+                    dropdown.appendChild(item);
+                });
+                dropdown.style.display = 'block';
+            } else {
+                dropdown.style.display = 'none';
+            }
+        }
+
+        tagsInput.addEventListener('input', function () {
+            const searchWord = getCurrentInput(tagsInput.value.trim());
+            if (searchWord.length > 1) {
+                fetch(`/Template/GetTags?begin=${searchWord}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        displayResults(tagsInput, tagsDropdown, data);
+                    });
+            } else {
+                tagsDropdown.style.display = 'none';
+            }
+            var value = tagsInput.value;
+
+            value = value.replace(/\s*,\s*/g, ', ');
+
+            value = value.replace(/^\s+/, '');
+
+            value = value.replace(/\s+$/, '');
+
+            tagsInput.value = value;
+        });
+
+        tagsInput.addEventListener('keydown', function (event) {
+            if (event.key === 'Backspace' || event.key === 'Delete') {
+                let value = tagsInput.value;
+
+                if (value.slice(-2) === ', ') {
+                    tagsInput.value = value.slice(0, -2);
+                    event.preventDefault();
+                }
+            }
+        });
+
+        usersInput.addEventListener('input', function () {
+            const searchWord = getCurrentInput(usersInput.value.trim());
+            if (searchWord.length > 1) {
+                fetch(`/Template/GetUsers?begin=${searchWord}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        displayResults(usersInput, usersDropdown, data);
+                    });
+            } else {
+                usersDropdown.style.display = 'none';
+            }
+            var value = usersInput.value;
+
+            value = value.replace(/\s*,\s*/g, ', ');
+
+            value = value.replace(/^\s+/, '');
+
+            value = value.replace(/\s+$/, '');
+
+            usersInput.value = value;
+        });
+
+        usersInput.addEventListener('keydown', function (event) {
+            if (event.key === 'Backspace' || event.key === 'Delete') {
+                let value = usersInput.value;
+
+                if (value.slice(-2) === ', ') {
+                    usersInput.value = value.slice(0, -2);
+                    event.preventDefault();
+                }
+            }
+        });
+
+        usersInput.addEventListener("focus", (e) => {
+            const scrollPosition = window.scrollY;
+            setTimeout(() => window.scrollTo(0, scrollPosition), 0);
+        });
+
+        tagsInput.addEventListener("focus", (e) => {
+            const scrollPosition = window.scrollY;
+            setTimeout(() => window.scrollTo(0, scrollPosition), 0);
+        });
+
+        document.addEventListener('click', function (event) {
+            if (!tagsDropdown.contains(event.target) && event.target !== tagsInput) {
+                tagsDropdown.style.display = 'none';
+            }
+            if (!usersDropdown.contains(event.target) && event.target !== usersInput) {
+                usersDropdown.style.display = 'none';
+            }
+        });
+
+        function getCurrentInput(value) {
+            const lastCommaIndex = value.lastIndexOf(',');
+            return lastCommaIndex === -1 ? value : value.slice(lastCommaIndex + 1).trim();
+        }
+    });
+
+</script>
+<style>
+    #questions-container .list-group-item {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    #questions-container .list-group-item.dragging {
+        opacity: 0.7;
+        transform: scale(1.05);
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    #questions-container .list-group-item:not(.dragging) {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+</style>

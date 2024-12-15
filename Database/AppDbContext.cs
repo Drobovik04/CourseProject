@@ -7,17 +7,17 @@ namespace CourseProject.Database
 {
     public class AppDbContext: IdentityDbContext<IdentityUser>
     {
-        public DbSet<Form> Forms { get; set; }
+        public DbSet<Template> Templates { get; set; }
         public DbSet<Question> Questions { get; set; }
-        public DbSet<FormAnswer> FormAnswers { get; set; }
-        public DbSet<Answer> Answers { get; set; } // Для всех типов ответов (Text, Integer, Checkbox)
+        public DbSet<Form> Forms { get; set; }
+        public DbSet<Answer> Answers { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Like> Likes { get; set; }
         public DbSet<Tag> Tags { get; set; }
+        public DbSet<Topic> Topics { get; set; }
 
-        // Промежуточные таблицы (если нужны прямые запросы)
-        public DbSet<FormAccess> FormAccesses { get; set; } // Необязательно, если только через связи
-        public DbSet<FormTag> FormTags { get; set; } // Необязательно, если только через связи
+        public DbSet<TemplateAccess> TemplateAccesses { get; set; }
+        public DbSet<TemplateTag> TemplateTags { get; set; }
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
             //Database.EnsureCreated();
@@ -26,62 +26,74 @@ namespace CourseProject.Database
         {
             base.OnModelCreating(builder);
 
-            // Связь Form ↔ AllowedUsers через FormAccess
-            builder.Entity<FormAccess>()
-                .HasKey(fa => new { fa.FormId, fa.UserId }); // Композитный ключ
-            builder.Entity<FormAccess>()
-                .HasOne(fa => fa.Form)
-                .WithMany(f => f.AllowedUsers)
-                .HasForeignKey(fa => fa.FormId);
-            builder.Entity<FormAccess>()
+            // Template ↔ AllowedUsers via TemplateAccess
+            builder.Entity<TemplateAccess>()
+                .HasKey(x => new { x.TemplateId, x.UserId });
+            builder.Entity<TemplateAccess>()
+                .HasOne(x => x.Template)
+                .WithMany(x => x.AllowedUsers)
+                .HasForeignKey(x => x.TemplateId);
+            builder.Entity<TemplateAccess>()
                 .HasOne(fa => fa.User)
                 .WithMany()
                 .HasForeignKey(fa => fa.UserId);
 
-            // Связь Form ↔ Tags через FormTag
-            builder.Entity<FormTag>()
-                .HasKey(ft => new { ft.FormId, ft.TagId }); // Композитный ключ
-            builder.Entity<FormTag>()
-                .HasOne(ft => ft.Form)
-                .WithMany(f => f.FormTags)
-                .HasForeignKey(ft => ft.FormId);
-            builder.Entity<FormTag>()
-                .HasOne(ft => ft.Tag)
-                .WithMany(t => t.FormTags)
-                .HasForeignKey(ft => ft.TagId);
+            // Template ↔ Tags via TemplateTag
+            builder.Entity<TemplateTag>()
+                .HasKey(x => new { x.TemplateId, x.TagId });
+            builder.Entity<TemplateTag>()
+                .HasOne(x => x.Template)
+                .WithMany(x => x.TemplateTags)
+                .HasForeignKey(x => x.TemplateId);
+            builder.Entity<TemplateTag>()
+                .HasOne(x => x.Tag)
+                .WithMany(x => x.TemplateTags)
+                .HasForeignKey(x => x.TagId);
 
-            // Связь Form ↔ Question
+            // Form ↔ Question
             builder.Entity<Question>()
-                .HasOne(q => q.Form)
-                .WithMany(f => f.Questions)
-                .HasForeignKey(q => q.FormId);
+                .HasOne(x => x.Template)
+                .WithMany(x => x.Questions)
+                .HasForeignKey(q => q.TemplateId);
 
-            // Связь Form ↔ FormAnswer
-            builder.Entity<FormAnswer>()
-                .HasOne(fa => fa.Form)
-                .WithMany(f => f.FormAnswers)
-                .HasForeignKey(fa => fa.FormId);
+            // Template ↔ Form
+            builder.Entity<Form>()
+                .HasOne(x => x.Template)
+                .WithMany(x => x.Forms)
+                .HasForeignKey(x => x.TemplateId);
 
-            // Связь FormAnswer ↔ Answer
+            // Form ↔ Answer
             builder.Entity<Answer>()
-                .HasOne(a => a.FormAnswer)
-                .WithMany(fa => fa.Answers)
-                .HasForeignKey(a => a.FormAnswerId)
+                .HasOne(x => x.Form)
+                .WithMany(x => x.Answers)
+                .HasForeignKey(a => a.FormId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Связь Form ↔ Comment
+            // Template ↔ Comment
             builder.Entity<Comment>()
-                .HasOne(c => c.Form)
-                .WithMany(f => f.Comments)
-                .HasForeignKey(c => c.FormId);
+                .HasOne(x => x.Template)
+                .WithMany(x => x.Comments)
+                .HasForeignKey(c => c.TemplateId);
 
-            // Связь Form ↔ Like
+            // Template ↔ Like
             builder.Entity<Like>()
-                .HasOne(l => l.Form)
-                .WithMany(f => f.Likes)
-                .HasForeignKey(l => l.FormId);
+                .HasOne(x => x.Template)
+                .WithMany(x => x.Likes)
+                .HasForeignKey(x => x.TemplateId);
 
-            // Полиморфизм для Answer через дискриминатор
+            builder.Entity<Like>()
+                .HasOne(x => x.User)
+                .WithMany()
+                .HasForeignKey(x => x.UserId);
+
+            // Template ↔ Topics
+            builder.Entity<Topic>()
+                .HasMany(x => x.Templates)
+                .WithOne(x => x.Topic)
+                .HasForeignKey(x => x.TopicId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            // Polymorphism for Answer
             builder.Entity<Answer>()
                 .HasDiscriminator<string>("AnswerType")
                 .HasValue<TextAnswer>("Text")

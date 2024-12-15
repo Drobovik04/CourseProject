@@ -1,9 +1,9 @@
 ﻿namespace CourseProject.Models
 {
-    public class FormTag
+    public class TemplateTag
     {
-        public int FormId { get; set; }
-        public Form Form { get; set; }
+        public int TemplateId { get; set; }
+        public Template Template { get; set; }
 
         public int TagId { get; set; }
         public Tag Tag { get; set; }

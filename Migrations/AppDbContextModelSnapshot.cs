@@ -35,7 +35,7 @@ namespace CourseProject.Migrations
                         .HasMaxLength(8)
                         .HasColumnType("nvarchar(8)");
 
-                    b.Property<int>("FormAnswerId")
+                    b.Property<int>("FormId")
                         .HasColumnType("int");
 
                     b.Property<int>("QuestionId")
@@ -43,7 +43,7 @@ namespace CourseProject.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FormAnswerId");
+                    b.HasIndex("FormId");
 
                     b.HasIndex("QuestionId");
 
@@ -65,7 +65,7 @@ namespace CourseProject.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("FormId")
+                    b.Property<int>("TemplateId")
                         .HasColumnType("int");
 
                     b.Property<string>("Text")
@@ -78,7 +78,7 @@ namespace CourseProject.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FormId");
+                    b.HasIndex("TemplateId");
 
                     b.HasIndex("UserId");
 
@@ -86,6 +86,105 @@ namespace CourseProject.Migrations
                 });
 
             modelBuilder.Entity("CourseProject.Models.Form", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("SubmittedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("TemplateId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TemplateId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Forms");
+                });
+
+            modelBuilder.Entity("CourseProject.Models.Like", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("TemplateId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TemplateId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Likes");
+                });
+
+            modelBuilder.Entity("CourseProject.Models.Question", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("ShowInResults")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("TemplateId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TemplateId");
+
+                    b.ToTable("Questions");
+                });
+
+            modelBuilder.Entity("CourseProject.Models.Tag", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tags");
+                });
+
+            modelBuilder.Entity("CourseProject.Models.Template", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -112,126 +211,49 @@ namespace CourseProject.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("TopicId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AuthorId");
 
-                    b.ToTable("Forms");
+                    b.HasIndex("TopicId");
+
+                    b.ToTable("Templates");
                 });
 
-            modelBuilder.Entity("CourseProject.Models.FormAccess", b =>
+            modelBuilder.Entity("CourseProject.Models.TemplateAccess", b =>
                 {
-                    b.Property<int>("FormId")
+                    b.Property<int>("TemplateId")
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("FormId", "UserId");
+                    b.HasKey("TemplateId", "UserId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("FormAccesses");
+                    b.ToTable("TemplateAccesses");
                 });
 
-            modelBuilder.Entity("CourseProject.Models.FormAnswer", b =>
+            modelBuilder.Entity("CourseProject.Models.TemplateTag", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("FormId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("SubmittedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FormId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("FormAnswers");
-                });
-
-            modelBuilder.Entity("CourseProject.Models.FormTag", b =>
-                {
-                    b.Property<int>("FormId")
+                    b.Property<int>("TemplateId")
                         .HasColumnType("int");
 
                     b.Property<int>("TagId")
                         .HasColumnType("int");
 
-                    b.HasKey("FormId", "TagId");
+                    b.HasKey("TemplateId", "TagId");
 
                     b.HasIndex("TagId");
 
-                    b.ToTable("FormTags");
+                    b.ToTable("TemplateTags");
                 });
 
-            modelBuilder.Entity("CourseProject.Models.Like", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("FormId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FormId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Likes");
-                });
-
-            modelBuilder.Entity("CourseProject.Models.Question", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("FormId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Order")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("ShowInResults")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FormId");
-
-                    b.ToTable("Questions");
-                });
-
-            modelBuilder.Entity("CourseProject.Models.Tag", b =>
+            modelBuilder.Entity("CourseProject.Models.Topic", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -245,7 +267,7 @@ namespace CourseProject.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tags");
+                    b.ToTable("Topics");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -450,7 +472,7 @@ namespace CourseProject.Migrations
                 {
                     b.HasBaseType("CourseProject.Models.Answer");
 
-                    b.Property<bool>("CheckboxAnswerValue")
+                    b.Property<bool?>("CheckboxAnswerValue")
                         .HasColumnType("bit");
 
                     b.HasDiscriminator().HasValue("Checkbox");
@@ -460,7 +482,7 @@ namespace CourseProject.Migrations
                 {
                     b.HasBaseType("CourseProject.Models.Answer");
 
-                    b.Property<int>("IntegerAnswerValue")
+                    b.Property<int?>("IntegerAnswerValue")
                         .HasColumnType("int");
 
                     b.HasDiscriminator().HasValue("Integer");
@@ -471,7 +493,6 @@ namespace CourseProject.Migrations
                     b.HasBaseType("CourseProject.Models.Answer");
 
                     b.Property<string>("TextAnswerValue")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasDiscriminator().HasValue("Text");
@@ -479,9 +500,9 @@ namespace CourseProject.Migrations
 
             modelBuilder.Entity("CourseProject.Models.Answer", b =>
                 {
-                    b.HasOne("CourseProject.Models.FormAnswer", "FormAnswer")
+                    b.HasOne("CourseProject.Models.Form", "Form")
                         .WithMany("Answers")
-                        .HasForeignKey("FormAnswerId")
+                        .HasForeignKey("FormId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -491,16 +512,16 @@ namespace CourseProject.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("FormAnswer");
+                    b.Navigation("Form");
 
                     b.Navigation("Question");
                 });
 
             modelBuilder.Entity("CourseProject.Models.Comment", b =>
                 {
-                    b.HasOne("CourseProject.Models.Form", "Form")
+                    b.HasOne("CourseProject.Models.Template", "Template")
                         .WithMany("Comments")
-                        .HasForeignKey("FormId")
+                        .HasForeignKey("TemplateId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -510,25 +531,16 @@ namespace CourseProject.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Form");
+                    b.Navigation("Template");
 
                     b.Navigation("User");
                 });
 
             modelBuilder.Entity("CourseProject.Models.Form", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Author")
-                        .WithMany()
-                        .HasForeignKey("AuthorId");
-
-                    b.Navigation("Author");
-                });
-
-            modelBuilder.Entity("CourseProject.Models.FormAccess", b =>
-                {
-                    b.HasOne("CourseProject.Models.Form", "Form")
-                        .WithMany("AllowedUsers")
-                        .HasForeignKey("FormId")
+                    b.HasOne("CourseProject.Models.Template", "Template")
+                        .WithMany("Forms")
+                        .HasForeignKey("TemplateId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -538,54 +550,16 @@ namespace CourseProject.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Form");
+                    b.Navigation("Template");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("CourseProject.Models.FormAnswer", b =>
-                {
-                    b.HasOne("CourseProject.Models.Form", "Form")
-                        .WithMany("FormAnswers")
-                        .HasForeignKey("FormId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Form");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("CourseProject.Models.FormTag", b =>
-                {
-                    b.HasOne("CourseProject.Models.Form", "Form")
-                        .WithMany("FormTags")
-                        .HasForeignKey("FormId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CourseProject.Models.Tag", "Tag")
-                        .WithMany("FormTags")
-                        .HasForeignKey("TagId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Form");
-
-                    b.Navigation("Tag");
                 });
 
             modelBuilder.Entity("CourseProject.Models.Like", b =>
                 {
-                    b.HasOne("CourseProject.Models.Form", "Form")
+                    b.HasOne("CourseProject.Models.Template", "Template")
                         .WithMany("Likes")
-                        .HasForeignKey("FormId")
+                        .HasForeignKey("TemplateId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -595,20 +569,74 @@ namespace CourseProject.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Form");
+                    b.Navigation("Template");
 
                     b.Navigation("User");
                 });
 
             modelBuilder.Entity("CourseProject.Models.Question", b =>
                 {
-                    b.HasOne("CourseProject.Models.Form", "Form")
+                    b.HasOne("CourseProject.Models.Template", "Template")
                         .WithMany("Questions")
-                        .HasForeignKey("FormId")
+                        .HasForeignKey("TemplateId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Form");
+                    b.Navigation("Template");
+                });
+
+            modelBuilder.Entity("CourseProject.Models.Template", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId");
+
+                    b.HasOne("CourseProject.Models.Topic", "Topic")
+                        .WithMany("Templates")
+                        .HasForeignKey("TopicId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Author");
+
+                    b.Navigation("Topic");
+                });
+
+            modelBuilder.Entity("CourseProject.Models.TemplateAccess", b =>
+                {
+                    b.HasOne("CourseProject.Models.Template", "Template")
+                        .WithMany("AllowedUsers")
+                        .HasForeignKey("TemplateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Template");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CourseProject.Models.TemplateTag", b =>
+                {
+                    b.HasOne("CourseProject.Models.Tag", "Tag")
+                        .WithMany("TemplateTags")
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CourseProject.Models.Template", "Template")
+                        .WithMany("TemplateTags")
+                        .HasForeignKey("TemplateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Tag");
+
+                    b.Navigation("Template");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -664,27 +692,32 @@ namespace CourseProject.Migrations
 
             modelBuilder.Entity("CourseProject.Models.Form", b =>
                 {
-                    b.Navigation("AllowedUsers");
-
-                    b.Navigation("Comments");
-
-                    b.Navigation("FormAnswers");
-
-                    b.Navigation("FormTags");
-
-                    b.Navigation("Likes");
-
-                    b.Navigation("Questions");
-                });
-
-            modelBuilder.Entity("CourseProject.Models.FormAnswer", b =>
-                {
                     b.Navigation("Answers");
                 });
 
             modelBuilder.Entity("CourseProject.Models.Tag", b =>
                 {
-                    b.Navigation("FormTags");
+                    b.Navigation("TemplateTags");
+                });
+
+            modelBuilder.Entity("CourseProject.Models.Template", b =>
+                {
+                    b.Navigation("AllowedUsers");
+
+                    b.Navigation("Comments");
+
+                    b.Navigation("Forms");
+
+                    b.Navigation("Likes");
+
+                    b.Navigation("Questions");
+
+                    b.Navigation("TemplateTags");
+                });
+
+            modelBuilder.Entity("CourseProject.Models.Topic", b =>
+                {
+                    b.Navigation("Templates");
                 });
 #pragma warning restore 612, 618
         }

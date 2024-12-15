@@ -1,0 +1,41 @@
+﻿@using CourseProject.ViewModels
+@using Microsoft.Extensions.Localization
+@model IEnumerable<CourseProject.Models.Template>
+@inject IStringLocalizer<SharedResources> localizer
+
+<div class="container mt-5">
+    <h2>@localizer["Templates"]</h2>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <a asp-controller="Template" asp-action="Create" class="btn btn-secondary mb-1">@localizer["CreateTemplate"]</a>
+    }
+    <form method="get" class="mb-4">
+        <div class="input-group">
+            <input type="text" name="searchQuery" class="form-control" placeholder="" value="" />
+            <button type="submit" class="btn btn-primary">@localizer["Search"]</button>
+        </div>
+    </form>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        @foreach (var template in Model)
+        {
+            <div class="col">
+                <div class="card h-100">
+                    @if (!string.IsNullOrEmpty(template.ImageUrl))
+                    {
+                        <img src="@template.ImageUrl" class="card-img-top" alt="Form Image" style="max-height: 150px; object-fit: cover;" />
+                    }
+                    <div class="card-body">
+                        <h5 class="card-title">@template.Title</h5>
+                        <p class="card-text text-truncate">@template.Description</p>
+                        <a asp-controller="Template" asp-action="Details" asp-route-id="@template.Id" class="btn btn-primary">@localizer["View"]</a>
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted">@localizer["CreatedBy"]: @template.Author?.UserName</small>
+                        <small class="text-muted">@localizer["CreatedAt"]: @template.CreatedAt</small>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

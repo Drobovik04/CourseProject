@@ -6,6 +6,6 @@ namespace CourseProject.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public ICollection<FormTag> FormTags { get; set; } = new List<FormTag>();
+        public ICollection<TemplateTag> TemplateTags { get; set; } = new List<TemplateTag>();
     }
 }

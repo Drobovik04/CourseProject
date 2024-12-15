@@ -123,6 +123,9 @@
   <data name="Actions" xml:space="preserve">
     <value>Actions</value>
   </data>
+  <data name="AddComment" xml:space="preserve">
+    <value>Add comment</value>
+  </data>
   <data name="AddQuestion" xml:space="preserve">
     <value>Add question</value>
   </data>
@@ -135,11 +138,23 @@
   <data name="AnsweredForms" xml:space="preserve">
     <value>Answers</value>
   </data>
+  <data name="AnsweredTemplates" xml:space="preserve">
+    <value>Your forms</value>
+  </data>
   <data name="Answers" xml:space="preserve">
     <value>Answers</value>
   </data>
+  <data name="AreYouSure?" xml:space="preserve">
+    <value>Are you sure?</value>
+  </data>
   <data name="Block" xml:space="preserve">
     <value>Block user</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="CannotBeEmpty" xml:space="preserve">
+    <value>Cannot be empty</value>
   </data>
   <data name="Checkbox" xml:space="preserve">
     <value>Checkbox</value>
@@ -150,11 +165,20 @@
   <data name="Comma-SeparatedUserNames" xml:space="preserve">
     <value>Comma-separated usernames</value>
   </data>
+  <data name="Comments" xml:space="preserve">
+    <value>Comments</value>
+  </data>
   <data name="Compare" xml:space="preserve">
     <value>The {0} and {1} fields must match</value>
   </data>
   <data name="ConfirmPassword" xml:space="preserve">
     <value>Confirm Password</value>
+  </data>
+  <data name="CreatedAnswers" xml:space="preserve">
+    <value>Created answers</value>
+  </data>
+  <data name="CreatedAt" xml:space="preserve">
+    <value>Created at</value>
   </data>
   <data name="CreatedBy" xml:space="preserve">
     <value>Created by</value>
@@ -162,20 +186,32 @@
   <data name="CreatedForms" xml:space="preserve">
     <value>Created forms</value>
   </data>
+  <data name="CreatedTemplates" xml:space="preserve">
+    <value>Created templates</value>
+  </data>
   <data name="CreateForm" xml:space="preserve">
     <value>Create form</value>
+  </data>
+  <data name="CreateTemplate" xml:space="preserve">
+    <value>Create new template</value>
   </data>
   <data name="CurrentImage" xml:space="preserve">
     <value>Current image</value>
   </data>
   <data name="Delete" xml:space="preserve">
-    <value>Delete user</value>
+    <value>Delete</value>
   </data>
   <data name="DeleteAnswer" xml:space="preserve">
     <value>Delete answer</value>
   </data>
   <data name="DeleteForm" xml:space="preserve">
     <value>Delete form</value>
+  </data>
+  <data name="DeleteTemplate" xml:space="preserve">
+    <value>Delete template</value>
+  </data>
+  <data name="DeleteUser" xml:space="preserve">
+    <value>Delete user</value>
   </data>
   <data name="Description" xml:space="preserve">
     <value>Description</value>
@@ -186,8 +222,14 @@
   <data name="DuplicateUserName" xml:space="preserve">
     <value>Username {0} is already taken</value>
   </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
   <data name="EditForm" xml:space="preserve">
     <value>Edit form</value>
+  </data>
+  <data name="EditTemplate" xml:space="preserve">
+    <value>Edit template</value>
   </data>
   <data name="Email" xml:space="preserve">
     <value>Email</value>
@@ -197,6 +239,24 @@
   </data>
   <data name="English" xml:space="preserve">
     <value>English</value>
+  </data>
+  <data name="ErrorDelete" xml:space="preserve">
+    <value>Error on delete</value>
+  </data>
+  <data name="ErrorDeleteComment" xml:space="preserve">
+    <value>Occured error, when tried to delete the comment</value>
+  </data>
+  <data name="ErrorEdit" xml:space="preserve">
+    <value>Occured error, when tried to edit</value>
+  </data>
+  <data name="ErrorProcessingLike" xml:space="preserve">
+    <value>Error processing like</value>
+  </data>
+  <data name="ErrorSaveComment" xml:space="preserve">
+    <value>Occured error, when tried to save a comment</value>
+  </data>
+  <data name="FileNotSelected" xml:space="preserve">
+    <value>File not selected</value>
   </data>
   <data name="FillAnswers" xml:space="preserve">
     <value>Please fill out the answers to the questions below</value>
@@ -227,6 +287,12 @@
   </data>
   <data name="IsLockedOut" xml:space="preserve">
     <value>Is blocked?</value>
+  </data>
+  <data name="Like" xml:space="preserve">
+    <value>Like</value>
+  </data>
+  <data name="LikesCount" xml:space="preserve">
+    <value>Likes count</value>
   </data>
   <data name="Login" xml:space="preserve">
     <value>Login</value>
@@ -269,6 +335,12 @@
   </data>
   <data name="NoData" xml:space="preserve">
     <value>No data</value>
+  </data>
+  <data name="NoPermission" xml:space="preserve">
+    <value>You have no permission</value>
+  </data>
+  <data name="NoTopicSelected" xml:space="preserve">
+    <value>No topic selected</value>
   </data>
   <data name="Number" xml:space="preserve">
     <value>Number</value>
@@ -336,8 +408,14 @@
   <data name="Search" xml:space="preserve">
     <value>Search</value>
   </data>
+  <data name="SelectFile" xml:space="preserve">
+    <value>Select a file</value>
+  </data>
   <data name="SelectionPrecentage" xml:space="preserve">
     <value>Percentage of selection</value>
+  </data>
+  <data name="SelectTopic" xml:space="preserve">
+    <value>Select topic</value>
   </data>
   <data name="ShowInResults" xml:space="preserve">
     <value>Show in results</value>
@@ -366,11 +444,20 @@
   <data name="Tags" xml:space="preserve">
     <value>Tags</value>
   </data>
+  <data name="Templates" xml:space="preserve">
+    <value>Templates</value>
+  </data>
   <data name="Title" xml:space="preserve">
     <value>Title</value>
   </data>
+  <data name="Topic" xml:space="preserve">
+    <value>Topic</value>
+  </data>
   <data name="Unblock" xml:space="preserve">
     <value>Unblock user</value>
+  </data>
+  <data name="Unlike" xml:space="preserve">
+    <value>Unlike</value>
   </data>
   <data name="UploadImage" xml:space="preserve">
     <value>Upload image</value>
