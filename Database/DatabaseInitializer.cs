@@ -56,7 +56,9 @@ namespace CourseProject.Database
                     new Topic { Name = "Education" },
                     new Topic { Name = "Health" },
                     new Topic { Name = "Technology" },
-                    new Topic { Name = "Science" }
+                    new Topic { Name = "Science" },
+                    new Topic { Name = "Quiz"},
+                    new Topic { Name = "Other"}
                 );
 
                 await context.SaveChangesAsync();

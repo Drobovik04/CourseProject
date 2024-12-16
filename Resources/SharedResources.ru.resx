@@ -147,6 +147,9 @@
   <data name="AreYouSure?" xml:space="preserve">
     <value>Вы уверены?</value>
   </data>
+  <data name="Ascending" xml:space="preserve">
+    <value>По возрастанию</value>
+  </data>
   <data name="Author" xml:space="preserve">
     <value>Автор</value>
   </data>
@@ -215,6 +218,9 @@
   </data>
   <data name="DeleteUser" xml:space="preserve">
     <value>Удалить пользователя</value>
+  </data>
+  <data name="Descending" xml:space="preserve">
+    <value>По убыванию</value>
   </data>
   <data name="Description" xml:space="preserve">
     <value>Описание</value>
@@ -428,6 +434,9 @@
   </data>
   <data name="SingleLineText" xml:space="preserve">
     <value>Однострочный текст</value>
+  </data>
+  <data name="SortBy" xml:space="preserve">
+    <value>Отсортировано по</value>
   </data>
   <data name="Statistics" xml:space="preserve">
     <value>Статистика</value>

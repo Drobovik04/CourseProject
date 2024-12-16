@@ -147,6 +147,9 @@
   <data name="AreYouSure?" xml:space="preserve">
     <value>Are you sure?</value>
   </data>
+  <data name="Ascending" xml:space="preserve">
+    <value>Ascending</value>
+  </data>
   <data name="Author" xml:space="preserve">
     <value>Author</value>
   </data>
@@ -215,6 +218,9 @@
   </data>
   <data name="DeleteUser" xml:space="preserve">
     <value>Delete user</value>
+  </data>
+  <data name="Descending" xml:space="preserve">
+    <value>Descending</value>
   </data>
   <data name="Description" xml:space="preserve">
     <value>Description</value>
@@ -428,6 +434,9 @@
   </data>
   <data name="SingleLineText" xml:space="preserve">
     <value>Single-line text</value>
+  </data>
+  <data name="SortBy" xml:space="preserve">
+    <value>Sort by</value>
   </data>
   <data name="Statistics" xml:space="preserve">
     <value>Statistics</value>
