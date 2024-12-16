@@ -45,11 +45,11 @@ namespace CourseProject.Controllers
 
             model = (sortColumn switch
             {
-                "UserName" => sortOrder == "asc" ? model.OrderBy(u => u.UserName) : model.OrderByDescending(u => u.UserName),
-                "Email" => sortOrder == "asc" ? model.OrderBy(u => u.Email) : model.OrderByDescending(u => u.Email),
-                "IsAdmin" => sortOrder == "asc" ? model.OrderBy(u => u.IsAdmin) : model.OrderByDescending(u => u.IsAdmin),
-                "IsLockedOut" => sortOrder == "asc" ? model.OrderBy(u => u.IsLockedOut) : model.OrderByDescending(u => u.IsLockedOut),
-                _ => model.OrderBy(u => u.UserId),
+                "UserName" => sortOrder == "asc" ? model.OrderBy(x => x.UserName) : model.OrderByDescending(x => x.UserName),
+                "Email" => sortOrder == "asc" ? model.OrderBy(x => x.Email) : model.OrderByDescending(x => x.Email),
+                "IsAdmin" => sortOrder == "asc" ? model.OrderBy(x => x.IsAdmin) : model.OrderByDescending(x => x.IsAdmin),
+                "IsLockedOut" => sortOrder == "asc" ? model.OrderBy(x => x.IsLockedOut) : model.OrderByDescending(x => x.IsLockedOut),
+                _ => model.OrderBy(x => x.UserId),
             }).ToList();
 
             return View(model);

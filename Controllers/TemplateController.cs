@@ -22,16 +22,39 @@ namespace CourseProject.Controllers
             _userManager = userManager;
         }
 
-        public async Task<IActionResult> Index(string searchQuery)
+        public async Task<IActionResult> Index(string searchQuery = "", string sortColumn = "Title", string sortOrder = "asc", string viewMode = "Table")
         {
-            var templates = _context.Templates.Include(x => x.Author).AsQueryable();
+            var templates = _context.Templates
+                .Include(x => x.Author)
+                .Include(x => x.Topic)
+                .Include(x => x.Comments)
+                .Include(x => x.Likes)
+                .AsQueryable();
 
             if (!string.IsNullOrEmpty(searchQuery))
             {
                 templates = templates.Where(f => f.Title.Contains(searchQuery) || f.Description.Contains(searchQuery));
             }
 
-            var model = await templates.ToListAsync();
+            templates = sortColumn switch
+            {
+                "Title" => sortOrder == "asc" ? templates.OrderBy(x => x.Title) : templates.OrderByDescending(x => x.Title),
+                "Topic" => sortOrder == "asc" ? templates.OrderBy(x => x.Topic.Name) : templates.OrderByDescending(x => x.Topic.Name),
+                "Author" => sortOrder == "asc" ? templates.OrderBy(x => x.Author.UserName) : templates.OrderByDescending(x => x.Author.UserName),
+                "Comments" => sortOrder == "asc" ? templates.OrderBy(x => x.Comments.Count) : templates.OrderByDescending(x => x.Comments.Count),
+                "Likes" => sortOrder == "asc" ? templates.OrderBy(x => x.Likes.Count) : templates.OrderByDescending(x => x.Likes.Count),
+                "CreatedAt" => sortOrder == "asc" ? templates.OrderBy(x => x.CreatedAt) : templates.OrderByDescending(x => x.CreatedAt),
+                
+                _ => templates
+            };
+
+            var model = new TemplateIndexViewModel
+            {
+                Templates = await templates.ToListAsync(),
+                CurrentViewMode = viewMode,
+                SortColumn = sortColumn,
+                SortOrder = sortOrder
+            };
             return View(model);
         }
 

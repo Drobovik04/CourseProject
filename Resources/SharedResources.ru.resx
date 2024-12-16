@@ -147,6 +147,9 @@
   <data name="AreYouSure?" xml:space="preserve">
     <value>Вы уверены?</value>
   </data>
+  <data name="Author" xml:space="preserve">
+    <value>Автор</value>
+  </data>
   <data name="Block" xml:space="preserve">
     <value>Заблокировать пользователя</value>
   </data>
@@ -290,6 +293,9 @@
   </data>
   <data name="Like" xml:space="preserve">
     <value>Нравится</value>
+  </data>
+  <data name="Likes" xml:space="preserve">
+    <value>Лайки</value>
   </data>
   <data name="LikesCount" xml:space="preserve">
     <value>Лайков</value>
