@@ -1,10 +1,12 @@
 ﻿using CourseProject;
 using CourseProject.Database;
+using CourseProject.Models;
 using CourseProject.ViewModels.Account;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
+using System.Formats.Asn1;
 
 public class AccountController : Controller
 {
@@ -83,18 +85,61 @@ public class AccountController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(string sortColumnCreated = "Title", string sortOrderCreated = "asc", string sortColumnAnswered = "Title", string sortOrderAnswered = "asc", string viewModeCreated = "Table", string viewModeAnswered = "Table", string tab = "Created")
     {
         var currentUser = await _userManager.GetUserAsync(User);
 
-        var createdTemplates = await _context.Templates.Where(x => x.Author.Id == currentUser.Id).ToListAsync();
+        var createdTemplates = _context.Templates
+            .Include(x => x.Author)
+            .Include(x => x.Topic)
+            .Include(x => x.Comments)
+            .Include(x => x.Likes)
+            .Where(x => x.Author.Id == currentUser.Id)
+            .AsQueryable();
 
-        var answeredTemplates = await _context.Forms.Where(fa => fa.UserId == currentUser.Id).Include(x => x.Template).ToListAsync();
+        var answeredTemplates = _context.Forms
+            .Where(x => x.UserId == currentUser.Id)
+            .Include(x => x.Template)
+            .Include(x => x.Template.Author)
+            .Include(x => x.Template.Topic)
+            .Include(x => x.Template.Comments)
+            .Include(x => x.Template.Likes)
+            .AsQueryable();
+
+        createdTemplates = sortColumnCreated switch
+        {
+            "Title" => sortOrderCreated == "asc" ? createdTemplates.OrderBy(x => x.Title) : createdTemplates.OrderByDescending(x => x.Title),
+            "Topic" => sortOrderCreated == "asc" ? createdTemplates.OrderBy(x => x.Topic.Name) : createdTemplates.OrderByDescending(x => x.Topic.Name),
+            "Author" => sortOrderCreated == "asc" ? createdTemplates.OrderBy(x => x.Author.UserName) : createdTemplates.OrderByDescending(x => x.Author.UserName),
+            "Comments" => sortOrderCreated == "asc" ? createdTemplates.OrderBy(x => x.Comments.Count) : createdTemplates.OrderByDescending(x => x.Comments.Count),
+            "Likes" => sortOrderCreated == "asc" ? createdTemplates.OrderBy(x => x.Likes.Count) : createdTemplates.OrderByDescending(x => x.Likes.Count),
+            "CreatedAt" => sortOrderCreated == "asc" ? createdTemplates.OrderBy(x => x.CreatedAt) : createdTemplates.OrderByDescending(x => x.CreatedAt),
+            _ => createdTemplates
+        };
+
+        answeredTemplates = sortColumnAnswered switch
+        {
+            "Title" => sortOrderAnswered == "asc" ? answeredTemplates.OrderBy(x => x.Template.Title) : answeredTemplates.OrderByDescending(x => x.Template.Title),
+            "Topic" => sortOrderAnswered == "asc" ? answeredTemplates.OrderBy(x => x.Template.Topic.Name) : answeredTemplates.OrderByDescending(x => x.Template.Topic.Name),
+            "Author" => sortOrderAnswered == "asc" ? answeredTemplates.OrderBy(x => x.Template.Author.UserName) : answeredTemplates.OrderByDescending(x => x.Template.Author.UserName),
+            "Comments" => sortOrderAnswered == "asc" ? answeredTemplates.OrderBy(x => x.Template.Comments.Count) : answeredTemplates.OrderByDescending(x => x.Template.Comments.Count),
+            "Likes" => sortOrderAnswered == "asc" ? answeredTemplates.OrderBy(x => x.Template.Likes.Count) : answeredTemplates.OrderByDescending(x => x.Template.Likes.Count),
+            "CreatedAt" => sortOrderAnswered == "asc" ? answeredTemplates.OrderBy(x => x.Template.CreatedAt) : answeredTemplates.OrderByDescending(x => x.Template.CreatedAt),
+            "SubmittedAt" => sortOrderAnswered == "asc" ? answeredTemplates.OrderBy(x => x.SubmittedAt) : answeredTemplates.OrderByDescending(x => x.SubmittedAt),
+            _ => answeredTemplates
+        };
 
         var model = new ProfileViewModel
         {
-            CreatedTemplates = createdTemplates,
-            AnsweredTemplates = answeredTemplates
+            CreatedTemplates = await createdTemplates.ToListAsync(),
+            AnsweredTemplates = await answeredTemplates.ToListAsync(),
+            CurrentViewModeCreated = viewModeCreated,
+            CurrentViewModeAnswered = viewModeAnswered,
+            SortColumnCreated = sortColumnCreated,
+            SortOrderCreated = sortOrderCreated,
+            SortColumnAnswered = sortColumnAnswered,
+            SortOrderAnswered = sortOrderAnswered,
+            Tab = tab,
         };
 
         return View(model);

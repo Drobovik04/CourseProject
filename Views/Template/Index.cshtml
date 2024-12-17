@@ -175,6 +175,7 @@
                 @(Model.SortOrder == "asc" ? @localizer["Ascending"] : @localizer["Descending"])
             </button>
         </div>
+
         <div id="cardView" class="row row-cols-1 row-cols-md-3 g-4 @(Model.CurrentViewMode == "Table" ? "d-none" : "")">
             @foreach (var template in Model.Templates)
             {
@@ -218,14 +219,14 @@
         });
 
         sortColumn.addEventListener("change", function () {
-            const sortOrder = sortDirectionBtn.textContent.includes("Ascending") ? "asc" : "desc";
+            const sortOrder = sortDirectionBtn.textContent.includes("@localizer["Ascending"]") ? "asc" : "desc";
             const isCardView = !cardView.classList.contains("d-none");
             window.location.href = `?sortColumn=${sortColumn.value}&sortOrder=${sortOrder}&viewMode=${isCardView ? 'Card' : 'Table'}`;
         });
 
         sortDirectionBtn.addEventListener("click", function () {
-            const sortOrder = sortDirectionBtn.textContent.includes("Ascending") ? "desc" : "asc";
-            sortDirectionBtn.textContent = sortOrder === "asc" ? "Ascending" : "Descending";
+            const sortOrder = sortDirectionBtn.textContent.includes("@localizer["Ascending"]") ? "desc" : "asc";
+            sortDirectionBtn.textContent = sortOrder === "asc" ? "@localizer["Ascending"]" : "@localizer["Descending"]";
 
             window.location.href = `?sortColumn=${sortColumn.value}&sortOrder=${sortOrder}&viewMode=${isCardView ? 'Card' : 'Table'}`;
         });
