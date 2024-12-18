@@ -5,6 +5,7 @@ namespace CourseProject.ViewModels
     public class QuestionStatisticsViewModel
     {
         public string QuestionTitle { get; set; } 
+        public string QuestionDescription { get; set; }
         public QuestionType QuestionType { get; set; }
 
         public IntegerStatistics? IntegerStats { get; set; }

@@ -375,11 +375,17 @@
   <data name="PasswordTooShort" xml:space="preserve">
     <value>Пароль должен быть не менее {0} символов</value>
   </data>
+  <data name="PreviewMarkdown" xml:space="preserve">
+    <value>Предосмотр с markdown</value>
+  </data>
   <data name="Profile" xml:space="preserve">
     <value>Профиль</value>
   </data>
   <data name="Public" xml:space="preserve">
     <value>Публичный</value>
+  </data>
+  <data name="QuestionDescription" xml:space="preserve">
+    <value>Описание вопроса</value>
   </data>
   <data name="Questions" xml:space="preserve">
     <value>Вопросы</value>
@@ -387,8 +393,8 @@
   <data name="QuestionsStatistics" xml:space="preserve">
     <value>Статистика по вопросам</value>
   </data>
-  <data name="QuestionText" xml:space="preserve">
-    <value>Текст вопроса</value>
+  <data name="QuestionTitle" xml:space="preserve">
+    <value>Заголовок вопроса</value>
   </data>
   <data name="RecoveryCodeRedemptionFailed" xml:space="preserve">
     <value>Сбой при использовании кода восстановления</value>

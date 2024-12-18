@@ -9,7 +9,7 @@
 
 <div class="container mt-5">
     <h2>@Model.Template.Title</h2>
-    <p>@Model.Template.Description</p>
+    <p>@Html.Raw(MarkdownHelper.ToHtml(Model.Template.DescriptionWithMarkdown))</p>
     <p><strong>@localizer["Topic"]:</strong> @(Model.Template.Topic?.Name ?? localizer["NoTopicSelected"])</p>
     <div class="d-flex align-items-center mb-3">
         <button id="like-btn" class="btn btn-outline-primary" data-template-id="@Model.Template.Id">
@@ -36,6 +36,7 @@
             <li class="list-group-item d-flex align-items-center" data-index="@item.i">
                 <div class="flex-grow-1">
                     <label type="text" name="Questions[@item.i].Title" class="form-control mb-2">@item.q.Title</label>
+                    <p type="text" name="Questions[@item.i].Description" class="form-control mb-2" placeholder="@localizer["QuestionDescription"]">@item.q.Description</p>
                     <label name="Questions[@item.i].Type" class="form-control mb-2">
                         @if (item.q.Type == QuestionType.SingleLineText)
                         {
@@ -327,4 +328,5 @@
             }
         });
     });
+
 </script>

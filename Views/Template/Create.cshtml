@@ -34,6 +34,11 @@
                     </div>
 
                     <div class="mb-3">
+                        <label class="form-label">@localizer["PreviewMarkdown"]</label>
+                        <div id="markdownPreview" class="border rounded bg-light p-1"></div>
+                    </div>
+
+                    <div class="mb-3">
                         <label asp-for="ImageFile" class="form-label">@localizer["UploadImage"]</label>
                         <input type="file" accept="image/*" asp-for="ImageFile" class="form-control" />
                         <span asp-validation-for="ImageFile" class="text-danger"></span>
@@ -103,7 +108,8 @@
         const questionHTML = `
                     <li class="list-group-item d-flex align-items-center" data-index="${index}" draggable="true">
                         <div class="flex-grow-1">
-                            <input type="text" name="Questions[${index}].Title" class="form-control mb-2" placeholder="@localizer["QuestionText"]" />
+                            <input type="text" name="Questions[${index}].Title" class="form-control mb-2" placeholder="@localizer["QuestionTitle"]" />
+                            <input type="text" name="Questions[${index}].Description" class="form-control mb-2" placeholder="@localizer["QuestionDescription"]" />
                             <input type="hidden" name="Questions[${index}].Order" value="${index}" />
                             <select name="Questions[${index}].Type" class="form-select">
                                 <option value="SingleLineText">@localizer["SingleLineText"]</option>
@@ -326,7 +332,22 @@
         }
     });
 
+    document.addEventListener("DOMContentLoaded", function () {
+        const markdownInput = document.getElementById("description");
+        const markdownPreview = document.getElementById("markdownPreview");
+
+        function renderMarkdown() {
+            const markdownText = markdownInput.value;
+            markdownPreview.innerHTML = marked.parse(markdownText);
+        }
+
+        markdownInput.addEventListener("input", renderMarkdown);
+
+        renderMarkdown();
+    });
+
 </script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <style>
     #questions-container .list-group-item {
         transition: transform 0.2s ease, box-shadow 0.2s ease;

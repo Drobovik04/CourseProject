@@ -9,6 +9,7 @@ namespace CourseProject.ViewModels.Template
         public IdentityUser Author { get; set; }
         public string Title { get; set; }
         public string? Description { get; set; }
+        public string? DescriptionWithMarkdown { get; set; }
         public string? CurrentImageUrl { get; set; }
         public IFormFile? NewImageFile { get; set; }
         public AccessType AccessType { get; set; }

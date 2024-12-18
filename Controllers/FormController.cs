@@ -72,6 +72,7 @@ namespace CourseProject.Controllers
                 {
                     QuestionId = x.Id,
                     Title = x.Title,
+                    Description = x.Description,
                     Type = x.Type
                 })).ToDictionary()
             };

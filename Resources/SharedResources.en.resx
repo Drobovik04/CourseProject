@@ -375,11 +375,17 @@
   <data name="PasswordTooShort" xml:space="preserve">
     <value>Password must be at least {0} characters long</value>
   </data>
+  <data name="PreviewMarkdown" xml:space="preserve">
+    <value>Preview with markdown</value>
+  </data>
   <data name="Profile" xml:space="preserve">
     <value>Profile</value>
   </data>
   <data name="Public" xml:space="preserve">
     <value>Public</value>
+  </data>
+  <data name="QuestionDescription" xml:space="preserve">
+    <value>Quest description</value>
   </data>
   <data name="Questions" xml:space="preserve">
     <value>Questions</value>
@@ -387,8 +393,8 @@
   <data name="QuestionsStatistics" xml:space="preserve">
     <value>Statistics on questions</value>
   </data>
-  <data name="QuestionText" xml:space="preserve">
-    <value>Question text</value>
+  <data name="QuestionTitle" xml:space="preserve">
+    <value>Question title</value>
   </data>
   <data name="RecoveryCodeRedemptionFailed" xml:space="preserve">
     <value>Recovery code redemption failed</value>

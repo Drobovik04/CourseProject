@@ -36,9 +36,14 @@
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="Description" class="form-label">@localizer["Description"]</label>
-                        <textarea asp-for="Description" id="description" class="form-control"></textarea>
-                        <span asp-validation-for="Description" class="text-danger"></span>
+                        <label asp-for="DescriptionWithMarkdown" class="form-label">@localizer["Description"]</label>
+                        <textarea asp-for="DescriptionWithMarkdown" id="description" class="form-control"></textarea>
+                        <span asp-validation-for="DescriptionWithMarkdown" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">@localizer["PreviewMarkdown"]</label>
+                        <div id="markdownPreview" class="form-control bg-light"></div>
                     </div>
 
                     <div class="mb-3">
@@ -122,7 +127,8 @@
                             <li class="list-group-item d-flex align-items-center" data-index="@item.i" draggable="true">
                                 <div class="flex-grow-1">
                                     <input type="hidden" name="Questions[@item.i].Id" value="@item.q.Id" />
-                                    <input type="text" name="Questions[@item.i].Title" class="form-control mb-2" placeholder="@localizer["QuestionText"]" value="@item.q.Title" />
+                                    <input type="text" name="Questions[@item.i].Title" class="form-control mb-2" placeholder="@localizer["QuestionTitle"]" value="@item.q.Title" />
+                                    <input type="text" name="Questions[@item.i].Description" class="form-control mb-2" placeholder="@localizer["QuestionDescription"]" value ="@item.q.Description"/>
                                     <input type="hidden" name="Questions[@item.i].Order" value="@item.i" />
                                     <select name="Questions[@item.i].Type" class="form-select">
                                         @if (item.q.Type == QuestionType.SingleLineText)
@@ -192,7 +198,8 @@
         const questionHTML = `
                     <li class="list-group-item d-flex align-items-center" data-index="${index}" draggable="true">
                         <div class="flex-grow-1">
-                            <input type="text" name="Questions[${index}].Title" class="form-control mb-2" placeholder="@localizer["QuestionText"]" />
+                            <input type="text" name="Questions[${index}].Title" class="form-control mb-2" placeholder="@localizer["QuestionTitle"]" />
+                            <input type="text" name="Questions[${index}].Description" class="form-control mb-2" placeholder="@localizer["QuestionDescription"]" />
                             <input type="hidden" name="Questions[${index}].Order" value="${index}" />
                             <select name="Questions[${index}].Type" class="form-select">
                                 <option value="SingleLineText">@localizer["SingleLineText"]</option>
@@ -415,7 +422,22 @@
         }
     });
 
+    document.addEventListener("DOMContentLoaded", function () {
+        const markdownInput = document.getElementById("description");
+        const markdownPreview = document.getElementById("markdownPreview");
+
+        function renderMarkdown() {
+            const markdownText = markdownInput.value;
+            markdownPreview.innerHTML = marked.parse(markdownText);
+        }
+
+        markdownInput.addEventListener("input", renderMarkdown);
+
+        renderMarkdown();
+    });
+
 </script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <style>
     #questions-container .list-group-item {
         transition: transform 0.2s ease, box-shadow 0.2s ease;

@@ -90,7 +90,8 @@ namespace CourseProject.Controllers
             var template = new Template
             {
                 Title = model.Title,
-                Description = model.Description,
+                Description = MarkdownHelper.ExtractPlainText(model.Description),
+                DescriptionWithMarkdown = model.Description,
                 ImageUrl = uploadedImageUrl,
                 AccessType = model.AccessType,
                 Author = currentUser,
@@ -130,6 +131,7 @@ namespace CourseProject.Controllers
                 template.Questions.Add(new Question
                 {
                     Title = questionModel.q.Title,
+                    Description = questionModel.q.Description,
                     Type = questionModel.q.Type,
                     ShowInResults = questionModel.q.ShowInResults,
                     Order = questionModel.index
@@ -172,16 +174,19 @@ namespace CourseProject.Controllers
                 Author = template.Author,
                 Title = template.Title,
                 Description = template.Description,
+                DescriptionWithMarkdown = template.DescriptionWithMarkdown,
                 CurrentImageUrl = template.ImageUrl,
                 AccessType = template.AccessType,
                 Questions = template.Questions.Select(q => new QuestionUpdateViewModel
                 {
                     Id = q.Id,
                     Title = q.Title,
+                    Description = q.Description,
                     Type = q.Type,
                     ShowInResults = q.ShowInResults,
                     Order = q.Order
                 }).ToList(),
+
                 Tags = template.TemplateTags.Select(x => x.Tag.Name).ToList(),
                 AllowedUserNames = template.AllowedUsers.Select(x => x.User.UserName).ToList()!,
                 TopicId = template.TopicId,
@@ -218,7 +223,8 @@ namespace CourseProject.Controllers
             }
 
             template.Title = model.Title;
-            template.Description = model.Description;
+            template.Description = MarkdownHelper.ExtractPlainText(model.DescriptionWithMarkdown);
+            template.DescriptionWithMarkdown = model.DescriptionWithMarkdown;
             template.AccessType = model.AccessType;
             template.TopicId = model.TopicId;
 
@@ -328,6 +334,7 @@ namespace CourseProject.Controllers
                         }
                     }
                     existingQuestion.Title = questionModel.Title;
+                    existingQuestion.Description = questionModel.Description;
                     existingQuestion.Type = questionModel.Type;
                     existingQuestion.Order = questionModel.Order;
                     existingQuestion.ShowInResults = questionModel.ShowInResults;
@@ -337,6 +344,7 @@ namespace CourseProject.Controllers
                     template.Questions.Add(new Question
                     {
                         Title = questionModel.Title,
+                        Description = questionModel.Description,
                         Type = questionModel.Type,
                         Order = questionModel.Order,
                         TemplateId = template.Id,
@@ -386,6 +394,7 @@ namespace CourseProject.Controllers
                 var result = new QuestionStatisticsViewModel
                 {
                     QuestionTitle = question.Title,
+                    QuestionDescription = question.Description,
                     QuestionType = question.Type
                 };
 

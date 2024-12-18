@@ -14,7 +14,8 @@
         @foreach (var question in Model.Questions)
         {
             <div class="mb-3">
-                <label>@question.Value.Title</label>
+                <label class="form-label fw-bold">@question.Value.Title</label>
+                <p class="fst-italic">@question.Value.Description</p>
                 @switch (question.Value.Type)
                 {
                     case QuestionType.SingleLineText:
@@ -40,6 +41,7 @@
 
                 <input type="hidden" name="Questions[@question.Value.QuestionId].QuestionId" value="@question.Value.QuestionId" />
                 <input type="hidden" name="Questions[@question.Value.QuestionId].Title" value="@question.Value.Title" />
+                <input type="hidden" name="Questions[@question.Value.QuestionId].Description" value="@question.Value.Description" />
                 <input type="hidden" name="Questions[@question.Value.QuestionId].Type" value="@question.Value.Type" />
             </div>
         }
