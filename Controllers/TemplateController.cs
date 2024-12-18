@@ -5,6 +5,7 @@ using CourseProject.ViewModels.Template;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using System.Text.Json;
@@ -33,7 +34,8 @@ namespace CourseProject.Controllers
 
             if (!string.IsNullOrEmpty(searchQuery))
             {
-                templates = templates.Where(f => f.Title.Contains(searchQuery) || f.Description.Contains(searchQuery));
+                var searchProcedure = _context.Database.SqlQueryRaw<int>($"EXEC SearchTemplates '\"{searchQuery}\"'").ToList();
+                templates = templates.Where(x => searchProcedure.Contains(x.Id));
             }
 
             templates = sortColumn switch
