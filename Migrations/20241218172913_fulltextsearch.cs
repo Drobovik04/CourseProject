@@ -13,11 +13,11 @@ namespace CourseProject.Migrations
             migrationBuilder.Sql("CREATE FULLTEXT CATALOG CourseCatalog WITH ACCENT_SENSITIVITY = OFF AS DEFAULT", true);
             migrationBuilder.Sql("CREATE FULLTEXT INDEX ON Answers(TextAnswerValue LANGUAGE 0) KEY INDEX PK_Answers ON (CourseCatalog) WITH (CHANGE_TRACKING AUTO)", true);
             migrationBuilder.Sql("CREATE FULLTEXT INDEX ON Comments(Text LANGUAGE 0) KEY INDEX PK_Comments ON (CourseCatalog) WITH (CHANGE_TRACKING AUTO)", true);
-            migrationBuilder.Sql("CREATE FULLTEXT INDEX ON Questions(Title, Description LANGUAGE 0) KEY INDEX PK_Questions ON (CourseCatalog) WITH (CHANGE_TRACKING AUTO)", true);
+            migrationBuilder.Sql("CREATE FULLTEXT INDEX ON Questions(Title LANGUAGE 0, Description LANGUAGE 0) KEY INDEX PK_Questions ON (CourseCatalog) WITH (CHANGE_TRACKING AUTO)", true);
             migrationBuilder.Sql("CREATE FULLTEXT INDEX ON Tags(Name LANGUAGE 0) KEY INDEX PK_Tags ON (CourseCatalog) WITH (CHANGE_TRACKING AUTO)", true);
             migrationBuilder.Sql("CREATE FULLTEXT INDEX ON Templates(Title LANGUAGE 0, Description LANGUAGE 0) KEY INDEX PK_Templates ON (CourseCatalog) WITH (CHANGE_TRACKING AUTO)", true);
             migrationBuilder.Sql("CREATE FULLTEXT INDEX ON Topics(Name LANGUAGE 0) KEY INDEX PK_Topics ON (CourseCatalog) WITH (CHANGE_TRACKING AUTO)", true);
-            migrationBuilder.Sql("CREATE FULLTEXT INDEX ON AspNetUsers(UserName LANGUAGE 0, Email Language 0) KEY INDEX PK_Topics ON (CourseCatalog) WITH (CHANGE_TRACKING AUTO)", true);
+            migrationBuilder.Sql("CREATE FULLTEXT INDEX ON AspNetUsers(UserName LANGUAGE 0, Email Language 0) KEY INDEX PK_AspNetUsers ON (CourseCatalog) WITH (CHANGE_TRACKING AUTO)", true);
             migrationBuilder.Sql("CREATE PROCEDURE SearchTemplates " +
                 "@SearchTerm NVARCHAR(500) " +
                 "AS " +

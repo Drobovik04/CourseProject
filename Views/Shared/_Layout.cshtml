@@ -21,7 +21,7 @@
                 <a asp-controller="Home" asp-action="ChangeLanguage" asp-route-culture="ru" class="btn btn-link">@localizer["Russian"]</a>
             </div>
         </div>
-        <form asp-controller="Template" asp-action="Index" method="get" class="flex-grow-1 ms-4 me-4">
+        <form asp-controller="Template" asp-action="Search" method="get" class="flex-grow-1 ms-4 me-4">
             <div class="input-group">
                 <input type="text" name="searchQuery" class="form-control" placeholder="" value="" />
                 <button type="submit" class="btn btn-primary">@localizer["Search"]</button>

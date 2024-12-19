@@ -426,6 +426,9 @@
   <data name="Search" xml:space="preserve">
     <value>Поиск</value>
   </data>
+  <data name="SearchResults" xml:space="preserve">
+    <value>Результаты поиска</value>
+  </data>
   <data name="SelectFile" xml:space="preserve">
     <value>Выберите файл</value>
   </data>

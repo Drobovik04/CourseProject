@@ -1,0 +1,226 @@
+﻿@using CourseProject.ViewModels
+@using CourseProject.ViewModels.Template
+@using Microsoft.Extensions.Localization
+@model TemplateSearchViewModel
+@inject IStringLocalizer<SharedResources> localizer
+
+<div class="container mt-5">
+    <h2>@localizer["SearchResults"]</h2>
+
+    <h3>@localizer["Templates"]</h3>
+
+    <div class="d-flex justify-content-between mb-3">
+        <button id="toggleViewBtn" class="btn btn-outline-primary">
+            @if (Model.CurrentViewMode == "Card")
+            {
+                <i class="fa-solid fa-table"></i>
+            }
+            else
+            {
+                <i class="fa-solid fa-list"></i>
+            }
+        </button>
+    </div>
+
+    <table id="tableView" class="table table-striped @(Model.CurrentViewMode == "Card" ? "d-none" : "")">
+        <thead>
+            <tr>
+                <th>
+                    <a asp-controller="Template" asp-action="Search" asp-route-sortColumn="Title" asp-route-sortOrder="@(Model.SortOrder == "asc" ? "desc" : "asc")">
+                        @localizer["Title"]
+                        @if (Model.SortColumn == "Title")
+                        {
+                            <span>
+                                @(Model.SortOrder == "asc" ? "↑" : "↓")
+                            </span>
+                        }
+                    </a>
+                </th>
+                <th>
+                    <a asp-controller="Template" asp-action="Search" asp-route-sortColumn="Topic" asp-route-sortOrder="@(Model.SortOrder == "asc" ? "desc" : "asc")">
+                        @localizer["Topic"]
+                        @if (Model.SortColumn == "Topic")
+                        {
+                            <span>
+                                @(Model.SortOrder == "asc" ? "↑" : "↓")
+                            </span>
+                        }
+                    </a>
+                </th>
+                <th>
+                    <a asp-controller="Template" asp-action="Search" asp-route-sortColumn="Author" asp-route-sortOrder="@(Model.SortOrder == "asc" ? "desc" : "asc")">
+                        @localizer["Author"]
+                        @if (Model.SortColumn == "Author")
+                        {
+                            <span>
+                                @(Model.SortOrder == "asc" ? "↑" : "↓")
+                            </span>
+                        }
+                    </a>
+                </th>
+                <th>
+                    <a asp-controller="Template" asp-action="Search" asp-route-sortColumn="Comments" asp-route-sortOrder="@(Model.SortOrder == "asc" ? "desc" : "asc")">
+                        @localizer["Comments"]
+                        @if (Model.SortColumn == "Comments")
+                        {
+                            <span>
+                                @(Model.SortOrder == "asc" ? "↑" : "↓")
+                            </span>
+                        }
+                    </a>
+                </th>
+                <th>
+                    <a asp-controller="Template" asp-action="Search" asp-route-sortColumn="Likes" asp-route-sortOrder="@(Model.SortOrder == "asc" ? "desc" : "asc")">
+                        @localizer["Likes"]
+                        @if (Model.SortColumn == "Likes")
+                        {
+                            <span>
+                                @(Model.SortOrder == "asc" ? "↑" : "↓")
+                            </span>
+                        }
+                    </a>
+                </th>
+                <th>
+                    <a asp-controller="Template" asp-action="Search" asp-route-sortColumn="CreatedAt" asp-route-sortOrder="@(Model.SortOrder == "asc" ? "desc" : "asc")">
+                        @localizer["CreatedAt"]
+                        @if (Model.SortColumn == "CreatedAt")
+                        {
+                            <span>
+                                @(Model.SortOrder == "asc" ? "↑" : "↓")
+                            </span>
+                        }
+                    </a>
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var template in Model.Templates)
+            {
+                <tr>
+                    <td>@template.Title</td>
+                    <td>@template.Topic?.Name</td>
+                    <td>@template.Author.UserName</td>
+                    <td>@template.Comments.Count</td>
+                    <td>@template.Likes.Count</td>
+                    <td>@template.CreatedAt.ToString("g")</td>
+                    <td><a class="btn btn-sm btn-primary" asp-controller="Template" asp-action="Details" asp-route-id="@template.Id"><i class="fa-solid fa-eye"></i></a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div id="containerTable" class="@(Model.CurrentViewMode == "Table" ? "d-none" : "")">
+        <div class="mb-2">
+            <label for="sortColumn">@localizer["SortBy"]:</label>
+            <select id="sortColumn" class="form-select d-inline-block w-auto">
+                @if (Model.SortColumn == "Title")
+                {
+                    <option value="Title" selected>@localizer["Title"]</option>
+                }
+                else
+                {
+                    <option value="Title">@localizer["Title"]</option>
+                }
+                @if (Model.SortColumn == "Topic")
+                {
+                    <option value="Topic" selected>@localizer["Topic"]</option>
+                }
+                else
+                {
+                    <option value="Topic">@localizer["Topic"]</option>
+                }
+                @if (Model.SortColumn == "Author")
+                {
+                    <option value="Author" selected>@localizer["Author"]</option>
+                }
+                else
+                {
+                    <option value="Author">@localizer["Author"]</option>
+                }
+                @if (Model.SortColumn == "Comments")
+                {
+                    <option value="Comments" selected>@localizer["Comments"]</option>
+                }
+                else
+                {
+                    <option value="Comments">@localizer["Comments"]</option>
+                }
+                @if (Model.SortColumn == "Likes")
+                {
+                    <option value="Likes" selected>@localizer["Likes"]</option>
+                }
+                else
+                {
+                    <option value="Likes">@localizer["Likes"]</option>
+                }
+                @if (Model.SortColumn == "CreatedAt")
+                {
+                    <option value="CreatedAt" selected>@localizer["CreatedAt"]</option>
+                }
+                else
+                {
+                    <option value="CreatedAt">@localizer["CreatedAt"]</option>
+                }
+            </select>
+            <button id="sortDirectionBtn" class="btn btn-outline-secondary">
+                @(Model.SortOrder == "asc" ? @localizer["Ascending"] : @localizer["Descending"])
+            </button>
+        </div>
+
+        <div id="cardView" class="row row-cols-1 row-cols-md-3 g-4 @(Model.CurrentViewMode == "Table" ? "d-none" : "")">
+            @foreach (var template in Model.Templates)
+            {
+                <div class="col">
+                    <div class="card h-100">
+                        @if (!string.IsNullOrEmpty(template.ImageUrl))
+                        {
+                            <img src="@template.ImageUrl" class="card-img-top" alt="Form Image" style="max-height: 150px; object-fit: cover;" />
+                        }
+                        <div class="card-body">
+                            <h5 class="card-title">@template.Title</h5>
+                            <p class="card-text text-truncate">@template.Description</p>
+                            <a asp-controller="Template" asp-action="Details" asp-route-id="@template.Id" class="btn btn-primary">@localizer["View"]</a>
+                        </div>
+                        <div class="card-footer">
+                            <small class="text-muted">@localizer["CreatedBy"]: @template.Author?.UserName</small>
+                            <small class="text-muted">@localizer["CreatedAt"]: @template.CreatedAt</small>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const toggleViewBtn = document.getElementById("toggleViewBtn");
+        const cardView = document.getElementById("cardView");
+        const tableView = document.getElementById("tableView");
+        const sortColumn = document.getElementById("sortColumn");
+        const sortDirectionBtn = document.getElementById("sortDirectionBtn");
+        const containerTable = document.getElementById("containerTable");
+
+        toggleViewBtn.addEventListener("click", function () {
+            const isCardView = !cardView.classList.contains("d-none");
+            cardView.classList.toggle("d-none", isCardView);
+            tableView.classList.toggle("d-none", !isCardView);
+            containerTable.classList.toggle("d-none", isCardView);
+
+            toggleViewBtn.innerHTML = isCardView ? '<i class="fa-solid fa-list"></i>' : '<i class="fa-solid fa-table"></i>';
+        });
+
+        sortColumn.addEventListener("change", function () {
+            const sortOrder = sortDirectionBtn.textContent.includes("@localizer["Ascending"]") ? "asc" : "desc";
+            const isCardView = !cardView.classList.contains("d-none");
+            window.location.href = `?sortColumn=${sortColumn.value}&sortOrder=${sortOrder}&viewMode=${isCardView ? 'Card' : 'Table'}`;
+        });
+
+        sortDirectionBtn.addEventListener("click", function () {
+            const sortOrder = sortDirectionBtn.textContent.includes("@localizer["Ascending"]") ? "desc" : "asc";
+            sortDirectionBtn.textContent = sortOrder === "asc" ? "@localizer["Ascending"]" : "@localizer["Descending"]";
+
+            window.location.href = `?sortColumn=${sortColumn.value}&sortOrder=${sortOrder}&viewMode=${isCardView ? 'Card' : 'Table'}`;
+        });
+    });
+</script>

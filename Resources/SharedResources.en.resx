@@ -426,6 +426,9 @@
   <data name="Search" xml:space="preserve">
     <value>Search</value>
   </data>
+  <data name="SearchResults" xml:space="preserve">
+    <value>Search results</value>
+  </data>
   <data name="SelectFile" xml:space="preserve">
     <value>Select a file</value>
   </data>
