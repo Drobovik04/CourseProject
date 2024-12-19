@@ -153,14 +153,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (response.ok) {
             location.reload();
-            // answersContainer.querySelectorAll("textarea, input").forEach(input => {
-            //     originalAnswers[input.dataset.id] = input.type === "checkbox" ? input.checked : input.value;
-            //     input.disabled = true;
-            //     input.readOnly = true;
-            // });
-            // editBtn.style.display = "inline-block";
-            // saveBtn.style.display = "none";
-            // cancelBtn.style.display = "none";
         } 
         else {
             alert('@localizer["ErrorEdit"]');

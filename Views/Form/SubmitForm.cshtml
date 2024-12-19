@@ -31,8 +31,8 @@
                         break;
 
                     case QuestionType.Checkbox:
-                        <input type="hidden" name="Answers[@question.Value.QuestionId].Answer" value="false" />
                         <input type="checkbox" name="Answers[@question.Value.QuestionId].Answer" class="form-check-input" value="true" />
+                        <input type="hidden" name="Answers[@question.Value.QuestionId].Answer" value="false" />
                         break;
                 }
 
