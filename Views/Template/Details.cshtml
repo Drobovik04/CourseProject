@@ -29,6 +29,15 @@
             <button type="submit" class="btn btn-primary mb-3">@localizer["DeleteTemplate"]</button>
         </form>
     }
+    @if (!string.IsNullOrEmpty(Model.Template.ImageUrl))
+    {
+        <div class="mb-3">
+            <h3 class="form-label">@localizer["CurrentImage"]</h3>
+            <div>
+                <img src="@Model.Template.ImageUrl" alt="Current Image" class="img-fluid mb-2" style="max-height: 200px; object-fit: cover;" />
+            </div>
+        </div>
+    }
     <h3>@localizer["Questions"]</h3>
     <ul id="questions-container" class="list-group">
         @foreach (var item in Model.Questions.OrderBy(x => x.Order).Select((q, i) => new { i, q }))

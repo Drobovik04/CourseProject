@@ -240,6 +240,7 @@ namespace CourseProject.Controllers
         {
             var template = await _context.Templates
                 .Include(x => x.Questions.OrderBy(x => x.Order))
+                .Include(x => x.Author)
                 .Include(x => x.AllowedUsers)
                     .ThenInclude(x => x.User)
                 .Include(x => x.TemplateTags)
@@ -406,6 +407,7 @@ namespace CourseProject.Controllers
         {
             var template = await _context.Templates
                 .Include(x => x.Questions)
+                .Include(x => x.Author)
                 .Include(x => x.Forms)
                     .ThenInclude(x => x.Answers)
                 .FirstOrDefaultAsync(x => x.Id == id);
@@ -483,6 +485,7 @@ namespace CourseProject.Controllers
             var currentUser = await _userManager.GetUserAsync(User);
 
             var template = await _context.Templates
+                .Include(x => x.Author)
                 .Include(x => x.Forms)
                     .ThenInclude(x => x.Answers)
                 .FirstOrDefaultAsync(x => x.Id == id);
@@ -558,7 +561,11 @@ namespace CourseProject.Controllers
 
             var isAdmin = await _userManager.IsInRoleAsync(currentUser, "Admin");
 
-            if (!isAdmin && currentUser != _context.Templates.Where(x => x.Id == id).FirstOrDefault().Author)
+            var template = await _context.Templates
+                .Include(x => x.Author)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (!isAdmin && currentUser != template.Author)
             {
                 return Forbid();
             }
