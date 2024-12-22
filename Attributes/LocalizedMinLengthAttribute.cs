@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Localization;
+using System.Collections;
 using System.ComponentModel.DataAnnotations;
 
 namespace CourseProject.Attributes
@@ -18,11 +19,16 @@ namespace CourseProject.Attributes
 
             var fieldName = localizer?[validationContext.MemberName] ?? validationContext.MemberName;
 
-            var errorMessage = localizer?[ResourceKey] ?? "The {0} field must be at least {1} characters long";
+            var errorMessage = localizer?[ResourceKey];
 
             var formattedMessage = string.Format(errorMessage, fieldName, Length);
 
             if (value is string str && str.Length < Length)
+            {
+                return new ValidationResult(formattedMessage, new List<string> { validationContext.MemberName });
+            }
+
+            if (value is ICollection collection && collection.Count < Length)
             {
                 return new ValidationResult(formattedMessage, new List<string> { validationContext.MemberName });
             }

@@ -18,7 +18,7 @@ namespace CourseProject.Attributes
 
             var fieldName = localizer?[validationContext.MemberName] ?? validationContext.MemberName;
 
-            var errorMessage = localizer?[ResourceKey] ?? "The {0} field must be at most {1} characters long";
+            var errorMessage = localizer?[ResourceKey];
 
             var formattedMessage = string.Format(errorMessage, fieldName, Length);
 

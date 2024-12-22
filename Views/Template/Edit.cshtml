@@ -58,9 +58,16 @@
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="NewImageFile" class="form-label">@localizer["UploadNewImage"]</label>
+@*                         <label asp-for="NewImageFile" class="form-label">@localizer["UploadNewImage"]</label>
                         <input type="file" asp-for="NewImageFile" class="form-control" accept="image/*" />
-                        <span asp-validation-for="NewImageFile" class="text-danger"></span>
+                        <span asp-validation-for="NewImageFile" class="text-danger"></span> *@
+                        <label asp-for="NewImageFile" class="form-label">@localizer["UploadNewImage"]</label>
+                        <div class="input-group custom-file-button">
+                            <label asp-for="NewImageFile" class="input-group-text" for="review-image" role="button">@localizer["ChooseFile"]</label>
+                            <label for="review-image" class="form-control" id="review-image-label" role="button">@localizer["NoSelectedFile"]</label>
+                            <input asp-for="NewImageFile" type="file" class="d-none" id="review-image" accept="image/*">
+                            <span asp-validation-for="NewImageFile" class="text-danger"></span>
+                        </div>
                     </div>
 
                     <div class="mb-3">
@@ -112,15 +119,44 @@
                     </div>
 
                     <div class="mb-3">
-                        <label>@localizer["AllowedUsers"]</label>
-                        <input type="text" asp-for="AllowedUserNames" id="users-input" class="form-control" placeholder="@localizer["Comma-SeparatedUserNames"]" value="@string.Join(", ", Model.AllowedUserNames)" />
+                        <label for="users-input" class="form-label">@localizer["AllowedUsers"]</label>
+                        <input type="text" id="users-input" class="form-control" placeholder="@localizer["EnterUsernameOrEmail"]" />
                         <div id="users-dropdown" class="dropdown-menu" style="display: none;"></div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <label>@localizer["SelectedUsers"]</label>
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="sortButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                    @localizer["SortBy"]
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="sortButton">
+                                    <li><button type="button" class="dropdown-item" onclick="sortUsers('username')">@localizer["UserName"]</button></li>
+                                    <li><button type="button" class="dropdown-item" onclick="sortUsers('email')">@localizer["Email"]</button></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div id="selected-users">
+                            @for (int i = 0; i < Model.AllowedUserNames.Count; i++)
+                            {
+                                <div class="d-flex align-items-center mb-2">
+                                    <input type="hidden" asp-for="AllowedUserNames[@i].UserName" value="@Model.AllowedUserNames[i].UserName" />
+                                    <input type="hidden" asp-for="AllowedUserNames[@i].Email" value="@Model.AllowedUserNames[i].Email" />
+
+                                    <span class="flex-grow-1">
+                                        @Model.AllowedUserNames[i].UserName (@Model.AllowedUserNames[i].Email)
+                                    </span>
+                                    <button type="button" class="btn btn-sm btn-danger ms-2" onclick="removeUser(this, @i)">×</button>
+                                </div>
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="tab-pane fade" id="questions" role="tabpanel" aria-labelledby="questions-tab">
                 <div>
                     <h4>@localizer["Questions"]</h4>
+                    <span asp-validation-for="Questions" class="text-danger"></span>
                     <ul id="questions-container" class="list-group">
                         @foreach (var item in Model.Questions.OrderBy(x => x.Order).Select((q, i) => new {i, q}))
                         {
@@ -364,44 +400,6 @@
             }
         });
 
-        usersInput.addEventListener('input', function () {
-            const searchWord = getCurrentInput(usersInput.value.trim());
-            if (searchWord.length > 1) {
-                fetch(`/Template/GetUsers?begin=${searchWord}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        displayResults(usersInput, usersDropdown, data);
-                    });
-            } else {
-                usersDropdown.style.display = 'none';
-            }
-            var value = usersInput.value;
-
-            value = value.replace(/\s*,\s*/g, ', ');
-
-            value = value.replace(/^\s+/, '');
-
-            value = value.replace(/\s+$/, '');
-
-            usersInput.value = value;
-        });
-
-        usersInput.addEventListener('keydown', function (event) {
-            if (event.key === 'Backspace' || event.key === 'Delete') {
-                let value = usersInput.value;
-
-                if (value.slice(-2) === ', ') {
-                    usersInput.value = value.slice(0, -2);
-                    event.preventDefault();
-                }
-            }
-        });
-
-        usersInput.addEventListener("focus", (e) => {
-            const scrollPosition = window.scrollY;
-            setTimeout(() => window.scrollTo(0, scrollPosition), 0);
-        });
-
         tagsInput.addEventListener("focus", (e) => {
             const scrollPosition = window.scrollY;
             setTimeout(() => window.scrollTo(0, scrollPosition), 0);
@@ -411,15 +409,128 @@
             if (!tagsDropdown.contains(event.target) && event.target !== tagsInput) {
                 tagsDropdown.style.display = 'none';
             }
-            if (!usersDropdown.contains(event.target) && event.target !== usersInput) {
-                usersDropdown.style.display = 'none';
-            }
         });
 
         function getCurrentInput(value) {
             const lastCommaIndex = value.lastIndexOf(',');
             return lastCommaIndex === -1 ? value : value.slice(lastCommaIndex + 1).trim();
         }
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const usersInput = document.getElementById("users-input");
+        const usersDropdown = document.getElementById("users-dropdown");
+        const selectedUsersContainer = document.getElementById("selected-users");
+        const hiddenInput = document.getElementById("allowed-users");
+
+        var currentSort;
+
+        var selectedUsers = @Html.Raw(Json.Serialize(Model.AllowedUserNames ?? new List<TemplateUserNameAndEmail>()));
+
+        renderSelectedUsers();
+
+        function displayResults(results) {
+            usersDropdown.innerHTML = '';
+            if (results.length > 0) {
+                results.forEach(user => {
+                    const item = document.createElement('a');
+                    item.classList.add('dropdown-item');
+                    item.href = '#';
+                    item.textContent = `${user.userName} (${user.email})`;
+                    item.addEventListener('click', function (event) {
+                        event.preventDefault();
+                        addUser(user);
+                        usersDropdown.style.display = 'none';
+                        usersInput.value = '';
+                    });
+                    usersDropdown.appendChild(item);
+                });
+                usersDropdown.style.display = 'block';
+            } else {
+                usersDropdown.style.display = 'none';
+            }
+        }
+
+        function addUser(user) {
+            if (selectedUsers.some(x => x.userName === user.userName)) {
+                return;
+            }
+
+            selectedUsers.push(user);
+            sortUsers(currentSort);
+            renderSelectedUsers();
+        }
+
+        function renderSelectedUsers() {
+            selectedUsersContainer.innerHTML = '';
+            selectedUsers.forEach((user, index) => {
+                const userDiv = document.createElement('div');
+                userDiv.classList.add('d-flex', 'align-items-center', 'border', 'rounded', 'p-2', 'mb-2');
+                userDiv.dataset.id = index;
+
+                const usernameInput = document.createElement('input');
+                usernameInput.type = 'hidden';
+                usernameInput.name = `AllowedUserNames[${index}].UserName`;
+                usernameInput.value = user.userName;
+
+                const emailInput = document.createElement('input');
+                emailInput.type = 'hidden';
+                emailInput.name = `AllowedUserNames[${index}].Email`;
+                emailInput.value = user.email;
+
+                const text = document.createElement('span');
+                text.textContent = `${user.userName} (${user.email})`;
+                text.classList.add('flex-grow-1');
+
+                const removeBtn = document.createElement('button');
+                removeBtn.classList.add('btn', 'btn-sm', 'btn-danger', 'ms-2');
+                removeBtn.type = 'button';
+                removeBtn.textContent = "×";
+                removeBtn.addEventListener('click', () => {
+                    selectedUsers = selectedUsers.filter(x => x.userName !== user.userName);
+                    renderSelectedUsers();
+                });
+
+                userDiv.appendChild(usernameInput);
+                userDiv.appendChild(emailInput);
+                userDiv.appendChild(text);
+                userDiv.appendChild(removeBtn);
+                selectedUsersContainer.appendChild(userDiv);
+            });
+
+        }
+
+        window.sortUsers = function (criterion) {
+            if (criterion === 'username') {
+                selectedUsers.sort((a, b) => a.userName.localeCompare(b.userName));
+            } else if (criterion === 'email') {
+                selectedUsers.sort((a, b) => a.email.localeCompare(b.email));
+            }
+            currentSort = criterion;
+            renderSelectedUsers();
+        }
+
+        function updateHiddenField() {
+            hiddenInput.value = selectedUsers.map(x => `${x.userName}|${x.email}`).join(',');
+        }
+
+        usersInput.addEventListener('input', function () {
+            const searchWord = usersInput.value.trim();
+            if (searchWord.length > 1) {
+                fetch(`/Template/GetUsers?begin=${searchWord}`)
+                    .then(response => response.json())
+                    .then(data => displayResults(data))
+                    .catch(error => console.error('Error fetching users:', error));
+            } else {
+                usersDropdown.style.display = 'none';
+            }
+        });
+
+        document.addEventListener('click', function (event) {
+            if (!usersDropdown.contains(event.target) && event.target !== usersInput) {
+                usersDropdown.style.display = 'none';
+            }
+        });
     });
 
     document.addEventListener("DOMContentLoaded", function () {
@@ -436,7 +547,16 @@
         renderMarkdown();
     });
 
+    document.addEventListener("DOMContentLoaded", function () {
+        $('#review-image').change(function(e) {
+            var fileName = (e.target.files.length > 0) ? e.target.files[0].name : '@localizer["NoSelectedFile"]';
+            $('#review-image-label').text(fileName);
+        })
+
+    });
+
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <style>
     #questions-container .list-group-item {

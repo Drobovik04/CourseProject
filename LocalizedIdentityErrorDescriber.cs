@@ -17,7 +17,7 @@ namespace CourseProject
             return new IdentityError
             {
                 Code = nameof(DuplicateUserName),
-                Description = _localizer["DuplicateUserName", userName] ?? $"Username '{userName}' is already taken"
+                Description = _localizer["DuplicateUserName", userName]
             };
         }
 
@@ -26,7 +26,7 @@ namespace CourseProject
             return new IdentityError
             {
                 Code = nameof(DuplicateEmail),
-                Description = _localizer["DuplicateEmail", email] ?? $"Email '{email}' is already taken"
+                Description = _localizer["DuplicateEmail", email]
             };
         }
 
@@ -35,7 +35,7 @@ namespace CourseProject
             return new IdentityError
             {
                 Code = nameof(InvalidUserName),
-                Description = _localizer["InvalidUserName", userName] ?? $"The username '{userName}' is invalid"
+                Description = _localizer["InvalidUserName", userName]
             };
         }
 
@@ -44,7 +44,7 @@ namespace CourseProject
             return new IdentityError
             {
                 Code = nameof(InvalidEmail),
-                Description = _localizer["InvalidEmail", email] ?? $"The email '{email}' is invalid"
+                Description = _localizer["InvalidEmail", email]
             };
         }
 
@@ -53,7 +53,7 @@ namespace CourseProject
             return new IdentityError
             {
                 Code = nameof(PasswordTooShort),
-                Description = _localizer["PasswordTooShort", length] ?? $"Password must be at least {length} characters long"
+                Description = _localizer["PasswordTooShort", length]
             };
         }
 
@@ -62,7 +62,7 @@ namespace CourseProject
             return new IdentityError
             {
                 Code = nameof(PasswordRequiresNonAlphanumeric),
-                Description = _localizer["PasswordRequiresNonAlphanumeric"] ?? "Passwords must have at least one non-alphanumeric character"
+                Description = _localizer["PasswordRequiresNonAlphanumeric"]
             };
         }
 
@@ -71,7 +71,7 @@ namespace CourseProject
             return new IdentityError
             {
                 Code = nameof(PasswordRequiresDigit),
-                Description = _localizer["PasswordRequiresDigit"] ?? "Passwords must have at least one digit ('0'-'9')"
+                Description = _localizer["PasswordRequiresDigit"]
             };
         }
 
@@ -80,7 +80,7 @@ namespace CourseProject
             return new IdentityError
             {
                 Code = nameof(PasswordRequiresLower),
-                Description = _localizer["PasswordRequiresLower"] ?? "Passwords must have at least one lowercase ('a'-'z')"
+                Description = _localizer["PasswordRequiresLower"]
             };
         }
 
@@ -89,7 +89,7 @@ namespace CourseProject
             return new IdentityError
             {
                 Code = nameof(PasswordRequiresUpper),
-                Description = _localizer["PasswordRequiresUpper"] ?? "Passwords must have at least one uppercase ('A'-'Z')"
+                Description = _localizer["PasswordRequiresUpper"]
             };
         }
 
@@ -98,7 +98,7 @@ namespace CourseProject
             return new IdentityError
             {
                 Code = nameof(UserAlreadyHasPassword),
-                Description = _localizer["UserAlreadyHasPassword"] ?? "User already has a password set"
+                Description = _localizer["UserAlreadyHasPassword"]
             };
         }
 
@@ -107,7 +107,7 @@ namespace CourseProject
             return new IdentityError
             {
                 Code = nameof(UserLockoutNotEnabled),
-                Description = _localizer["UserLockoutNotEnabled"] ?? "Lockout is not enabled for this user"
+                Description = _localizer["UserLockoutNotEnabled"]
             };
         }
 
@@ -116,7 +116,7 @@ namespace CourseProject
             return new IdentityError
             {
                 Code = nameof(RecoveryCodeRedemptionFailed),
-                Description = _localizer["RecoveryCodeRedemptionFailed"] ?? "Recovery code redemption failed"
+                Description = _localizer["RecoveryCodeRedemptionFailed"]
             };
         }
     }

@@ -165,17 +165,17 @@
   <data name="Checkbox" xml:space="preserve">
     <value>Чекбокс</value>
   </data>
+  <data name="ChooseFile" xml:space="preserve">
+    <value>Выберите файл</value>
+  </data>
   <data name="Comma-SeparatedTags" xml:space="preserve">
     <value>Разделенные запятой теги</value>
-  </data>
-  <data name="Comma-SeparatedUserNames" xml:space="preserve">
-    <value>Разделенные запятой пользователи</value>
   </data>
   <data name="Comments" xml:space="preserve">
     <value>Комментарии</value>
   </data>
   <data name="Compare" xml:space="preserve">
-    <value>Поля {0} и {1} должны совпадать</value>
+    <value>Поля "{0}" и "{1}" должны совпадать</value>
   </data>
   <data name="ConfirmPassword" xml:space="preserve">
     <value>Подтверждение пароля</value>
@@ -226,10 +226,10 @@
     <value>Описание</value>
   </data>
   <data name="DuplicateEmail" xml:space="preserve">
-    <value>Почта '{0}' уже используется</value>
+    <value>Почта "{0}" уже используется</value>
   </data>
   <data name="DuplicateUserName" xml:space="preserve">
-    <value>Логин {0} уже занят</value>
+    <value>Логин "{0}" уже занят</value>
   </data>
   <data name="Edit" xml:space="preserve">
     <value>Изменить</value>
@@ -244,10 +244,13 @@
     <value>Электронная почта</value>
   </data>
   <data name="EmailAddress" xml:space="preserve">
-    <value>Поле {0} должно быть корректным email-адресом</value>
+    <value>Поле "{0}" должно быть корректным email-адресом</value>
   </data>
   <data name="English" xml:space="preserve">
     <value>Английский</value>
+  </data>
+  <data name="EnterUsernameOrEmail" xml:space="preserve">
+    <value>Введите имя пользователя или email</value>
   </data>
   <data name="ErrorDelete" xml:space="preserve">
     <value>Ошиба при удалении</value>
@@ -283,13 +286,13 @@
     <value>Ссылка на картинку</value>
   </data>
   <data name="InvalidEmail" xml:space="preserve">
-    <value>Почта '{0}' недопустима</value>
+    <value>Почта "{0}" недопустима</value>
   </data>
   <data name="InvalidLoginAttempt" xml:space="preserve">
     <value>Неверная попытка входа</value>
   </data>
   <data name="InvalidUserName" xml:space="preserve">
-    <value>Имя пользователя '{0}' недопустимо</value>
+    <value>Имя пользователя "{0}" недопустимо</value>
   </data>
   <data name="IsAdmin" xml:space="preserve">
     <value>Имеет права администратора?</value>
@@ -312,6 +315,9 @@
   <data name="Logout" xml:space="preserve">
     <value>Выход</value>
   </data>
+  <data name="Main" xml:space="preserve">
+    <value>Главная</value>
+  </data>
   <data name="MakeAdmin" xml:space="preserve">
     <value>Выдать права администратора</value>
   </data>
@@ -319,7 +325,10 @@
     <value>Максимальный</value>
   </data>
   <data name="MaxLength" xml:space="preserve">
-    <value>Поле {0} должно содержать не более  {1} символов</value>
+    <value>Поле "{0}" должно содержать не более  {1} символов</value>
+  </data>
+  <data name="MaxLengthArray" xml:space="preserve">
+    <value>Поле "{0}" должно содержать не более {1} элементов</value>
   </data>
   <data name="Mean" xml:space="preserve">
     <value>Математическое ожидание</value>
@@ -331,7 +340,10 @@
     <value>Минимальный</value>
   </data>
   <data name="MinLength" xml:space="preserve">
-    <value>Поле {0} должно содержать не менее {1} символов</value>
+    <value>Поле "{0}" должно содержать не менее {1} символов</value>
+  </data>
+  <data name="MinLengthArray" xml:space="preserve">
+    <value>Поле "{0}" должно содержать не менее {1} элементов</value>
   </data>
   <data name="MostFrequentAnswer" xml:space="preserve">
     <value>Самый частый ответ</value>
@@ -350,6 +362,9 @@
   </data>
   <data name="NoPermission" xml:space="preserve">
     <value>У вас нету права на выполнение операции</value>
+  </data>
+  <data name="NoSelectedFile" xml:space="preserve">
+    <value>Файл не выбран</value>
   </data>
   <data name="NoTopicSelected" xml:space="preserve">
     <value>Тема не выбрана</value>
@@ -409,7 +424,7 @@
     <value>Отозвать права администратора</value>
   </data>
   <data name="Required" xml:space="preserve">
-    <value>Поле {0} обязательно для заполнения</value>
+    <value>Поле "{0}" обязательно для заполнения</value>
   </data>
   <data name="Restricted" xml:space="preserve">
     <value>Ограниченный</value>
@@ -428,6 +443,9 @@
   </data>
   <data name="SearchResults" xml:space="preserve">
     <value>Результаты поиска</value>
+  </data>
+  <data name="SelectedUsers" xml:space="preserve">
+    <value>Выбранные пользователи</value>
   </data>
   <data name="SelectFile" xml:space="preserve">
     <value>Выберите файл</value>

@@ -1,8 +1,11 @@
-﻿using CourseProject.ViewModels;
+﻿using CourseProject.Database;
+using CourseProject.Models;
+using CourseProject.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 
 namespace CourseProject.Controllers
@@ -10,12 +13,14 @@ namespace CourseProject.Controllers
     [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
+        private readonly AppDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IStringLocalizer<SharedResources> _localizer;
 
-        public AdminController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, IStringLocalizer<SharedResources> localizer)
+        public AdminController(AppDbContext context, UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, IStringLocalizer<SharedResources> localizer)
         {
+            _context = context;
             _userManager = userManager;
             _roleManager = roleManager;
             _localizer = localizer;
@@ -102,6 +107,16 @@ namespace CourseProject.Controllers
         {
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null) return NotFound();
+
+            var templates = _context.Templates
+                .Include(x => x.Author)
+                .Include(x => x.Forms)
+                    .ThenInclude(x => x.Answers)
+                .Where(x => x.Author.Id == userId)
+                .ToList();
+
+            _context.Answers.RemoveRange(templates.SelectMany(x => x.Forms).SelectMany(x => x.Answers));
+            _context.Templates.RemoveRange(templates);
 
             var result = await _userManager.DeleteAsync(user);
             if (result.Succeeded)

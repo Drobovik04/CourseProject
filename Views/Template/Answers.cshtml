@@ -1,6 +1,7 @@
 ﻿@using CourseProject.Models
+@using CourseProject.ViewModels.Template
 @using Microsoft.Extensions.Localization
-@model IEnumerable<Form>
+@model TemplateAnswersViewModel
 @inject IStringLocalizer<SharedResources> localizer
 
 <div class="container mt-5">
@@ -10,15 +11,35 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>@localizer["UserName"]</th>
-                    <th>@localizer["SubmittedAt"]</th>
-                    <th>@localizer["Actions"]</th>
+                    <th>
+                        <a asp-controller="Template" asp-action="Answers" asp-route-id="@Model.TemplateId" asp-route-sortColumn="UserName" asp-route-sortOrder="@(Model.SortOrder == "asc" ? "desc" : "asc")">
+                            @localizer["UserName"]
+                            @if (Model.SortColumn == "UserName")
+                            {
+                                <span>
+                                    @(Model.SortOrder == "asc" ? "↑" : "↓")
+                                </span>
+                            }
+                        </a>
+                    </th>
+                    <th>
+                        <a asp-controller="Template" asp-action="Answers" asp-route-id="@Model.TemplateId" asp-route-sortColumn="SubmittedAt" asp-route-sortOrder="@(Model.SortOrder == "asc" ? "desc" : "asc")">
+                            @localizer["SubmittedAt"]
+                            @if (Model.SortColumn == "SubmittedAt")
+                            {
+                                <span>
+                                    @(Model.SortOrder == "asc" ? "↑" : "↓")
+                                </span>
+                            }
+                        </a>
+                    </th>
+                    <th><a href="">@localizer["Actions"]</a></th>
                 </tr>
             </thead>
             <tbody>
-                @if (Model != null && Model.Any())
+                @if (Model != null && Model.Forms.Any())
                 {
-                    foreach (var answer in Model)
+                    foreach (var answer in Model.Forms)
                     {
                         <tr>
                             <td>@answer.User?.UserName</td>

@@ -13,7 +13,7 @@ namespace CourseProject.Attributes
 
             var fieldName = localizer?[validationContext.MemberName] ?? validationContext.MemberName;
 
-            var errorMessage = localizer?[ResourceKey ?? "Required"] ?? "The {0} field is required";
+            var errorMessage = localizer?[ResourceKey ?? "Required"];
 
             var formattedMessage = string.Format(errorMessage, fieldName);
 

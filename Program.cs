@@ -76,7 +76,7 @@ namespace CourseProject
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Template}/{action=Index}/{searchQuery?}");
+                pattern: "{controller=Template}/{action=Main}/{searchQuery?}");
 
             using (var scope = app.Services.CreateScope())
             {

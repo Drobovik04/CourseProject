@@ -18,6 +18,7 @@ namespace CourseProject.Database
             }
 
             var adminEmail = "admin@example.com";
+
             if (await userManager.FindByEmailAsync(adminEmail) == null)
             {
                 var adminUser = new IdentityUser
@@ -43,6 +44,23 @@ namespace CourseProject.Database
                     Email = "test@example.com",
                 };
                 var result = await userManager.CreateAsync(newUser, "test");
+
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(newUser, "User");
+                }
+            }
+
+            var userName1 = "test1";
+
+            if (await userManager.FindByNameAsync(userName1) == null)
+            {
+                var newUser = new IdentityUser
+                {
+                    UserName = userName1,
+                    Email = "test1@example.com",
+                };
+                var result = await userManager.CreateAsync(newUser, "test1");
 
                 if (result.Succeeded)
                 {

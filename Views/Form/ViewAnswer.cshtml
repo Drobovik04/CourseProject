@@ -10,11 +10,11 @@
     <h2>@Model.Template.Title</h2>
     <p><strong>@localizer["SubmittedAt"]:</strong> @Model.SubmittedAt.ToString("g")</p>
     <div class="d-inline-block">
-        <form method="post" asp-controller="Form" asp-action="DeleteAnswer" asp-route-id="@Model.Form.Id" asp-route-returnUrl="@ViewData["returnUrl"]" class="mt-1 mb-3 d-inline-block">
-            <button type="submit" class="btn btn-danger">@localizer["DeleteAnswer"]</button>
-        </form>
         @if (User.IsInRole("Admin") || Model.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier))
         {
+            <form method="post" asp-controller="Form" asp-action="DeleteAnswer" asp-route-id="@Model.Form.Id" asp-route-returnUrl="@ViewData["returnUrl"]" class="mt-1 mb-3 d-inline-block">
+                <button type="submit" class="btn btn-danger">@localizer["DeleteAnswer"]</button>
+            </form>
             <button id="edit-btn" class="btn btn-primary" style="display:inline-block;">@localizer["Edit"]</button>
         }
         <button id="save-btn" class="btn btn-success" style="display:none;">@localizer["Save"]</button>

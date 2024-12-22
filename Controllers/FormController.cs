@@ -58,11 +58,26 @@ namespace CourseProject.Controllers
         [HttpGet]
         public async Task<IActionResult> SubmitForm(int id)
         {
-            var template = await _context.Templates.Include(f => f.Questions).FirstOrDefaultAsync(f => f.Id == id);
+            var template = await _context.Templates
+                .Include(x => x.Questions)
+                .Include(x => x.AllowedUsers)
+                .FirstOrDefaultAsync(x => x.Id == id);
 
             if (template == null)
             {
                 return NotFound();
+            }
+
+            var currentUser = await _userManager.GetUserAsync(User); ;
+
+            if (template.AccessType == AccessType.Restricted)
+            {
+                var isUserCanFillForm = template.AllowedUsers.Any(x => x.Template.Id == template.Id && x.User.Id == currentUser.Id);
+
+                if (!isUserCanFillForm)
+                {
+                    return Forbid();
+                }
             }
 
             var model = new SubmitFormViewModel
@@ -222,7 +237,11 @@ namespace CourseProject.Controllers
         {
             var currentUser = await _userManager.GetUserAsync(User);
 
-            var form = await _context.Forms.Include(x => x.Template).Include(x => x.Answers).FirstOrDefaultAsync(x => x.Id == id);
+            var form = await _context.Forms
+                .Include(x => x.User)
+                .Include(x => x.Template)
+                .Include(x => x.Answers)
+                .FirstOrDefaultAsync(x => x.Id == id);
 
             var isAdmin = await _userManager.IsInRoleAsync(currentUser, "Admin");
             if (!isAdmin && currentUser != form.User)

@@ -91,7 +91,7 @@
                         @if (!user.IsLockedOut)
                         {
                             <form method="post" asp-action="BlockUser" asp-route-userId="@user.UserId">
-                                <button type="submit" class="btn btn-warning">
+                                <button type="submit" class="btn btn-secondary">
                                     @localizer["Block"]
                                 </button>
                             </form>
@@ -99,7 +99,7 @@
                         else
                         {
                             <form method="post" asp-action="UnblockUser" asp-route-userId="@user.UserId">
-                                <button type="submit" class="btn btn-info">
+                                <button type="submit" class="btn btn-secondary">
                                     @localizer["Unblock"]
                                 </button>
                             </form>

@@ -1,6 +1,7 @@
 ﻿@using CourseProject
 @using CourseProject.ViewModels
 @using Microsoft.Extensions.Localization
+@using System.Security.Claims
 @inject IStringLocalizer<SharedResources> localizer
 @model SubmitFormViewModel
 
@@ -9,8 +10,9 @@
     <p>@localizer["FillAnswers"]</p>
 
     <form method="post" asp-action="SubmitForm">
-        <input type="hidden" name="TemplateId" value="@Model.TemplateId" />
-
+        <input type="hidden" asp-for="TemplateId" value="@Model.TemplateId" />
+@*         <input class="form-control" value="@User.FindFirstValue(ClaimTypes.Name)" readonly />
+        <input class="form-control" value="@DateTime.UtcNow" /> *@
         @foreach (var question in Model.Questions)
         {
             <div class="mb-3">

@@ -34,7 +34,7 @@
         <div class="mb-3">
             <h3 class="form-label">@localizer["CurrentImage"]</h3>
             <div>
-                <img src="@Model.Template.ImageUrl" alt="Current Image" class="img-fluid mb-2" style="max-height: 200px; object-fit: cover;" />
+                <img src="@Model.Template.ImageUrl" alt="Current Image" class="img-fluid mb-2" style="max-height: 400px; object-fit: cover;" />
             </div>
         </div>
     }
@@ -42,48 +42,54 @@
     <ul id="questions-container" class="list-group">
         @foreach (var item in Model.Questions.OrderBy(x => x.Order).Select((q, i) => new { i, q }))
         {
-            <li class="list-group-item d-flex align-items-center" data-index="@item.i">
-                <div class="flex-grow-1">
-                    <label type="text" name="Questions[@item.i].Title" class="form-control mb-2">@item.q.Title</label>
-                    <p type="text" name="Questions[@item.i].Description" class="form-control mb-2" placeholder="@localizer["QuestionDescription"]">@item.q.Description</p>
-                    <label name="Questions[@item.i].Type" class="form-control mb-2">
-                        @if (item.q.Type == QuestionType.SingleLineText)
+            @if (Model.Template.Author.Id == User.FindFirstValue(ClaimTypes.NameIdentifier) || User.IsInRole("Admin") || item.q.ShowInResults)
+            {
+                <li class="list-group-item d-flex align-items-center" data-index="@item.i">
+                    <div class="flex-grow-1">
+                        <label type="text" name="Questions[@item.i].Title" class="form-control mb-2">@item.q.Title</label>
+                        <p type="text" name="Questions[@item.i].Description" class="form-control mb-2" placeholder="@localizer["QuestionDescription"]">@item.q.Description</p>
+                        <label name="Questions[@item.i].Type" class="form-control mb-2">
+                            @if (item.q.Type == QuestionType.SingleLineText)
+                            {
+                                @localizer["SingleLineText"]
+                            }
+                            @if (item.q.Type == QuestionType.MultiLineText)
+                            {
+                                @localizer["MultiLineText"]
+                            }
+                            @if (item.q.Type == QuestionType.Checkbox)
+                            {
+                                @localizer["Checkbox"]
+                            }
+                            @if (item.q.Type == QuestionType.Integer)
+                            {
+                                @localizer["Number"]
+                            }
+                        </label>
+                        @if (Model.Template.Author.Id == User.FindFirstValue(ClaimTypes.NameIdentifier) || User.IsInRole("Admin"))
                         {
-                            @localizer["SingleLineText"]
+                            <div class="form-check">
+                                @if (item.q.ShowInResults)
+                                {
+                                    <input type="checkbox" name="Questions[@item.i].ShowInResults" class="form-check-input" checked disabled />
+                                }
+                                else
+                                {
+                                    <input type="checkbox" name="Questions[@item.i].ShowInResults" class="form-check-input" disabled />
+                                }
+                                <label class="form-check-label">@localizer["ShowInResults"]</label>
+                            </div>
                         }
-                        @if (item.q.Type == QuestionType.MultiLineText)
-                        {
-                            @localizer["MultiLineText"]
-                        }
-                        @if (item.q.Type == QuestionType.Checkbox)
-                        {
-                            @localizer["Checkbox"]
-                        }
-                        @if (item.q.Type == QuestionType.Integer)
-                        {
-                            @localizer["Number"]
-                        }
-                    </label>
-                    <div class="form-check">
-                        @if (item.q.ShowInResults)
-                        {
-                            <input type="checkbox" name="Questions[@item.i].ShowInResults" class="form-check-input" checked disabled/>
-                        }
-                        else
-                        {
-                            <input type="checkbox" name="Questions[@item.i].ShowInResults" class="form-check-input" disabled/>
-                        }
-                        <label class="form-check-label">@localizer["ShowInResults"]</label>
                     </div>
-                </div>
-            </li>
+                </li>
+            }
         }
     </ul>
     <h3>@localizer["YourAnswers"]</h3>
     @if (Model.UserAnswers.Any())
     {
         <ul class="list-group">
-            @foreach (var answer in Model.UserAnswers)
+            @foreach (var answer in Model.UserAnswers.OrderByDescending(x => x.SubmittedAt))
             {
                 <li class="list-group-item">
                     <strong>@localizer["SubmittedAt"]:</strong> @answer.SubmittedAt.ToString("g")

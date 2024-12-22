@@ -13,47 +13,57 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" />
 </head>
 <body>
-    <header class="d-flex justify-content-between align-items-center p-3 mb-4 border-bottom">
-        <div class="d-flex">
-            <button id="theme-toggle" class="btn btn-secondary">@localizer["SwitchTheme"]</button>
-            <div class="language-switcher">
-                <a asp-controller="Home" asp-action="ChangeLanguage" asp-route-culture="en" class="btn btn-link">@localizer["English"]</a>
-                <a asp-controller="Home" asp-action="ChangeLanguage" asp-route-culture="ru" class="btn btn-link">@localizer["Russian"]</a>
-            </div>
-        </div>
-        <form asp-controller="Template" asp-action="Search" method="get" class="flex-grow-1 ms-4 me-4">
-            <div class="input-group">
-                <input type="text" name="searchQuery" class="form-control" placeholder="" value="" />
-                <button type="submit" class="btn btn-primary">@localizer["Search"]</button>
-            </div>
-        </form>
-        <div class="dropdown">
-            @if (User.Identity.IsAuthenticated)
-            {
-                <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                    @User.Identity.Name
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="userDropdown">
-                    <li><a class="dropdown-item" asp-controller="Account" asp-action="Index">@localizer["Profile"]</a></li>
-                    @if (User.IsInRole("Admin"))
+    <header class="d-flex flex-wrap justify-content-between align-items-center p-3 pt-1 pb-1 mb-4 border-bottom">
+            <div class="d-flex w-100 justify-content-between pt-1">
+                <div class="d-flex">
+                    <button id="theme-toggle" class="btn btn-secondary">@localizer["SwitchTheme"]</button>
+                    <div class="language-switcher">
+                        <a asp-controller="Home" asp-action="ChangeLanguage" asp-route-culture="en" class="btn btn-link">@localizer["English"]</a>
+                        <a asp-controller="Home" asp-action="ChangeLanguage" asp-route-culture="ru" class="btn btn-link">@localizer["Russian"]</a>
+                    </div>
+                </div>
+                <form asp-controller="Template" asp-action="Search" method="get" class="flex-grow-1 ms-4 me-4">
+                    <div class="input-group">
+                        <input type="text" name="searchQuery" class="form-control" placeholder="" value="" />
+                        <button type="submit" class="btn btn-primary">@localizer["Search"]</button>
+                    </div>
+                </form>
+                <div class="dropdown">
+                    @if (User.Identity.IsAuthenticated)
                     {
-                        <li><a class="dropdown-item" asp-controller="Admin" asp-action="Index">@localizer["AdminPanel"]</a></li>
+                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            @User.Identity.Name
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" asp-controller="Account" asp-action="Index">@localizer["Profile"]</a></li>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li><a class="dropdown-item" asp-controller="Admin" asp-action="Index">@localizer["AdminPanel"]</a></li>
+                            }
+                            <li>
+                                <form asp-controller="Account" asp-action="Logout" method="post">
+                                    <button type="submit" class="dropdown-item">@localizer["Logout"]</button>
+                                </form>
+                            </li>
+                        </ul>
                     }
-                    <li>
-                        <form asp-controller="Account" asp-action="Logout" method="post">
-                            <button type="submit" class="dropdown-item">@localizer["Logout"]</button>
-                        </form>
-                    </li>
-                </ul>
-            }
-            else
-            {
-                <a asp-controller="Account" asp-action="Login" class="btn btn-outline-primary me-2">@localizer["Login"]</a>
-                <a asp-controller="Account" asp-action="Register" class="btn btn-primary">@localizer["Register"]</a>
-            }
-        </div>
+                    else
+                    {
+                        <a asp-controller="Account" asp-action="Login" class="btn btn-outline-primary me-2">@localizer["Login"]</a>
+                        <a asp-controller="Account" asp-action="Register" class="btn btn-primary">@localizer["Register"]</a>
+                    }
+                </div>
+            </div>
+
+            <div class="w-100 mt-2">
+                <nav class="d-flex justify-content-start border-top pt-1">
+                    <a asp-controller="Template" asp-action="Main" class="btn btn-outline-secondary menu-block me-1">@localizer["Main"]</a>
+                    <a asp-controller="Template" asp-action="Index" class="btn btn-outline-secondary menu-block me-1">@localizer["Templates"]</a>
+                </nav>
+            </div>
     </header>
-    <div class="container">
+
+    <div class="container-fluid" id="main-content">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>

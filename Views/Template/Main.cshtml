@@ -1,0 +1,451 @@
+﻿@using CourseProject.ViewModels
+@using CourseProject.ViewModels.Template
+@using Microsoft.Extensions.Localization
+@model TemplateMainViewModel
+@inject IStringLocalizer<SharedResources> localizer
+
+<div class="container mt-5">
+    <ul class="nav nav-tabs" id="profile-tabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link @(Model.CurrentTab == "LatestTemplates" ? "active" : "")" id="tab1" data-bs-toggle="tab" data-bs-target="#tab1-templates" type="button" role="tab" aria-selected="@(Model.CurrentTab == "LatestTemplates" ? true : false)">
+                @localizer["LatestTemplates"]
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link @(Model.CurrentTab == "FiveMostPopularTemplates" ? "active" : "")" id="tab2" data-bs-toggle="tab" data-bs-target="#tab2-templates" type="button" role="tab" aria-selected="@(Model.CurrentTab == "FiveMostPopularTemplates" ? true : false)">
+                @localizer["FiveMostPopularTemplates"]
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link @(Model.CurrentTab == "TagCloud" ? "active" : "")" id="tab3" data-bs-toggle="tab" data-bs-target="#tag-cloud" type="button" role="tab" aria-selected="@(Model.CurrentTab == "TagCloud" ? true : false)">
+                @localizer["TagCloud"]
+            </button>
+        </li>
+    </ul>
+    <div class="tab-content" id="tabs-content">
+        <div class="tab-pane fade @(Model.CurrentTab == "LatestTemplates" ? "show active" : "")" id="tab1-templates" role="tabpanel">
+            <div class="d-flex justify-content-between mt-3">
+                <button id="toggleViewBtnTab1" class="btn btn-outline-primary">
+                    @if (Model.ViewModeTab1 == "Card")
+                    {
+                        <i class="fa-solid fa-table"></i>
+                    }
+                    else
+                    {
+                        <i class="fa-solid fa-list"></i>
+                    }
+                </button>
+            </div>
+            <table id="tableViewTab1" class="table table-striped @(Model.ViewModeTab1 == "Card" ? "d-none" : "")">
+                <thead>
+                    <tr>
+                        <th>
+                            <a asp-controller="Template" asp-action="Main" asp-route-sortColumnTab1="Title" asp-route-sortOrderTab1="@(Model.SortOrderTab1 == "asc" ? "desc" : "asc")" asp-route-sortColumnTab2="@Model.SortColumnTab2" asp-route-sortOrderTab2="@Model.SortOrderTab2" asp-route-viewModeTab1="@Model.ViewModeTab1" asp-route-viewModeTab2="@Model.ViewModeTab2" asp-route-currentTab="LatestTemplates">
+                                @localizer["Title"]
+                                @if (Model.SortColumnTab1 == "Title")
+                                {
+                                    <span>
+                                        @(Model.SortOrderTab1 == "asc" ? "↑" : "↓")
+                                    </span>
+                                }
+                            </a>
+                        </th>
+                        <th>
+                            <a asp-controller="Template" asp-action="Main" asp-route-sortColumnTab1="Topic" asp-route-sortOrderTab1="@(Model.SortOrderTab1 == "asc" ? "desc" : "asc")" asp-route-sortColumnTab2="@Model.SortColumnTab2" asp-route-sortOrderTab2="@Model.SortOrderTab2" asp-route-viewModeTab1="@Model.ViewModeTab1" asp-route-viewModeTab2="@Model.ViewModeTab2" asp-route-currentTab="LatestTemplates">
+                                @localizer["Topic"]
+                                @if (Model.SortColumnTab1 == "Topic")
+                                {
+                                    <span>
+                                        @(Model.SortOrderTab1 == "asc" ? "↑" : "↓")
+                                    </span>
+                                }
+                            </a>
+                        </th>
+                        <th>
+                            <a asp-controller="Template" asp-action="Main" asp-route-sortColumnTab1="Author" asp-route-sortOrderTab1="@(Model.SortOrderTab1 == "asc" ? "desc" : "asc")" asp-route-sortColumnTab2="@Model.SortColumnTab2" asp-route-sortOrderTab2="@Model.SortOrderTab2" asp-route-viewModeTab1="@Model.ViewModeTab1" asp-route-viewModeTab2="@Model.ViewModeTab2" asp-route-currentTab="LatestTemplates">
+                                @localizer["Author"]
+                                @if (Model.SortColumnTab1 == "Author")
+                                {
+                                    <span>
+                                        @(Model.SortOrderTab1 == "asc" ? "↑" : "↓")
+                                    </span>
+                                }
+                            </a>
+                        </th>
+                        <th>
+                            <a asp-controller="Template" asp-action="Main" asp-route-sortColumnTab1="Comments" asp-route-sortOrderTab1="@(Model.SortOrderTab1 == "asc" ? "desc" : "asc")" asp-route-sortColumnTab2="@Model.SortColumnTab2" asp-route-sortOrderTab2="@Model.SortOrderTab2" asp-route-viewModeTab1="@Model.ViewModeTab1" asp-route-viewModeTab2="@Model.ViewModeTab2" asp-route-currentTab="LatestTemplates">
+                                @localizer["Comments"]
+                                @if (Model.SortColumnTab1 == "Comments")
+                                {
+                                    <span>
+                                        @(Model.SortOrderTab1 == "asc" ? "↑" : "↓")
+                                    </span>
+                                }
+                            </a>
+                        </th>
+                        <th>
+                            <a asp-controller="Template" asp-action="Main" asp-route-sortColumnTab1="Likes" asp-route-sortOrderTab1="@(Model.SortOrderTab1 == "asc" ? "desc" : "asc")" asp-route-sortColumnTab2="@Model.SortColumnTab2" asp-route-sortOrderTab2="@Model.SortOrderTab2" asp-route-viewModeTab1="@Model.ViewModeTab1" asp-route-viewModeTab2="@Model.ViewModeTab2" asp-route-currentTab="LatestTemplates">
+                                @localizer["Likes"]
+                                @if (Model.SortColumnTab1 == "Likes")
+                                {
+                                    <span>
+                                        @(Model.SortOrderTab1 == "asc" ? "↑" : "↓")
+                                    </span>
+                                }
+                            </a>
+                        </th>
+                        <th>
+                            <a asp-controller="Template" asp-action="Main" asp-route-sortColumnTab1="CreatedAt" asp-route-sortOrderTab1="@(Model.SortOrderTab1 == "asc" ? "desc" : "asc")" asp-route-sortColumnTab2="@Model.SortColumnTab2" asp-route-sortOrderTab2="@Model.SortOrderTab2" asp-route-viewModeTab1="@Model.ViewModeTab1" asp-route-viewModeTab2="@Model.ViewModeTab2" asp-route-currentTab="LatestTemplates">
+                                @localizer["CreatedAt"]
+                                @if (Model.SortColumnTab1 == "CreatedAt")
+                                {
+                                    <span>
+                                        @(Model.SortOrderTab1 == "asc" ? "↑" : "↓")
+                                    </span>
+                                }
+                            </a>
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var template in Model.LatestTemplates)
+                    {
+                        <tr>
+                            <td>@template.Title</td>
+                            <td>@template.Topic?.Name</td>
+                            <td>@template.Author.UserName</td>
+                            <td>@template.Comments.Count</td>
+                            <td>@template.Likes.Count</td>
+                            <td>@template.CreatedAt.ToString("g")</td>
+                            <td><a class="btn btn-sm btn-primary" asp-controller="Template" asp-action="Details" asp-route-id="@template.Id"><i class="fa-solid fa-eye"></i></a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div id="containerTableTab1" class="@(Model.ViewModeTab1 == "Table" ? "d-none" : "")">
+                <div class="mb-2">
+                    <label for="sortColumnTab1">@localizer["SortBy"]:</label>
+                    <select id="sortColumnTab1" class="form-select d-inline-block w-auto">
+                        @if (Model.SortColumnTab1 == "Title")
+                        {
+                            <option value="Title" selected>@localizer["Title"]</option>
+                        }
+                        else
+                        {
+                            <option value="Title">@localizer["Title"]</option>
+                        }
+                        @if (Model.SortColumnTab1 == "Topic")
+                        {
+                            <option value="Topic" selected>@localizer["Topic"]</option>
+                        }
+                        else
+                        {
+                            <option value="Topic">@localizer["Topic"]</option>
+                        }
+                        @if (Model.SortColumnTab1 == "Author")
+                        {
+                            <option value="Author" selected>@localizer["Author"]</option>
+                        }
+                        else
+                        {
+                            <option value="Author">@localizer["Author"]</option>
+                        }
+                        @if (Model.SortColumnTab1 == "Comments")
+                        {
+                            <option value="Comments" selected>@localizer["Comments"]</option>
+                        }
+                        else
+                        {
+                            <option value="Comments">@localizer["Comments"]</option>
+                        }
+                        @if (Model.SortColumnTab1 == "Likes")
+                        {
+                            <option value="Likes" selected>@localizer["Likes"]</option>
+                        }
+                        else
+                        {
+                            <option value="Likes">@localizer["Likes"]</option>
+                        }
+                        @if (Model.SortColumnTab1 == "CreatedAt")
+                        {
+                            <option value="CreatedAt" selected>@localizer["CreatedAt"]</option>
+                        }
+                        else
+                        {
+                            <option value="CreatedAt">@localizer["CreatedAt"]</option>
+                        }
+                    </select>
+                    <button id="sortDirectionBtnTab1" class="btn btn-outline-secondary">
+                        @(Model.SortOrderTab1 == "asc" ? @localizer["Ascending"] : @localizer["Descending"])
+                    </button>
+                </div>
+
+                @if (Model.LatestTemplates.Any())
+                {
+                    <div id="cardViewTab1" class="row row-cols-1 row-cols-md-3 g-4 mt-3 @(Model.ViewModeTab1 == "Table" ? "d-none" : "")">
+                        @foreach (var template in Model.LatestTemplates)
+                        {
+                            <div class="col-md-4 mb-4">
+                                <div class="card h-100">
+                                    @if (!string.IsNullOrEmpty(template.ImageUrl))
+                                    {
+                                        <img src="@template.ImageUrl" class="card-img-top" alt="Template Image" style="max-height: 150px; object-fit: cover;" />
+                                    }
+                                    <div class="card-body">
+                                        <h5 class="card-title">@template.Title</h5>
+                                        <p class="card-text">@template.Description</p>
+                                        <a asp-controller="Template" asp-action="Details" asp-route-id="@template.Id" class="btn btn-primary">@localizer["View"]</a>
+                                    </div>
+                                    <div class="card-footer">
+                                        <small class="text-muted">@localizer["CreatedBy"]: @template.Author?.UserName</small>
+                                        <small class="text-muted">@localizer["CreatedAt"]: @template.CreatedAt</small>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="mt-3">@localizer["NoCreated"]</p>
+                }
+            </div>
+        </div>
+        <div class="tab-pane fade @(Model.CurrentTab == "FiveMostPopularTemplates" ? "show active" : "")" id="tab2-templates" role="tabpanel">
+            <div class="d-flex justify-content-between mt-3">
+                <button id="toggleViewBtnTab2" class="btn btn-outline-primary">
+                    @if (Model.ViewModeTab2 == "Card")
+                    {
+                        <i class="fa-solid fa-table"></i>
+                    }
+                    else
+                    {
+                        <i class="fa-solid fa-list"></i>
+                    }
+                </button>
+            </div>
+
+            <table id="tableViewTab2" class="table table-striped @(Model.ViewModeTab2 == "Card" ? "d-none" : "")">
+                <thead>
+                    <tr>
+                        <th>
+                            <a asp-controller="Template" asp-action="Main" asp-route-sortColumnTab2="Title" asp-route-sortOrderTab2="@(Model.SortOrderTab2 == "asc" ? "desc" : "asc")" asp-route-sortColumnTab1="@Model.SortColumnTab1" asp-route-sortOrderTab1="@Model.SortOrderTab1" asp-route-viewModeTab1="@Model.ViewModeTab1" asp-route-viewModeTab2="@Model.ViewModeTab2" asp-route-currentTab="FiveMostPopularTemplates">
+                                @localizer["Title"]
+                                @if (Model.SortColumnTab2 == "Title")
+                                {
+                                    <span>
+                                        @(Model.SortOrderTab2 == "asc" ? "↑" : "↓")
+                                    </span>
+                                }
+                            </a>
+                        </th>
+                        <th>
+                            <a asp-controller="Template" asp-action="Main" asp-route-sortColumnTab2="Topic" asp-route-sortOrderTab2="@(Model.SortOrderTab2 == "asc" ? "desc" : "asc")" asp-route-sortColumnTab1="@Model.SortColumnTab1" asp-route-sortOrderTab1="@Model.SortOrderTab1" asp-route-viewModeTab1="@Model.ViewModeTab1" asp-route-viewModeTab2="@Model.ViewModeTab2" asp-route-currentTab="FiveMostPopularTemplates">
+                                @localizer["Topic"]
+                                @if (Model.SortColumnTab2 == "Topic")
+                                {
+                                    <span>
+                                        @(Model.SortOrderTab2 == "asc" ? "↑" : "↓")
+                                    </span>
+                                }
+                            </a>
+                        </th>
+                        <th>
+                            <a asp-controller="Template" asp-action="Main" asp-route-sortColumnTab2="Author" asp-route-sortOrderTab2="@(Model.SortOrderTab2 == "asc" ? "desc" : "asc")" asp-route-sortColumnTab1="@Model.SortColumnTab1" asp-route-sortOrderTab1="@Model.SortOrderTab1" asp-route-viewModeTab1="@Model.ViewModeTab1" asp-route-viewModeTab2="@Model.ViewModeTab2" asp-route-currentTab="FiveMostPopularTemplates">
+                                @localizer["Author"]
+                                @if (Model.SortColumnTab2 == "Author")
+                                {
+                                    <span>
+                                        @(Model.SortOrderTab2 == "asc" ? "↑" : "↓")
+                                    </span>
+                                }
+                            </a>
+                        </th>
+                        <th>
+                            <a asp-controller="Template" asp-action="Main" asp-route-sortColumnTab2="Comments" asp-route-sortOrderTab2="@(Model.SortOrderTab2 == "asc" ? "desc" : "asc")" asp-route-sortColumnTab1="@Model.SortColumnTab1" asp-route-sortOrderTab1="@Model.SortOrderTab1" asp-route-viewModeTab1="@Model.ViewModeTab1" asp-route-viewModeTab2="@Model.ViewModeTab2" asp-route-currentTab="FiveMostPopularTemplates">
+                                @localizer["Comments"]
+                                @if (Model.SortColumnTab2 == "Comments")
+                                {
+                                    <span>
+                                        @(Model.SortOrderTab2 == "asc" ? "↑" : "↓")
+                                    </span>
+                                }
+                            </a>
+                        </th>
+                        <th>
+                            <a asp-controller="Template" asp-action="Main" asp-route-sortColumnTab2="Likes" asp-route-sortOrderTab2="@(Model.SortOrderTab2 == "asc" ? "desc" : "asc")" asp-route-sortColumnTab1="@Model.SortColumnTab1" asp-route-sortOrderTab1="@Model.SortOrderTab1" asp-route-viewModeTab1="@Model.ViewModeTab1" asp-route-viewModeTab2="@Model.ViewModeTab2" asp-route-currentTab="FiveMostPopularTemplates">
+                                @localizer["Likes"]
+                                @if (Model.SortColumnTab2 == "Likes")
+                                {
+                                    <span>
+                                        @(Model.SortOrderTab2 == "asc" ? "↑" : "↓")
+                                    </span>
+                                }
+                            </a>
+                        </th>
+                        <th>
+                            <a asp-controller="Template" asp-action="Main" asp-route-sortColumnTab2="CreatedAt" asp-route-sortOrderTab2="@(Model.SortOrderTab2 == "asc" ? "desc" : "asc")" asp-route-sortColumnTab1="@Model.SortColumnTab1" asp-route-sortOrderTab1="@Model.SortOrderTab1" asp-route-viewModeTab1="@Model.ViewModeTab1" asp-route-viewModeTab2="@Model.ViewModeTab2" asp-route-currentTab="FiveMostPopularTemplates">
+                                @localizer["CreatedAt"]
+                                @if (Model.SortColumnTab2 == "CreatedAt")
+                                {
+                                    <span>
+                                        @(Model.SortOrderTab2 == "asc" ? "↑" : "↓")
+                                    </span>
+                                }
+                            </a>
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var template in Model.FiveMostPopularTemplates)
+                    {
+                        <tr>
+                            <td>@template.Title</td>
+                            <td>@template.Topic?.Name</td>
+                            <td>@template.Author.UserName</td>
+                            <td>@template.Comments.Count</td>
+                            <td>@template.Likes.Count</td>
+                            <td>@template.CreatedAt.ToString("g")</td>
+                            <td><a class="btn btn-sm btn-primary" asp-controller="Template" asp-action="Details" asp-route-id="@template.Id"><i class="fa-solid fa-eye"></i></a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div id="containerTableTab2" class="@(Model.ViewModeTab2 == "Table" ? "d-none" : "")">
+                <div class="mb-2">
+                    <label for="sortColumnTab2">@localizer["SortBy"]:</label>
+                    <select id="sortColumnTab2" class="form-select d-inline-block w-auto">
+                        @if (Model.SortColumnTab2 == "Title")
+                        {
+                            <option value="Title" selected>@localizer["Title"]</option>
+                        }
+                        else
+                        {
+                            <option value="Title">@localizer["Title"]</option>
+                        }
+                        @if (Model.SortColumnTab2 == "Topic")
+                        {
+                            <option value="Topic" selected>@localizer["Topic"]</option>
+                        }
+                        else
+                        {
+                            <option value="Topic">@localizer["Topic"]</option>
+                        }
+                        @if (Model.SortColumnTab2 == "Author")
+                        {
+                            <option value="Author" selected>@localizer["Author"]</option>
+                        }
+                        else
+                        {
+                            <option value="Author">@localizer["Author"]</option>
+                        }
+                        @if (Model.SortColumnTab2 == "Comments")
+                        {
+                            <option value="Comments" selected>@localizer["Comments"]</option>
+                        }
+                        else
+                        {
+                            <option value="Comments">@localizer["Comments"]</option>
+                        }
+                        @if (Model.SortColumnTab2 == "Likes")
+                        {
+                            <option value="Likes" selected>@localizer["Likes"]</option>
+                        }
+                        else
+                        {
+                            <option value="Likes">@localizer["Likes"]</option>
+                        }
+                        @if (Model.SortColumnTab2 == "CreatedAt")
+                        {
+                            <option value="CreatedAt" selected>@localizer["CreatedAt"]</option>
+                        }
+                        else
+                        {
+                            <option value="CreatedAt">@localizer["CreatedAt"]</option>
+                        }
+                        @if (Model.SortColumnTab2 == "SubmittedAt")
+                        {
+                            <option value="SubmittedAt" selected>@localizer["SubmittedAt"]</option>
+                        }
+                        else
+                        {
+                            <option value="SubmittedAt">@localizer["SubmittedAt"]</option>
+                        }
+                    </select>
+                    <button id="sortDirectionBtnTab2" class="btn btn-outline-secondary">
+                        @(Model.SortOrderTab2 == "asc" ? @localizer["Ascending"] : @localizer["Descending"])
+                    </button>
+                </div>
+
+                @if (Model.FiveMostPopularTemplates.Any())
+                {
+                    <div id="cardViewTab2" class="row row-cols-1 row-cols-md-3 g-4 mt-3 @(Model.ViewModeTab2 == "Table" ? "d-none" : "")">
+                        @foreach (var template in Model.FiveMostPopularTemplates)
+                        {
+                            <div class="col-md-4 mb-4">
+                                <div class="card h-100">
+                                    @if (!string.IsNullOrEmpty(template.ImageUrl))
+                                    {
+                                        <img src="@template.ImageUrl" class="card-img-top" alt="Template Image" style="max-height: 150px; object-fit: cover;" />
+                                    }
+                                    <div class="card-body">
+                                        <h5 class="card-title">@template.Title</h5>
+                                        <p class="card-text">@template.Description</p>
+                                        <a asp-controller="Template" asp-action="Details" asp-route-id="@template.Id" class="btn btn-primary">@localizer["View"]</a>
+                                    </div>
+                                    <div class="card-footer">
+                                        <small class="text-muted">@localizer["CreatedBy"]: @template.Author?.UserName</small>
+                                        <small class="text-muted">@localizer["CreatedAt"]: @template.CreatedAt</small>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="mt-3">@localizer["NoAnswers"]</p>
+                }
+            </div>
+        </div>
+        <div class="tab-pane fade @(Model.CurrentTab == "TagCloud" ? "show active" : "")" id="tag-cloud" role="tabpanel">
+        
+        </div>
+    </div>
+</div>
+<script>
+    // document.addEventListener("DOMContentLoaded", function () {
+    //     const toggleViewBtn = document.getElementById("toggleViewBtn");
+    //     const cardView = document.getElementById("cardView");
+    //     const tableView = document.getElementById("tableView");
+    //     const sortColumn = document.getElementById("sortColumn");
+    //     const sortDirectionBtn = document.getElementById("sortDirectionBtn");
+    //     const containerTable = document.getElementById("containerTable");
+
+    //     toggleViewBtn.addEventListener("click", function () {
+    //         const isCardView = !cardView.classList.contains("d-none");
+    //         cardView.classList.toggle("d-none", isCardView);
+    //         tableView.classList.toggle("d-none", !isCardView);
+    //         containerTable.classList.toggle("d-none", isCardView);
+
+    //         toggleViewBtn.innerHTML = isCardView ? '<i class="fa-solid fa-list"></i>' : '<i class="fa-solid fa-table"></i>';
+    //     });
+
+    //     sortColumn.addEventListener("change", function () {
+    //         const sortOrder = sortDirectionBtn.textContent.includes("@localizer["Ascending"]") ? "asc" : "desc";
+    //         const isCardView = !cardView.classList.contains("d-none");
+    //         window.location.href = `?sortColumn=${sortColumn.value}&sortOrder=${sortOrder}&viewMode=${isCardView ? 'Card' : 'Table'}`;
+    //     });
+
+    //     sortDirectionBtn.addEventListener("click", function () {
+    //         const sortOrder = sortDirectionBtn.textContent.includes("@localizer["Ascending"]") ? "desc" : "asc";
+    //         sortDirectionBtn.textContent = sortOrder === "asc" ? "@localizer["Ascending"]" : "@localizer["Descending"]";
+
+    //         window.location.href = `?sortColumn=${sortColumn.value}&sortOrder=${sortOrder}&viewMode=${isCardView ? 'Card' : 'Table'}`;
+    //     });
+    // });
+</script>

@@ -20,7 +20,7 @@ namespace CourseProject.Attributes
             var otherProperty = validationContext.ObjectType.GetProperty(OtherProperty);
             var otherFieldName = localizer?[OtherProperty] ?? OtherProperty;
 
-            var errorMessage = localizer?[ResourceKey] ?? "The {0} and {1} fields must match";
+            var errorMessage = localizer?[ResourceKey];
 
             var formattedMessage = string.Format(errorMessage, currentFieldName, otherFieldName);
 

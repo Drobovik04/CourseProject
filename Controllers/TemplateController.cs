@@ -71,7 +71,7 @@ namespace CourseProject.Controllers
 
             if (!string.IsNullOrEmpty(searchQuery))
             {
-                var searchProcedure = _context.Database.SqlQueryRaw<int>($"EXEC SearchTemplates '\"{searchQuery}\"'").ToList();
+                var searchProcedure = _context.Database.SqlQuery<int>($"EXEC SearchTemplates {"\"" + searchQuery + "\""}").ToList();
                 templates = templates.Where(x => searchProcedure.Contains(x.Id));
             }
 
@@ -97,6 +97,84 @@ namespace CourseProject.Controllers
             return View(model);
         }
 
+        public async Task<IActionResult> Main(string searchQuery, string sortColumnTab1 = "Title", string sortOrderTab1 = "asc", string sortColumnTab2 = "Title", string sortOrderTab2 = "asc", string viewModeTab1 = "Table", string viewModeTab2 = "Table", string currentTab = "LatestTemplates")
+        {
+            var latestTemplates = _context.Templates
+                .Include(x => x.Author)
+                .Include(x => x.Topic)
+                .Include(x => x.Comments)
+                .Include(x => x.Likes)
+                .OrderByDescending(x => x.CreatedAt)
+                .Take(10)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                var searchProcedure = _context.Database.SqlQueryRaw<int>($"EXEC SearchTemplates '\"{searchQuery}\"'").ToList();
+                latestTemplates = latestTemplates.Where(x => searchProcedure.Contains(x.Id));
+            }
+
+            latestTemplates = sortColumnTab1 switch
+            {
+                "Title" => sortOrderTab1 == "asc" ? latestTemplates.OrderBy(x => x.Title) : latestTemplates.OrderByDescending(x => x.Title),
+                "Topic" => sortOrderTab1 == "asc" ? latestTemplates.OrderBy(x => x.Topic.Name) : latestTemplates.OrderByDescending(x => x.Topic.Name),
+                "Author" => sortOrderTab1 == "asc" ? latestTemplates.OrderBy(x => x.Author.UserName) : latestTemplates.OrderByDescending(x => x.Author.UserName),
+                "Comments" => sortOrderTab1 == "asc" ? latestTemplates.OrderBy(x => x.Comments.Count) : latestTemplates.OrderByDescending(x => x.Comments.Count),
+                "Likes" => sortOrderTab1 == "asc" ? latestTemplates.OrderBy(x => x.Likes.Count) : latestTemplates.OrderByDescending(x => x.Likes.Count),
+                "CreatedAt" => sortOrderTab1 == "asc" ? latestTemplates.OrderBy(x => x.CreatedAt) : latestTemplates.OrderByDescending(x => x.CreatedAt),
+
+                _ => latestTemplates
+            };
+
+            var fiveMostPopularTemplates = _context.Templates
+                .Include(x => x.Author)
+                .Include(x => x.Topic)
+                .Include(x => x.Comments)
+                .Include(x => x.Likes)
+                .Include(x => x.Forms)
+                .OrderByDescending(x => x.Forms.Count)
+                .Take(5)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                var searchProcedure = _context.Database.SqlQueryRaw<int>($"EXEC SearchTemplates '\"{searchQuery}\"'").ToList();
+                fiveMostPopularTemplates = fiveMostPopularTemplates.Where(x => searchProcedure.Contains(x.Id));
+            }
+
+            fiveMostPopularTemplates = sortColumnTab2 switch
+            {
+                "Title" => sortOrderTab2 == "asc" ? fiveMostPopularTemplates.OrderBy(x => x.Title) : fiveMostPopularTemplates.OrderByDescending(x => x.Title),
+                "Topic" => sortOrderTab2 == "asc" ? fiveMostPopularTemplates.OrderBy(x => x.Topic.Name) : fiveMostPopularTemplates.OrderByDescending(x => x.Topic.Name),
+                "Author" => sortOrderTab2 == "asc" ? fiveMostPopularTemplates.OrderBy(x => x.Author.UserName) : fiveMostPopularTemplates.OrderByDescending(x => x.Author.UserName),
+                "Comments" => sortOrderTab2 == "asc" ? fiveMostPopularTemplates.OrderBy(x => x.Comments.Count) : fiveMostPopularTemplates.OrderByDescending(x => x.Comments.Count),
+                "Likes" => sortOrderTab2 == "asc" ? fiveMostPopularTemplates.OrderBy(x => x.Likes.Count) : fiveMostPopularTemplates.OrderByDescending(x => x.Likes.Count),
+                "CreatedAt" => sortOrderTab2 == "asc" ? fiveMostPopularTemplates.OrderBy(x => x.CreatedAt) : fiveMostPopularTemplates.OrderByDescending(x => x.CreatedAt),
+
+                _ => fiveMostPopularTemplates
+            };
+
+            var tagInfo = _context.Tags
+                .Include(x => x.TemplateTags)
+                .GroupBy(x => x)
+                .Select(x => new TagForCloud() { Tag = x.Key, Frequency = x.Count()})
+                .AsQueryable();
+
+            var model = new TemplateMainViewModel
+            {
+                LatestTemplates = await latestTemplates.ToListAsync(),
+                FiveMostPopularTemplates = await fiveMostPopularTemplates.ToListAsync(),
+                TagCloud = await tagInfo.ToListAsync(),
+                SortColumnTab1 = sortColumnTab1,
+                SortColumnTab2 = sortColumnTab2,
+                SortOrderTab1 = sortOrderTab1,
+                SortOrderTab2 = sortOrderTab2,
+                CurrentTab = currentTab,
+                ViewModeTab1 = viewModeTab1,
+                ViewModeTab2 = viewModeTab2
+            };
+            return View(model);
+        }
         [Authorize]
         [HttpGet]
         public async Task<IActionResult> Create()
@@ -202,6 +280,7 @@ namespace CourseProject.Controllers
 
             var currentUser = await _userManager.GetUserAsync(User);
             var isAdmin = await _userManager.IsInRoleAsync(currentUser, "Admin");
+
             if (template.Author.Id != currentUser.Id && !isAdmin)
             {
                 return Forbid();
@@ -227,13 +306,14 @@ namespace CourseProject.Controllers
                 }).ToList(),
 
                 Tags = template.TemplateTags.Select(x => x.Tag.Name).ToList(),
-                AllowedUserNames = template.AllowedUsers.Select(x => x.User.UserName).ToList()!,
+                AllowedUserNames = template.AllowedUsers.Select(x => new TemplateUserNameAndEmail() { UserName = x.User.UserName, Email = x.User.Email }).ToList()!,
                 TopicId = template.TopicId,
                 Topics = await GetTopicsAsync()
             };
 
             return View(model);
         }
+
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> Edit(TemplateUpdateViewModel model)
@@ -253,10 +333,11 @@ namespace CourseProject.Controllers
             }
 
             model.Tags = model.Tags?.Where(tag => !string.IsNullOrWhiteSpace(tag)).ToList() ?? new List<string>();
-            model.AllowedUserNames = model.AllowedUserNames?.Where(user => !string.IsNullOrWhiteSpace(user)).ToList() ?? new List<string>();
+            var allowedUsers = model.AllowedUserNames?.Select(x => x.UserName).ToList() ?? new List<string>();
 
             var currentUser = await _userManager.GetUserAsync(User);
             var isAdmin = await _userManager.IsInRoleAsync(currentUser, "Admin");
+
             if (template.Author.Id != currentUser.Id && !isAdmin)
             {
                 return Forbid();
@@ -269,7 +350,6 @@ namespace CourseProject.Controllers
             template.TopicId = model.TopicId;
 
             model.Tags = model.Tags?.FirstOrDefault()?.Split(',').Select(x => x.Trim()).Where(x => x.Length != 0).ToList();
-            model.AllowedUserNames = model.AllowedUserNames?.FirstOrDefault()?.Split(',').Select(x => x.Trim()).Where(x => x.Length != 0).ToList();
 
             if (model.NewImageFile != null)
             {
@@ -305,10 +385,10 @@ namespace CourseProject.Controllers
                 template.TemplateTags.Clear();
             }
 
-            if (model.AllowedUserNames != null)
+            if (allowedUsers != null)
             {
                 var usersToRemove = template.AllowedUsers
-                    .Where(x => !model.AllowedUserNames.Contains(x.User.UserName))
+                    .Where(x => !allowedUsers.Contains(x.User.UserName))
                     .ToList();
 
                 foreach (var userToRemove in usersToRemove)
@@ -316,7 +396,7 @@ namespace CourseProject.Controllers
                     template.AllowedUsers.Remove(userToRemove);
                 }
 
-                foreach (var userName in model.AllowedUserNames)
+                foreach (var userName in allowedUsers)
                 {
                     var user = await _userManager.FindByNameAsync(userName);
                     if (user != null && !template.AllowedUsers.Any(x => x.User.Id == user.Id))
@@ -411,6 +491,7 @@ namespace CourseProject.Controllers
                 .Include(x => x.Forms)
                     .ThenInclude(x => x.Answers)
                 .FirstOrDefaultAsync(x => x.Id == id);
+
             var currentUser = await _userManager.GetUserAsync(User);
             var isAdmin = await _userManager.IsInRoleAsync(currentUser, "Admin");
 
@@ -553,11 +634,9 @@ namespace CourseProject.Controllers
             return View(model);
         }
         [Authorize]
-        public async Task<ActionResult> Answers(int id)
+        public async Task<ActionResult> Answers(int id, string sortColumn = "UserName", string sortOrder = "asc")
         {
             var currentUser = await _userManager.GetUserAsync(User);
-
-            var forms = _context.Forms.Include(x => x.User).Where(x => x.TemplateId == id).ToList();
 
             var isAdmin = await _userManager.IsInRoleAsync(currentUser, "Admin");
 
@@ -570,7 +649,27 @@ namespace CourseProject.Controllers
                 return Forbid();
             }
 
-            return View(forms);
+            var forms = _context.Forms
+                .Include(x => x.User)
+                .Where(x => x.TemplateId == id)
+                .AsQueryable();
+
+            forms = sortColumn switch
+            {
+                "UserName" => sortOrder == "asc" ? forms.OrderBy(x => x.User.UserName) : forms.OrderByDescending(x => x.User.UserName),
+                "SubmittedAt" => sortOrder == "asc" ? forms.OrderBy(x => x.SubmittedAt) : forms.OrderByDescending(x => x.SubmittedAt),
+                _ => forms
+            };
+
+            var model = new TemplateAnswersViewModel
+            {
+                TemplateId = id,
+                Forms = await forms.ToListAsync(),
+                SortColumn = sortColumn,
+                SortOrder = sortOrder
+            };
+
+            return View(model);
         }
         [HttpGet]
         public IActionResult GetTags(string begin)
@@ -588,9 +687,8 @@ namespace CourseProject.Controllers
         public IActionResult GetUsers(string begin)
         {
             var users = _context.Users
-                .Where(x => x.UserName.StartsWith(begin))
-                .Select(x => x.UserName)
-                .OrderBy(x => x)
+                .Where(x => (x.UserName.StartsWith(begin) || x.Email.StartsWith(begin)))
+                .Select(x => new { x.UserName, x.Email })
                 .Take(10)
                 .ToList();
 
