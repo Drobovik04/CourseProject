@@ -276,6 +276,9 @@
   <data name="FillForm" xml:space="preserve">
     <value>Fill form</value>
   </data>
+  <data name="FiveMostPopularTemplates" xml:space="preserve">
+    <value>Five most popular templates</value>
+  </data>
   <data name="Forms" xml:space="preserve">
     <value>Forms</value>
   </data>
@@ -299,6 +302,9 @@
   </data>
   <data name="IsLockedOut" xml:space="preserve">
     <value>Is blocked?</value>
+  </data>
+  <data name="LatestTemplate" xml:space="preserve">
+    <value>Latest templates</value>
   </data>
   <data name="Like" xml:space="preserve">
     <value>Like</value>
@@ -482,6 +488,9 @@
   </data>
   <data name="SwitchTheme" xml:space="preserve">
     <value>Switch Theme</value>
+  </data>
+  <data name="TagCloud" xml:space="preserve">
+    <value>Tag cloud</value>
   </data>
   <data name="Tags" xml:space="preserve">
     <value>Tags</value>

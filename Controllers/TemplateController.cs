@@ -34,7 +34,7 @@ namespace CourseProject.Controllers
 
             if (!string.IsNullOrEmpty(searchQuery))
             {
-                var searchProcedure = _context.Database.SqlQueryRaw<int>($"EXEC SearchTemplates '\"{searchQuery}\"'").ToList();
+                var searchProcedure = _context.Database.SqlQuery<int>($"EXEC SearchTemplates {"\"" + searchQuery + "\""}").ToList();
                 templates = templates.Where(x => searchProcedure.Contains(x.Id));
             }
 
@@ -110,7 +110,7 @@ namespace CourseProject.Controllers
 
             if (!string.IsNullOrEmpty(searchQuery))
             {
-                var searchProcedure = _context.Database.SqlQueryRaw<int>($"EXEC SearchTemplates '\"{searchQuery}\"'").ToList();
+                var searchProcedure = _context.Database.SqlQuery<int>($"EXEC SearchTemplates {"\"" + searchQuery + "\""}").ToList();
                 latestTemplates = latestTemplates.Where(x => searchProcedure.Contains(x.Id));
             }
 
@@ -138,7 +138,7 @@ namespace CourseProject.Controllers
 
             if (!string.IsNullOrEmpty(searchQuery))
             {
-                var searchProcedure = _context.Database.SqlQueryRaw<int>($"EXEC SearchTemplates '\"{searchQuery}\"'").ToList();
+                var searchProcedure = _context.Database.SqlQuery<int>($"EXEC SearchTemplates {"\"" + searchQuery + "\""}").ToList();
                 fiveMostPopularTemplates = fiveMostPopularTemplates.Where(x => searchProcedure.Contains(x.Id));
             }
 

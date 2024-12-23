@@ -276,6 +276,9 @@
   <data name="FillForm" xml:space="preserve">
     <value>Заполнить форму</value>
   </data>
+  <data name="FiveMostPopularTemplates" xml:space="preserve">
+    <value>Пять самых популярных шаблонов</value>
+  </data>
   <data name="Forms" xml:space="preserve">
     <value>Формы</value>
   </data>
@@ -299,6 +302,9 @@
   </data>
   <data name="IsLockedOut" xml:space="preserve">
     <value>Заблокирован?</value>
+  </data>
+  <data name="LatestTemplates" xml:space="preserve">
+    <value>Последние шаблоны</value>
   </data>
   <data name="Like" xml:space="preserve">
     <value>Нравится</value>
@@ -482,6 +488,9 @@
   </data>
   <data name="SwitchTheme" xml:space="preserve">
     <value>Переключить тему</value>
+  </data>
+  <data name="TagCloud" xml:space="preserve">
+    <value>Облако тегов</value>
   </data>
   <data name="Tags" xml:space="preserve">
     <value>Теги</value>

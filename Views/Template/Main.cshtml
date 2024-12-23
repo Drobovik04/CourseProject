@@ -1,6 +1,7 @@
 ﻿@using CourseProject.ViewModels
 @using CourseProject.ViewModels.Template
 @using Microsoft.Extensions.Localization
+@using System.Text.Json
 @model TemplateMainViewModel
 @inject IStringLocalizer<SharedResources> localizer
 
@@ -413,10 +414,92 @@
             </div>
         </div>
         <div class="tab-pane fade @(Model.CurrentTab == "TagCloud" ? "show active" : "")" id="tag-cloud" role="tabpanel">
-        
+            <canvas id="tagCanvas" width="600" height="400">
+            </canvas>
+            <div id="tagCloud"></div>
         </div>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/wordcloud@1.2.2/src/wordcloud2.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.16.0/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-cloud/build/d3.layout.cloud.min.js"></script>
+
+<script>
+    const tags = @Html.Raw(JsonSerializer.Serialize(
+        Model.TagCloud.Select(x => new 
+        { 
+                text = x.Tag.Name, 
+                size = x.Frequency, 
+                url = Url.Action("Search", "Template", new { searchQuery = x.Tag.Name})
+        })
+    ));
+
+    const width = 800;
+    const height = 600;
+
+    const minSize = d3.min(tags, x => x.size);
+    const maxSize = d3.max(tags, x => x.size);
+
+    const fontSizeScale = d3.scaleLinear()
+        .domain([minSize, maxSize])
+        .range([10, 100]);
+
+    tags.forEach(tag => tag.scaledSize = fontSizeScale(tag.size));
+
+    const svg = d3
+        .select("#tagCloud")
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+    const layout = d3.layout.cloud()
+        .size([width, height])
+        .words(tags.map(tag => ({ text: tag.text, size: tag.size, url: tag.url })))
+        .padding(5)
+        .rotate(() => ~~(Math.random() * 2) * 90)
+        .font("Impact")
+        .fontSize(x => x.size)
+        .on("end", draw);
+
+    layout.start();
+
+    function draw(words) {
+        svg.append("g")
+            .attr("transform", `translate(${width / 2}, ${height / 2})`)
+            .selectAll("text")
+            .data(words)
+            .enter()
+            .append("text")
+            .style("font-size", x => `${x.size}px`)
+            .style("font-family", "Impact")
+            .style("fill", () => d3.schemeCategory10[Math.floor(Math.random() * 10)])
+            .attr("text-anchor", "middle")
+            .attr("transform", x => `translate(${x.x}, ${x.y}) rotate(${x.rotate})`)
+            .text(x => x.text)
+            .on("click", function (item, index) {
+                if (item.url) {
+                    window.location.href = item.url;
+                }
+            });
+    }
+
+    WordCloud(document.getElementById('tagCanvas'), {
+        list: tags.map(x => [x.text, x.size]),
+        gridSize: 8,
+        weightFactor: function (size) {
+            return size * 10;
+        },
+        fontFamily: 'Times, serif',
+        color: 'random-light',
+        backgroundColor: '#333',
+        click: (item, dimension, event) => {
+            const clickedTag = tags.find(x => x.text === item[0]);
+            if (clickedTag && clickedTag.url) {
+                window.location.href = clickedTag.url;
+            }
+        }
+    });
+</script>
 <script>
     // document.addEventListener("DOMContentLoaded", function () {
     //     const toggleViewBtn = document.getElementById("toggleViewBtn");
