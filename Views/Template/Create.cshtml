@@ -123,6 +123,8 @@
         <button type="submit" class="btn btn-primary mt-1">@localizer["Save"]</button>
     </form>
 </div>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.33.0/tagify.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.33.0/tagify.js"></script>
 <script>
     const questionsContainer = document.getElementById("questions-container");
 
@@ -243,67 +245,67 @@
         const tagsDropdown = document.getElementById("tags-dropdown");
         const usersDropdown = document.getElementById("users-dropdown");
 
-        function displayResults(input, dropdown, results) {
-            dropdown.innerHTML = '';
-            if (results.length > 0) {
-                results.forEach(result => {
-                    const item = document.createElement('a');
-                    item.classList.add('dropdown-item');
-                    item.href = '#';
-                    item.textContent = result;
-                    item.addEventListener('click', function () {
-                        const currentValue = input.value;
-                        const lastCommaIndex = currentValue.lastIndexOf(',');
-                        input.value = (lastCommaIndex !== -1 ? currentValue.slice(0, lastCommaIndex) + ', ' : '') + result;
-                        input.focus();
-                        dropdown.style.display = 'none';
-                    });
-                    dropdown.appendChild(item);
-                });
-                dropdown.style.display = 'block';
-            } else {
-                dropdown.style.display = 'none';
-            }
-        }
+        // function displayResults(input, dropdown, results) {
+        //     dropdown.innerHTML = '';
+        //     if (results.length > 0) {
+        //         results.forEach(result => {
+        //             const item = document.createElement('a');
+        //             item.classList.add('dropdown-item');
+        //             item.href = '#';
+        //             item.textContent = result;
+        //             item.addEventListener('click', function () {
+        //                 const currentValue = input.value;
+        //                 const lastCommaIndex = currentValue.lastIndexOf(',');
+        //                 input.value = (lastCommaIndex !== -1 ? currentValue.slice(0, lastCommaIndex) + ', ' : '') + result;
+        //                 input.focus();
+        //                 dropdown.style.display = 'none';
+        //             });
+        //             dropdown.appendChild(item);
+        //         });
+        //         dropdown.style.display = 'block';
+        //     } else {
+        //         dropdown.style.display = 'none';
+        //     }
+        // }
 
-        tagsInput.addEventListener('input', function () {
-            const searchWord = getCurrentInput(tagsInput.value.trim());
-            if (searchWord.length > 1) {
-                fetch(`/Template/GetTags?begin=${searchWord}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        displayResults(tagsInput, tagsDropdown, data);
-                    });
-            } else {
-                tagsDropdown.style.display = 'none';
-            }
-            var value = tagsInput.value;
+        // tagsInput.addEventListener('input', function () {
+        //     const searchWord = getCurrentInput(tagsInput.value.trim());
+        //     if (searchWord.length > 1) {
+        //         fetch(`/Template/GetTags?begin=${searchWord}`)
+        //             .then(response => response.json())
+        //             .then(data => {
+        //                 displayResults(tagsInput, tagsDropdown, data);
+        //             });
+        //     } else {
+        //         tagsDropdown.style.display = 'none';
+        //     }
+        //     var value = tagsInput.value;
 
-            value = value.replace(/\s*,\s*/g, ', ');
+        //     value = value.replace(/\s*,\s*/g, ', ');
 
-            value = value.replace(/^\s+/, '');
+        //     value = value.replace(/^\s+/, '');
 
-            value = value.replace(/\s+$/, '');
+        //     value = value.replace(/\s+$/, '');
 
-            tagsInput.value = value;
-        });
+        //     tagsInput.value = value;
+        // });
 
-        tagsInput.addEventListener('keydown', function (event) {
-            if (event.key === 'Backspace' || event.key === 'Delete') {
-                let value = tagsInput.value;
+        // tagsInput.addEventListener('keydown', function (event) {
+        //     if (event.key === 'Backspace' || event.key === 'Delete') {
+        //         let value = tagsInput.value;
 
-                if (value.slice(-2) === ', ') {
-                    tagsInput.value = value.slice(0, -2);
-                    event.preventDefault();
-                }
-            }
-        });
+        //         if (value.slice(-2) === ', ') {
+        //             tagsInput.value = value.slice(0, -2);
+        //             event.preventDefault();
+        //         }
+        //     }
+        // });
 
 
-        tagsInput.addEventListener("focus", (e) => {
-            const scrollPosition = window.scrollY;
-            setTimeout(() => window.scrollTo(0, scrollPosition), 0);
-        });
+        // tagsInput.addEventListener("focus", (e) => {
+        //     const scrollPosition = window.scrollY;
+        //     setTimeout(() => window.scrollTo(0, scrollPosition), 0);
+        // });
 
         document.addEventListener('click', function (event) {
             if (!tagsDropdown.contains(event.target) && event.target !== tagsInput) {
@@ -443,6 +445,39 @@
         })
 
     });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const tagsInput = document.getElementById("tags-input");
+        const tagify = new Tagify(tagsInput, {
+            delimiters: ",",
+            whitelist: [],
+            dropdown: {
+                enabled: 0,
+                position: "text",
+                closeOnSelect: false
+            }
+        });
+
+
+        const form = tagsInput.closest("form");
+        form.addEventListener("submit", function () {
+            tagsInput.value = tagify.value.map(tag => tag.value).join(",");
+        });
+
+        tagify.on("input", function (event) {
+            const searchWord = event.detail.value.trim();
+
+            if (searchWord.length > 1) {
+                fetch(`/Template/GetTags?begin=${searchWord}`)
+                    .then((response) => response.json())
+                    .then((tags) => {
+                        tagify.settings.whitelist = tags;
+                        tagify.dropdown.show.call(tagify, searchWord);
+                    });
+            }
+        });
+    });
+
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>

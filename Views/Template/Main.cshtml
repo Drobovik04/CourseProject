@@ -52,6 +52,28 @@
                             </a>
                         </th>
                         <th>
+                            <a asp-controller="Template" asp-action="Main" asp-route-sortColumnTab1="Description" asp-route-sortOrderTab1="@(Model.SortOrderTab1 == "asc" ? "desc" : "asc")" asp-route-sortColumnTab2="@Model.SortColumnTab2" asp-route-sortOrderTab2="@Model.SortOrderTab2" asp-route-viewModeTab1="@Model.ViewModeTab1" asp-route-viewModeTab2="@Model.ViewModeTab2" asp-route-currentTab="LatestTemplates">
+                                @localizer["Description"]
+                                @if (Model.SortColumnTab1 == "Description")
+                                {
+                                    <span>
+                                        @(Model.SortOrderTab1 == "asc" ? "↑" : "↓")
+                                    </span>
+                                }
+                            </a>
+                        </th>
+                        <th>
+                            <a href>
+                                @localizer["Image"]
+                                @if (Model.SortColumnTab1 == "Image")
+                                {
+                                    <span>
+                                        @(Model.SortOrderTab1 == "asc" ? "↑" : "↓")
+                                    </span>
+                                }
+                            </a>
+                        </th>
+                        <th>
                             <a asp-controller="Template" asp-action="Main" asp-route-sortColumnTab1="Topic" asp-route-sortOrderTab1="@(Model.SortOrderTab1 == "asc" ? "desc" : "asc")" asp-route-sortColumnTab2="@Model.SortColumnTab2" asp-route-sortOrderTab2="@Model.SortOrderTab2" asp-route-viewModeTab1="@Model.ViewModeTab1" asp-route-viewModeTab2="@Model.ViewModeTab2" asp-route-currentTab="LatestTemplates">
                                 @localizer["Topic"]
                                 @if (Model.SortColumnTab1 == "Topic")
@@ -114,6 +136,13 @@
                     {
                         <tr>
                             <td>@template.Title</td>
+                            <td class="text-break markdownText">@template.DescriptionWithMarkdown</td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(template.ImageUrl))
+                                {
+                                    <img src="@template.ImageUrl" class="card-img-top" alt="Template Image" style="max-height: 100px; object-fit: cover;" />
+                                }
+                            </td>
                             <td>@template.Topic?.Name</td>
                             <td>@template.Author.UserName</td>
                             <td>@template.Comments.Count</td>
@@ -423,8 +452,17 @@
 <script src="https://cdn.jsdelivr.net/npm/wordcloud@1.2.2/src/wordcloud2.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.16.0/d3.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3-cloud/build/d3.layout.cloud.min.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var markdownTexts = document.getElementsByClassName("markdownText");
+
+        for(var el of markdownTexts) {
+            el.innerHTML = marked.parse(el.innerText);
+        }
+
+    });
+
     const tags = @Html.Raw(JsonSerializer.Serialize(
         Model.TagCloud.Select(x => new 
         { 
@@ -446,6 +484,19 @@
 
     tags.forEach(tag => tag.scaledSize = fontSizeScale(tag.size));
 
+    const totalArea = tags.reduce((sum, tag) => {
+        const fontSize = tag.scaledSize;
+        const wordWidth = fontSize * tag.text.length * 3;
+        const wordHeight = fontSize;
+        return sum + wordWidth * wordHeight;
+    }, 0);
+
+    const availableArea = width * height;
+
+    const scaleFactor = Math.sqrt(availableArea / totalArea);
+
+    tags.forEach(tag => tag.scaledSize *= scaleFactor);
+
     const svg = d3
         .select("#tagCloud")
         .append("svg")
@@ -454,7 +505,7 @@
 
     const layout = d3.layout.cloud()
         .size([width, height])
-        .words(tags.map(tag => ({ text: tag.text, size: tag.size, url: tag.url })))
+        .words(tags.map(tag => ({ text: tag.text, size: tag.scaledSize, url: tag.url })))
         .padding(5)
         .rotate(() => ~~(Math.random() * 2) * 90)
         .font("Impact")
@@ -480,14 +531,33 @@
                 if (item.url) {
                     window.location.href = item.url;
                 }
-            });
+            })
+            .style("cursor", "pointer");
     }
 
-    WordCloud(document.getElementById('tagCanvas'), {
+    const canvas = document.getElementById('tagCanvas');
+    const canvasWidth = canvas.width;
+    const canvasHeight = canvas.height;
+
+    function calculateScaleFactor(tags, canvasWidth, canvasHeight) {
+        const totalArea = tags.reduce((sum, tag) => sum + Math.pow(tag.size, 2), 0);
+        const canvasArea = canvasWidth * canvasHeight;
+
+        // Уменьшаем масштаб, если суммарная площадь тегов больше площади холста
+        const scaleFactor = Math.sqrt(canvasArea / totalArea);
+
+        // Ограничиваем масштабирование (чтобы текст не стал слишком мелким)
+        return Math.max(scaleFactor, 1);
+    }
+
+    // Рассчитаем масштабный коэффициент
+    const scaleFactor1 = calculateScaleFactor(tags, canvasWidth, canvasHeight);
+
+    WordCloud(canvas, {
         list: tags.map(x => [x.text, x.size]),
-        gridSize: 8,
+        gridSize: 8, 
         weightFactor: function (size) {
-            return size * 10;
+            return size * scaleFactor1 * 0.3; 
         },
         fontFamily: 'Times, serif',
         color: 'random-light',

@@ -154,17 +154,20 @@ namespace CourseProject.Controllers
                 _ => fiveMostPopularTemplates
             };
 
-            var tagInfo = _context.Tags
-                .Include(x => x.TemplateTags)
-                .GroupBy(x => x)
-                .Select(x => new TagForCloud() { Tag = x.Key, Frequency = x.Count()})
-                .AsQueryable();
+            var tagInfo = await _context.Tags
+                .Select(x => new TagForCloud() 
+                { 
+                    Tag = x, 
+                    Frequency = x.TemplateTags.Count() 
+                })
+                .Where(x => x.Frequency != 0)
+                .ToListAsync();
 
             var model = new TemplateMainViewModel
             {
                 LatestTemplates = await latestTemplates.ToListAsync(),
                 FiveMostPopularTemplates = await fiveMostPopularTemplates.ToListAsync(),
-                TagCloud = await tagInfo.ToListAsync(),
+                TagCloud = tagInfo,
                 SortColumnTab1 = sortColumnTab1,
                 SortColumnTab2 = sortColumnTab2,
                 SortOrderTab1 = sortOrderTab1,

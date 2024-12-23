@@ -224,6 +224,8 @@
         <button type="submit" class="btn btn-primary mt-1">@localizer["Save"]</button>
     </form>
 </div>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.33.0/tagify.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.33.0/tagify.js"></script>
 <script>
     const questionsContainer = document.getElementById("questions-container");
 
@@ -553,6 +555,38 @@
             $('#review-image-label').text(fileName);
         })
 
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const tagsInput = document.getElementById("tags-input");
+        const tagify = new Tagify(tagsInput, {
+            delimiters: ",",
+            whitelist: [],
+            dropdown: {
+                enabled: 0,
+                position: "text",
+                closeOnSelect: false
+            }
+        });
+
+
+        const form = tagsInput.closest("form");
+        form.addEventListener("submit", function () {
+            tagsInput.value = tagify.value.map(tag => tag.value).join(",");
+        });
+
+        tagify.on("input", function (event) {
+            const searchWord = event.detail.value.trim();
+
+            if (searchWord.length > 1) {
+                fetch(`/Template/GetTags?begin=${searchWord}`)
+                    .then((response) => response.json())
+                    .then((tags) => {
+                        tagify.settings.whitelist = tags;
+                        tagify.dropdown.show.call(tagify, searchWord);
+                    });
+            }
+        });
     });
 
 </script>
