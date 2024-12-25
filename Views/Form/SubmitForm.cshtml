@@ -11,6 +11,7 @@
 
     <form method="post" asp-action="SubmitForm">
         <input type="hidden" asp-for="TemplateId" value="@Model.TemplateId" />
+        <input type="checkbox" asp-for="SendCopyOnEmail" value="true">@localizer["SendOnEmail"] />
 @*         <input class="form-control" value="@User.FindFirstValue(ClaimTypes.Name)" readonly />
         <input class="form-control" value="@DateTime.UtcNow" /> *@
         @foreach (var question in Model.Questions)

@@ -7,6 +7,8 @@
 @inject IStringLocalizer<SharedResources> localizer
 @inject AppDbContext _context
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.33.0/tagify.css">
+<link rel="stylesheet" href="~/css/tagifyTheme.css">
 <div class="container mt-5">
     <h2>@localizer["CreateTemplate"]</h2>
     <ul class="nav nav-tabs" id="formTabs" role="tablist">
@@ -35,7 +37,7 @@
 
                     <div class="mb-3">
                         <label class="form-label">@localizer["PreviewMarkdown"]</label>
-                        <div id="markdownPreview" class="border rounded bg-light p-1"></div>
+                        <div id="markdownPreview" class="border rounded p-1"></div>
                     </div>
 
                     <div class="mb-3">
@@ -123,7 +125,6 @@
         <button type="submit" class="btn btn-primary mt-1">@localizer["Save"]</button>
     </form>
 </div>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.33.0/tagify.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.33.0/tagify.js"></script>
 <script>
     const questionsContainer = document.getElementById("questions-container");
@@ -244,68 +245,6 @@
         const usersInput = document.getElementById("users-input");
         const tagsDropdown = document.getElementById("tags-dropdown");
         const usersDropdown = document.getElementById("users-dropdown");
-
-        // function displayResults(input, dropdown, results) {
-        //     dropdown.innerHTML = '';
-        //     if (results.length > 0) {
-        //         results.forEach(result => {
-        //             const item = document.createElement('a');
-        //             item.classList.add('dropdown-item');
-        //             item.href = '#';
-        //             item.textContent = result;
-        //             item.addEventListener('click', function () {
-        //                 const currentValue = input.value;
-        //                 const lastCommaIndex = currentValue.lastIndexOf(',');
-        //                 input.value = (lastCommaIndex !== -1 ? currentValue.slice(0, lastCommaIndex) + ', ' : '') + result;
-        //                 input.focus();
-        //                 dropdown.style.display = 'none';
-        //             });
-        //             dropdown.appendChild(item);
-        //         });
-        //         dropdown.style.display = 'block';
-        //     } else {
-        //         dropdown.style.display = 'none';
-        //     }
-        // }
-
-        // tagsInput.addEventListener('input', function () {
-        //     const searchWord = getCurrentInput(tagsInput.value.trim());
-        //     if (searchWord.length > 1) {
-        //         fetch(`/Template/GetTags?begin=${searchWord}`)
-        //             .then(response => response.json())
-        //             .then(data => {
-        //                 displayResults(tagsInput, tagsDropdown, data);
-        //             });
-        //     } else {
-        //         tagsDropdown.style.display = 'none';
-        //     }
-        //     var value = tagsInput.value;
-
-        //     value = value.replace(/\s*,\s*/g, ', ');
-
-        //     value = value.replace(/^\s+/, '');
-
-        //     value = value.replace(/\s+$/, '');
-
-        //     tagsInput.value = value;
-        // });
-
-        // tagsInput.addEventListener('keydown', function (event) {
-        //     if (event.key === 'Backspace' || event.key === 'Delete') {
-        //         let value = tagsInput.value;
-
-        //         if (value.slice(-2) === ', ') {
-        //             tagsInput.value = value.slice(0, -2);
-        //             event.preventDefault();
-        //         }
-        //     }
-        // });
-
-
-        // tagsInput.addEventListener("focus", (e) => {
-        //     const scrollPosition = window.scrollY;
-        //     setTimeout(() => window.scrollTo(0, scrollPosition), 0);
-        // });
 
         document.addEventListener('click', function (event) {
             if (!tagsDropdown.contains(event.target) && event.target !== tagsInput) {
@@ -486,13 +425,13 @@
         transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
-        #questions-container .list-group-item.dragging {
-            opacity: 0.7;
-            transform: scale(1.05);
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-        }
+    #questions-container .list-group-item.dragging {
+        opacity: 0.7;
+        transform: scale(1.05);
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    }
 
-        #questions-container .list-group-item:not(.dragging) {
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
+    #questions-container .list-group-item:not(.dragging) {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
 </style>

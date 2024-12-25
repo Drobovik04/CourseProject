@@ -5,6 +5,8 @@
 @model TemplateUpdateViewModel
 @inject IStringLocalizer<SharedResources> localizer
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.33.0/tagify.css">
+<link rel="stylesheet" href="~/css/tagifyTheme.css">
 <div class="container mt-5">
     <h2>@localizer["EditTemplate"]</h2>
     <ul class="nav nav-tabs" id="formTabs" role="tablist">
@@ -224,7 +226,6 @@
         <button type="submit" class="btn btn-primary mt-1">@localizer["Save"]</button>
     </form>
 </div>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.33.0/tagify.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.33.0/tagify.js"></script>
 <script>
     const questionsContainer = document.getElementById("questions-container");

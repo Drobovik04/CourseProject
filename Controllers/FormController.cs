@@ -3,9 +3,15 @@ using CourseProject.Database;
 using CourseProject.Models;
 using CourseProject.ViewModels;
 using CourseProject.ViewModels.Form;
+using CourseProject.ViewModels.Template;
+using DinkToPdf.Contracts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using System.Text.Json;
@@ -16,11 +22,13 @@ namespace CourseProject.Controllers
     {
         private readonly AppDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly PdfService _pdfService;
 
-        public FormController(AppDbContext context, UserManager<IdentityUser> userManager)
+        public FormController(AppDbContext context, UserManager<IdentityUser> userManager, PdfService pdfService)
         {
             _context = context;
             _userManager = userManager;
+            _pdfService = pdfService;
         }
 
         [Authorize]
@@ -155,6 +163,18 @@ namespace CourseProject.Controllers
             _context.Forms.Add(form);
             await _context.SaveChangesAsync();
 
+            if (model.SendCopyOnEmail)
+            {
+                var formToSend = _context.Forms
+                    .Include(x => x.Template)
+                    .Include(x => x.Answers)
+                        .ThenInclude(x => x.Question)
+                    .FirstOrDefault(x => x.Id == form.Id);
+                var htmlContext = await RenderViewToStringAsync("_UserAnswersPartial", formToSend);
+                var pdf = _pdfService.GeneratePdf(htmlContext);
+                System.IO.File.WriteAllBytes("testpdf.pdf", pdf);
+            }
+
             return RedirectToAction("Details", "Template", new { id = model.TemplateId });
         }
 
@@ -266,6 +286,30 @@ namespace CourseProject.Controllers
             return RedirectToAction("Details", "Template", new { id = form.TemplateId });
         }
 
+        private void SendCopyForm(string email, Form form)
+        {
+            
+        }
+        private async Task<string> RenderViewToStringAsync(string viewName, object model)
+        {
+            var viewEngine = HttpContext.RequestServices.GetService(typeof(IRazorViewEngine)) as IRazorViewEngine;
+            var tempDataProvider = HttpContext.RequestServices.GetService(typeof(ITempDataProvider)) as ITempDataProvider;
+            var actionContext = new ActionContext(HttpContext, RouteData, ControllerContext.ActionDescriptor);
+
+            using var sw = new StringWriter();
+            var viewResult = viewEngine.FindView(actionContext, viewName, false);
+
+            var viewDictionary = new ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary())
+            {
+                Model = model
+            };
+
+            var tempData = new TempDataDictionary(actionContext.HttpContext, tempDataProvider);
+            var viewContext = new ViewContext(actionContext, viewResult.View, viewDictionary, tempData, sw, new HtmlHelperOptions());
+            await viewResult.View.RenderAsync(viewContext);
+
+            return sw.ToString();
+        }
     }
 
 }

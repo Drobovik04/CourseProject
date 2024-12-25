@@ -462,6 +462,9 @@
   <data name="SelectTopic" xml:space="preserve">
     <value>Выберите тему</value>
   </data>
+  <data name="SendOnEmail" xml:space="preserve">
+    <value>Выслать ответы на вашу почту</value>
+  </data>
   <data name="ShowInResults" xml:space="preserve">
     <value>Показывать в результатах</value>
   </data>

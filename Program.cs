@@ -1,5 +1,8 @@
 using CourseProject.Database;
 using CourseProject.Hubs;
+using CourseProject.Utilities;
+using DinkToPdf.Contracts;
+using DinkToPdf;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
@@ -53,6 +56,12 @@ namespace CourseProject
             });
 
             builder.Services.AddSignalR();
+
+            var contextAssembly = new CustomAssemblyLoadContext();
+            contextAssembly.LoadUnmanagedLibrary(Path.Combine(Directory.GetCurrentDirectory(), "libwkhtmltox.dll"));
+
+            builder.Services.AddSingleton<IConverter, SynchronizedConverter>(sp => new SynchronizedConverter(new PdfTools()));
+            builder.Services.AddScoped<PdfService>();
 
             var app = builder.Build();
             // Configure the HTTP request pipeline.

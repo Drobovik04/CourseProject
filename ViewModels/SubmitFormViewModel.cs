@@ -5,5 +5,6 @@
         public int TemplateId { get; set; }
         public Dictionary<int, QuestionAnswerViewModel> Questions { get; set; } = new();
         public Dictionary<int, AnswerInputViewModel> Answers { get; set; } = new();
+        public bool SendCopyOnEmail { get; set; }
     }
 }

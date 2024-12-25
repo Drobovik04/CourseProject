@@ -1,0 +1,61 @@
+﻿@using CourseProject
+@using CourseProject.ViewModels
+@using CourseProject.ViewModels.Form
+@using Microsoft.Extensions.Localization
+@using System.Security.Claims
+@inject IStringLocalizer<SharedResources> localizer
+@model Form
+
+<div class="container mt-5">
+    <h2>@Model.Template.Title</h2>
+    <p><strong>@localizer["SubmittedAt"]:</strong> @Model.SubmittedAt.ToString("g")</p>
+    <h3>@localizer["Answers"]</h3>
+    <div id="answers-container" data-form-Id="@Model.Id" class="list-group">
+        @foreach (var pair in Model.Answers)
+        {
+            <div class="list-group-item">
+                <div class="mb-2">
+                    <label class="form-label fw-bold">@pair.Question.Title</label>
+                    <p class="fst-italic">@pair.Question.Description</p>
+                </div>
+                <div>
+                    @switch (pair)
+                    {
+                        case TextAnswer textAnswer:
+                            <textarea data-id="@textAnswer.Id" data-type="TextAnswer" class="form-control" disabled readonly>@textAnswer.TextAnswerValue</textarea>
+                            break;
+                        case IntegerAnswer integerAnswer:
+                            <input data-id="@integerAnswer.Id" data-type="Integer" type="number" class="form-control" value="@integerAnswer.IntegerAnswerValue" disabled readonly />
+                            break;
+                        case CheckboxAnswer checkboxAnswer:
+                            if (checkboxAnswer.CheckboxAnswerValue == false)
+                            {
+                                <input data-id="@checkboxAnswer.Id" data-type="Checkbox" type="checkbox" class="form-check-input mt-0" value="false" disabled readonly />
+                            }
+                            else
+                            {
+                                <input data-id="@checkboxAnswer.Id" data-type="Checkbox" type="checkbox" class="form-check-input mt-0" value="false" checked disabled readonly />
+                            }
+                            break;
+                        default:
+                            {
+                                switch (pair.Question.Type)
+                                {
+                                    case QuestionType.SingleLineText | QuestionType.MultiLineText:
+                                        <textarea data-question-id="@pair.Question.Id" data-type="TextAnswer" class="form-control" disabled readonly></textarea>
+                                        break;
+                                    case QuestionType.Integer:
+                                        <input data-question-id="@pair.Question.Id" data-type="Integer" type="number" class="form-control" disabled readonly />
+                                        break;
+                                    case QuestionType.Checkbox:
+                                        <input data-question-id="@pair.Question.Id" data-type="Checkbox" type="checkbox" class="form-check-input mt-0" value="false" disabled readonly />
+                                        break;
+                                }
+                            }
+                            break;
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>
