@@ -1,6 +1,7 @@
 ﻿using Azure.Core;
 using CourseProject.Database;
 using CourseProject.Models;
+using CourseProject.Utilities;
 using CourseProject.ViewModels;
 using CourseProject.ViewModels.Form;
 using CourseProject.ViewModels.Template;
@@ -38,6 +39,7 @@ namespace CourseProject.Controllers
         public async Task<IActionResult> ViewAnswer(int id, string? returnUrl = null)
         {
             var form = await _context.Forms
+                .Include(x => x.User)
                 .Include(x => x.Template)
                     .ThenInclude(x => x.Questions.OrderBy(x => x.Order))
                 .Include(x => x.Answers.OrderBy(x => x.Question.Order))
@@ -170,6 +172,7 @@ namespace CourseProject.Controllers
             {
                 var formToSend = _context.Forms
                     .Include(x => x.Template)
+                    .Include(x => x.User)
                     .Include(x => x.Answers)
                         .ThenInclude(x => x.Question)
                     .FirstOrDefault(x => x.Id == form.Id);
@@ -180,7 +183,7 @@ namespace CourseProject.Controllers
                 var pdfPDFSharp = PdfGenerator.GeneratePdf(htmlContext, PdfSharp.PageSize.A4);
                 pdfPDFSharp.Save("testPDFSharp.pdf");
                 HtmlConverter.ConvertToPdf(htmlContext, new FileStream("textIText.pdf", FileMode.Create));
-
+                //MailSender.SendMessage(formToSend.User.Email, "textIText.pdf");
                 //System.IO.File.WriteAllBytes("testpdf.pdf", pdf);
                 //await new BrowserFetcher().DownloadAsync();
                 //var browser = await Puppeteer.LaunchAsync(new LaunchOptions { Headless = true });
@@ -329,7 +332,6 @@ namespace CourseProject.Controllers
         {
             var httpClient = new HttpClient();
 
-            // Найти все <link rel="stylesheet" href="..."> в HTML
             var linkRegex = new Regex("<link[^>]*rel=\"stylesheet\"[^>]*href=\"([^\"]+)\"[^>]*>", RegexOptions.IgnoreCase);
             var matches = linkRegex.Matches(htmlContent);
 
@@ -361,7 +363,6 @@ namespace CourseProject.Controllers
                 }
             }
 
-            // Вставить стили в тег <style> в <head>
             var styleTag = $"<style>{inlinedStyles}</style>";
             htmlContent = htmlContent.Replace("</head>", $"{styleTag}</head>");
 

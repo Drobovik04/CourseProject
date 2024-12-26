@@ -7,22 +7,21 @@ namespace CourseProject.Utilities
 {
     public class MailSender
     {
-        public static RestResponse SendSimpleMessage(string emailReceiver)
+        public static RestResponse SendMessage(string emailReceiver, string filePath)
         {
             RestClientOptions options = new RestClientOptions("https://api.mailgun.net/v3")
             {
-                Authenticator = new HttpBasicAuthenticator("api", "0c2f743f4d037118a99ebed8f25b7687-2e68d0fb-0ec5c06b")
+                Authenticator = new HttpBasicAuthenticator("api", "0861e3a008b27be980a2b985d4787756-2e68d0fb-3afd8e8e")
             };
             RestClient client = new RestClient(options);
 
             RestRequest request = new RestRequest();
-            request.AddParameter("domain", "sandbox60ac654b6562444c835c8749fd089198.mailgun.org", ParameterType.UrlSegment);
+            request.AddParameter("domain", "sandboxc20f2e0511a6418b8c32c9ecc47ccb8d.mailgun.org", ParameterType.UrlSegment);
             request.Resource = "{domain}/messages";
-            request.AddParameter("from", "Excited User <mailgun@sandbox60ac654b6562444c835c8749fd089198.mailgun.org>");
+            request.AddParameter("from", "Excited User <mailgun@sandboxc20f2e0511a6418b8c32c9ecc47ccb8d.mailgun.org>");
             request.AddParameter("to", emailReceiver);
-            request.AddParameter("to", "YOU@sandbox60ac654b6562444c835c8749fd089198.mailgun.org");
-            request.AddParameter("subject", "Hello");
-            request.AddParameter("text", "Testing some Mailgun awesomeness!");
+            request.AddParameter("subject", "Your answers");
+            request.AddFile("attachment", filePath);
             request.Method = Method.Post;
             return client.Execute(request);
         }

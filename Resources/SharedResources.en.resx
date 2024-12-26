@@ -285,6 +285,9 @@
   <data name="General" xml:space="preserve">
     <value>General</value>
   </data>
+  <data name="Image" xml:space="preserve">
+    <value>Image</value>
+  </data>
   <data name="ImageURL" xml:space="preserve">
     <value>Image URL</value>
   </data>
@@ -518,6 +521,9 @@
   </data>
   <data name="UploadNewImage" xml:space="preserve">
     <value>Upload new image</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>User</value>
   </data>
   <data name="UserAlreadyHasPassword" xml:space="preserve">
     <value>User already has a password set</value>

@@ -13,8 +13,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - CourseProject</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/CourseProject.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" />
 </head>
 
@@ -23,12 +21,13 @@
         <main role="main" class="pb-3">
             <div class="container mt-5">
                 <h2>@Model.Template.Title</h2>
+                <h5>@localizer["User"]: @Model.User.UserName</h5>
                 <p><strong>@localizer["SubmittedAt"]:</strong> @Model.SubmittedAt.ToString("g")</p>
                 <h3>@localizer["Answers"]</h3>
                 <div id="answers-container" data-form-Id="@Model.Id" class="list-group">
                     @foreach (var pair in Model.Answers)
                     {
-                        <div class="list-group-item">
+                        <div class="list-group-item rounded">
                             <div class="mb-2">
                                 <label class="form-label fw-bold">@pair.Question.Title</label>
                                 <p class="fst-italic">@pair.Question.Description</p>

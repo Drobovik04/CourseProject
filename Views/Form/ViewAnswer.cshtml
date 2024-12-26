@@ -8,6 +8,7 @@
 
 <div class="container mt-5">
     <h2>@Model.Template.Title</h2>
+    <h5>@localizer["User"]: @Model.Form.User.UserName</h5>
     <p><strong>@localizer["SubmittedAt"]:</strong> @Model.SubmittedAt.ToString("g")</p>
     <div class="d-inline-block">
         @if (User.IsInRole("Admin") || Model.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier))
@@ -24,7 +25,7 @@
     <div id="answers-container" data-form-Id="@Model.Form.Id" class="list-group">
         @foreach (var pair in Model.QuestionAnswerMap)
         {
-            <div class="list-group-item">
+            <div class="list-group-item rounded">
                 <div class="mb-2">
                     <label class="form-label fw-bold">@pair.Question.Title</label>
                     <p class="fst-italic">@pair.Question.Description</p>

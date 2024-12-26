@@ -595,7 +595,7 @@ namespace CourseProject.Controllers
                 return Redirect(returnUrl);
             }
 
-            return RedirectToAction("Index", "Account");
+            return RedirectToAction("Main", "Template");
         }
 
         public async Task<IActionResult> Details(int id)

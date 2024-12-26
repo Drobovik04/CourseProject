@@ -285,6 +285,9 @@
   <data name="General" xml:space="preserve">
     <value>Общее</value>
   </data>
+  <data name="Image" xml:space="preserve">
+    <value>Изображение</value>
+  </data>
   <data name="ImageURL" xml:space="preserve">
     <value>Ссылка на картинку</value>
   </data>
@@ -518,6 +521,9 @@
   </data>
   <data name="UploadNewImage" xml:space="preserve">
     <value>Загрузить новое изображение</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>Пользователь</value>
   </data>
   <data name="UserAlreadyHasPassword" xml:space="preserve">
     <value>У пользователя уже есть пароль</value>
