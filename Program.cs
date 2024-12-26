@@ -1,17 +1,18 @@
 using CourseProject.Database;
 using CourseProject.Hubs;
 using CourseProject.Utilities;
-using DinkToPdf.Contracts;
-using DinkToPdf;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.WebEncoders;
+using PuppeteerSharp;
 using System.Globalization;
+using System.Net;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
+using TheArtOfDev.HtmlRenderer.PdfSharp;
 
 namespace CourseProject
 {
@@ -57,12 +58,6 @@ namespace CourseProject
 
             builder.Services.AddSignalR();
 
-            var contextAssembly = new CustomAssemblyLoadContext();
-            contextAssembly.LoadUnmanagedLibrary(Path.Combine(Directory.GetCurrentDirectory(), "libwkhtmltox.dll"));
-
-            builder.Services.AddSingleton<IConverter, SynchronizedConverter>(sp => new SynchronizedConverter(new PdfTools()));
-            builder.Services.AddScoped<PdfService>();
-
             var app = builder.Build();
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -99,6 +94,7 @@ namespace CourseProject
                 await DatabaseInitializer.SeedAsync(userManager, roleManager, context);
             }
 
+            //PdfGenerator.GeneratePdf(new WebClient().DownloadString("https://ru.wikipedia.org/wiki/Медведева,_Евгения_Армановна"), PdfSharp.PageSize.A4).Save("test.pdf");
             app.Run();
         }
     }

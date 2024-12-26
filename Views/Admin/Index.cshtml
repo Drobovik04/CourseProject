@@ -80,7 +80,7 @@
                             <i class="fa-solid fa-xmark"></i>
                         }
                     </td>
-                    <td>
+                    <td class="d-flex flex-column gap-2">
                         <form method="post" asp-action="UpdateRole" asp-route-userId="@user.UserId">
                             <input type="hidden" name="userId" value="@user.UserId" />
                             <button type="submit" class="btn @(user.IsAdmin ? "btn-danger" : "btn-success")">
