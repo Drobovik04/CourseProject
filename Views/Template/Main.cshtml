@@ -443,7 +443,7 @@
             </div>
         </div>
         <div class="tab-pane fade @(Model.CurrentTab == "TagCloud" ? "show active" : "")" id="tag-cloud" role="tabpanel">
-            <canvas id="tagCanvas" width="600" height="400">
+            <canvas class="mt-3" id="tagCanvas" width="600" height="400">
             </canvas>
             <div id="tagCloud"></div>
         </div>
@@ -474,6 +474,9 @@
 
     const width = 800;
     const height = 600;
+
+    var style = getComputedStyle(document.body);
+    var font = style.getPropertyValue('--bs-body-font-family')
 
     const minSize = d3.min(tags, x => x.size);
     const maxSize = d3.max(tags, x => x.size);
@@ -508,7 +511,7 @@
         .words(tags.map(tag => ({ text: tag.text, size: tag.scaledSize, url: tag.url })))
         .padding(5)
         .rotate(() => ~~(Math.random() * 2) * 90)
-        .font("Impact")
+        .font(font)
         .fontSize(x => x.size)
         .on("end", draw);
 
@@ -522,7 +525,7 @@
             .enter()
             .append("text")
             .style("font-size", x => `${x.size}px`)
-            .style("font-family", "Impact")
+            .style("font-family", font)
             .style("fill", () => d3.schemeCategory10[Math.floor(Math.random() * 10)])
             .attr("text-anchor", "middle")
             .attr("transform", x => `translate(${x.x}, ${x.y}) rotate(${x.rotate})`)
@@ -543,14 +546,11 @@
         const totalArea = tags.reduce((sum, tag) => sum + Math.pow(tag.size, 2), 0);
         const canvasArea = canvasWidth * canvasHeight;
 
-        // Уменьшаем масштаб, если суммарная площадь тегов больше площади холста
         const scaleFactor = Math.sqrt(canvasArea / totalArea);
 
-        // Ограничиваем масштабирование (чтобы текст не стал слишком мелким)
         return Math.max(scaleFactor, 1);
     }
 
-    // Рассчитаем масштабный коэффициент
     const scaleFactor1 = calculateScaleFactor(tags, canvasWidth, canvasHeight);
 
     WordCloud(canvas, {
@@ -559,9 +559,9 @@
         weightFactor: function (size) {
             return size * scaleFactor1 * 0.3; 
         },
-        fontFamily: 'Times, serif',
+        fontFamily: font,
         color: 'random-light',
-        backgroundColor: '#333',
+        backgroundColor: '#00000000',
         click: (item, dimension, event) => {
             const clickedTag = tags.find(x => x.text === item[0]);
             if (clickedTag && clickedTag.url) {
@@ -571,34 +571,34 @@
     });
 </script>
 <script>
-    // document.addEventListener("DOMContentLoaded", function () {
-    //     const toggleViewBtn = document.getElementById("toggleViewBtn");
-    //     const cardView = document.getElementById("cardView");
-    //     const tableView = document.getElementById("tableView");
-    //     const sortColumn = document.getElementById("sortColumn");
-    //     const sortDirectionBtn = document.getElementById("sortDirectionBtn");
-    //     const containerTable = document.getElementById("containerTable");
+    document.addEventListener("DOMContentLoaded", function () {
+        const toggleViewBtn = document.getElementById("toggleViewBtn");
+        const cardViewTab1 = document.getElementById("cardViewTab1");
+        const tableViewTab1 = document.getElementById("tableViewTab1");
+        const cardViewTab2 = document.getElementById("cardViewTab2");
+        const tableViewTab2 = document.getElementById("tableViewTab2");
+        const sortColumn = document.getElementById("sortColumn");
 
-    //     toggleViewBtn.addEventListener("click", function () {
-    //         const isCardView = !cardView.classList.contains("d-none");
-    //         cardView.classList.toggle("d-none", isCardView);
-    //         tableView.classList.toggle("d-none", !isCardView);
-    //         containerTable.classList.toggle("d-none", isCardView);
+        toggleViewBtn.addEventListener("click", function () {
+            const isCardView = !cardView.classList.contains("d-none");
+            cardView.classList.toggle("d-none", isCardView);
+            tableView.classList.toggle("d-none", !isCardView);
+            containerTable.classList.toggle("d-none", isCardView);
 
-    //         toggleViewBtn.innerHTML = isCardView ? '<i class="fa-solid fa-list"></i>' : '<i class="fa-solid fa-table"></i>';
-    //     });
+            toggleViewBtn.innerHTML = isCardView ? '<i class="fa-solid fa-list"></i>' : '<i class="fa-solid fa-table"></i>';
+        });
 
-    //     sortColumn.addEventListener("change", function () {
-    //         const sortOrder = sortDirectionBtn.textContent.includes("@localizer["Ascending"]") ? "asc" : "desc";
-    //         const isCardView = !cardView.classList.contains("d-none");
-    //         window.location.href = `?sortColumn=${sortColumn.value}&sortOrder=${sortOrder}&viewMode=${isCardView ? 'Card' : 'Table'}`;
-    //     });
+        // sortColumn.addEventListener("change", function () {
+        //     const sortOrder = sortDirectionBtn.textContent.includes("@localizer["Ascending"]") ? "asc" : "desc";
+        //     const isCardView = !cardView.classList.contains("d-none");
+        //     window.location.href = `?sortColumn=${sortColumn.value}&sortOrder=${sortOrder}&viewMode=${isCardView ? 'Card' : 'Table'}`;
+        // });
 
-    //     sortDirectionBtn.addEventListener("click", function () {
-    //         const sortOrder = sortDirectionBtn.textContent.includes("@localizer["Ascending"]") ? "desc" : "asc";
-    //         sortDirectionBtn.textContent = sortOrder === "asc" ? "@localizer["Ascending"]" : "@localizer["Descending"]";
+        // sortDirectionBtn.addEventListener("click", function () {
+        //     const sortOrder = sortDirectionBtn.textContent.includes("@localizer["Ascending"]") ? "desc" : "asc";
+        //     sortDirectionBtn.textContent = sortOrder === "asc" ? "@localizer["Ascending"]" : "@localizer["Descending"]";
 
-    //         window.location.href = `?sortColumn=${sortColumn.value}&sortOrder=${sortOrder}&viewMode=${isCardView ? 'Card' : 'Table'}`;
-    //     });
-    // });
+        //     window.location.href = `?sortColumn=${sortColumn.value}&sortOrder=${sortOrder}&viewMode=${isCardView ? 'Card' : 'Table'}`;
+        // });
+    });
 </script>
