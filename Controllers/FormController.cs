@@ -1,38 +1,27 @@
-﻿using Azure.Core;
-using CourseProject.Database;
+﻿using CourseProject.Database;
 using CourseProject.Models;
 using CourseProject.Utilities;
 using CourseProject.ViewModels;
 using CourseProject.ViewModels.Form;
-using CourseProject.ViewModels.Template;
-using iText.Html2pdf;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
-using PuppeteerSharp;
-using System.Net;
-using System.Security.Claims;
 using System.Text;
-using System.Text.Json;
-using System.Text.RegularExpressions;
-using TheArtOfDev.HtmlRenderer.PdfSharp;
 
 namespace CourseProject.Controllers
 {
-    public class FormController:Controller
+    public class FormController : Controller
     {
         private readonly AppDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly MailSender _mailSender;
 
-        public FormController(AppDbContext context, UserManager<IdentityUser> userManager)
+        public FormController(AppDbContext context, UserManager<IdentityUser> userManager, MailSender mailSender)
         {
             _context = context;
             _userManager = userManager;
+            _mailSender = mailSender;
         }
 
         [Authorize]
@@ -176,20 +165,11 @@ namespace CourseProject.Controllers
                     .Include(x => x.Answers)
                         .ThenInclude(x => x.Question)
                     .FirstOrDefault(x => x.Id == form.Id);
-                var htmlContext = await RenderViewToStringAsync("_UserAnswersPartial", formToSend);
-                htmlContext = await InlineStylesAsync(htmlContext);
-                System.IO.File.WriteAllText("testhtml.html", htmlContext);
-                //var pdfDinkToPDF = _pdfService.GeneratePdf(htmlContext);
-                var pdfPDFSharp = PdfGenerator.GeneratePdf(htmlContext, PdfSharp.PageSize.A4);
-                pdfPDFSharp.Save("testPDFSharp.pdf");
-                HtmlConverter.ConvertToPdf(htmlContext, new FileStream("textIText.pdf", FileMode.Create));
-                //MailSender.SendMessage(formToSend.User.Email, "textIText.pdf");
-                //System.IO.File.WriteAllBytes("testpdf.pdf", pdf);
-                //await new BrowserFetcher().DownloadAsync();
-                //var browser = await Puppeteer.LaunchAsync(new LaunchOptions { Headless = true });
-                //var page = await browser.NewPageAsync();
-                //await page.SetContentAsync(htmlContext);
-                //await page.PdfAsync("pdfPuppetSharp.pdf");
+
+                var htmlContent = await HtmlGenerator.HtmlPage("_UserAnswersPartial", formToSend, HttpContext, RouteData, ControllerContext);
+                var htmlBytes = Encoding.UTF8.GetBytes(htmlContent);
+                var pdfBytes = new NReco.PdfGenerator.HtmlToPdfConverter().GeneratePdf(htmlContent);
+                await _mailSender.SendMessage(formToSend.User.Email, pdfBytes, htmlBytes);
             }
 
             return RedirectToAction("Details", "Template", new { id = model.TemplateId });
@@ -301,72 +281,6 @@ namespace CourseProject.Controllers
             }
 
             return RedirectToAction("Details", "Template", new { id = form.TemplateId });
-        }
-
-        private void SendCopyForm(string email, Form form)
-        {
-            
-        }
-        private async Task<string> RenderViewToStringAsync(string viewName, object model)
-        {
-            var viewEngine = HttpContext.RequestServices.GetService(typeof(IRazorViewEngine)) as IRazorViewEngine;
-            var tempDataProvider = HttpContext.RequestServices.GetService(typeof(ITempDataProvider)) as ITempDataProvider;
-            var actionContext = new ActionContext(HttpContext, RouteData, ControllerContext.ActionDescriptor);
-
-            using var sw = new StringWriter();
-            var viewResult = viewEngine.FindView(actionContext, viewName, false);
-
-            var viewDictionary = new ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary())
-            {
-                Model = model
-            };
-
-            var tempData = new TempDataDictionary(actionContext.HttpContext, tempDataProvider);
-            var viewContext = new ViewContext(actionContext, viewResult.View, viewDictionary, tempData, sw, new HtmlHelperOptions());
-            await viewResult.View.RenderAsync(viewContext);
-
-            return sw.ToString();
-        }
-
-        public static async Task<string> InlineStylesAsync(string htmlContent)
-        {
-            var httpClient = new HttpClient();
-
-            var linkRegex = new Regex("<link[^>]*rel=\"stylesheet\"[^>]*href=\"([^\"]+)\"[^>]*>", RegexOptions.IgnoreCase);
-            var matches = linkRegex.Matches(htmlContent);
-
-            var inlinedStyles = new StringBuilder();
-
-            foreach (Match match in matches)
-            {
-                var href = match.Groups[1].Value;
-
-                try
-                {
-                    string cssContent;
-                    if (href.StartsWith("http"))
-                    {
-                        cssContent = await httpClient.GetStringAsync(href);
-                    }
-                    else
-                    {
-                        cssContent = System.IO.File.ReadAllText(Path.Combine(AppContext.BaseDirectory, href));
-                    }
-
-                    inlinedStyles.AppendLine(cssContent);
-
-                    htmlContent = htmlContent.Replace(match.Value, string.Empty);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Ошибка загрузки стиля: {href}. {ex.Message}");
-                }
-            }
-
-            var styleTag = $"<style>{inlinedStyles}</style>";
-            htmlContent = htmlContent.Replace("</head>", $"{styleTag}</head>");
-
-            return htmlContent;
         }
     }
 

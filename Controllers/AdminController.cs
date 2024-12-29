@@ -1,8 +1,6 @@
 ﻿using CourseProject.Database;
-using CourseProject.Models;
 using CourseProject.ViewModels;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -28,7 +26,7 @@ namespace CourseProject.Controllers
 
         public async Task<IActionResult> Index(string sortColumn, string sortOrder)
         {
-            var users = _userManager.Users.ToList(); 
+            var users = _userManager.Users.ToList();
             var model = new List<UserViewModel>();
 
             foreach (var user in users)
@@ -124,7 +122,7 @@ namespace CourseProject.Controllers
                 return RedirectToAction("Index");
             }
 
-            ModelState.AddModelError("", _localizer["ErrorDelete"]) ;
+            ModelState.AddModelError("", _localizer["ErrorDelete"]);
             return RedirectToAction("Index");
         }
     }

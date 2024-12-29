@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CourseProject.Attributes
 {
-    public class LocalizedMinLengthAttribute:MinLengthAttribute
+    public class LocalizedMinLengthAttribute : MinLengthAttribute
     {
         public string ResourceKey { get; set; }
 

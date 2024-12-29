@@ -1,6 +1,4 @@
-﻿using CourseProject.Models;
-
-namespace CourseProject.ViewModels.Account
+﻿namespace CourseProject.ViewModels.Account
 {
     public class ProfileViewModel
     {
@@ -11,7 +9,7 @@ namespace CourseProject.ViewModels.Account
         public string SortColumnCreated { get; set; }
         public string SortOrderCreated { get; set; }
         public string SortColumnAnswered { get; set; }
-        public string SortOrderAnswered {  get; set; }
-        public string Tab {  get; set; }
+        public string SortOrderAnswered { get; set; }
+        public string Tab { get; set; }
     }
 }

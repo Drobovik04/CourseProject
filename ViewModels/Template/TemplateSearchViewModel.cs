@@ -6,5 +6,7 @@
         public string CurrentViewMode { get; set; } = "Title";
         public string SortColumn { get; set; }
         public string SortOrder { get; set; }
+        public bool ByTagOnly { get; set; }
+        public string SearchQuery { get; set; }
     }
 }

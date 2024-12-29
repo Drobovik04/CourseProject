@@ -4,7 +4,7 @@
     {
         public List<Models.Template> LatestTemplates { get; set; }
         public List<Models.Template> FiveMostPopularTemplates { get; set; }
-        public List<TagForCloud> TagCloud {  get; set; }
+        public List<TagForCloud> TagCloud { get; set; }
         public string SortColumnTab1 { get; set; }
         public string SortColumnTab2 { get; set; }
         public string SortOrderTab1 { get; set; }

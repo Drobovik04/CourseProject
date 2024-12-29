@@ -8,13 +8,6 @@
 <div class="container mt-5">
     <h2>@localizer["YourProfile"]</h2>
 
-    <form method="get" class="mb-4">
-        <div class="input-group">
-            <input type="text" name="searchQuery" class="form-control" placeholder="" />
-            <button class="btn btn-primary" type="submit">@localizer["Search"]</button>
-        </div>
-    </form>
-
     <ul class="nav nav-tabs" id="profile-tabs" role="tablist">
         <li class="nav-item" role="presentation">
             <button class="nav-link @(Model.Tab == "Created" ? "active" : "")" id="created-templates-tab" data-bs-toggle="tab" data-bs-target="#created-templates" type="button" role="tab" aria-selected="@(Model.Tab == "Created" ? true : false)">
@@ -132,60 +125,69 @@
 
             <div id="containerTableCreated" class="@(Model.CurrentViewModeCreated == "Table" ? "d-none" : "")">
                 <div class="mb-2">
-                    <label for="sortColumnCreated">@localizer["SortBy"]:</label>
-                    <select id="sortColumnCreated" class="form-select d-inline-block w-auto">
-                        @if (Model.SortColumnCreated == "Title")
-                        {
-                            <option value="Title" selected>@localizer["Title"]</option>
-                        }
-                        else
-                        {
-                            <option value="Title">@localizer["Title"]</option>
-                        }
-                        @if (Model.SortColumnCreated == "Topic")
-                        {
-                            <option value="Topic" selected>@localizer["Topic"]</option>
-                        }
-                        else
-                        {
-                            <option value="Topic">@localizer["Topic"]</option>
-                        }
-                        @if (Model.SortColumnCreated == "Author")
-                        {
-                            <option value="Author" selected>@localizer["Author"]</option>
-                        }
-                        else
-                        {
-                            <option value="Author">@localizer["Author"]</option>
-                        }
-                        @if (Model.SortColumnCreated == "Comments")
-                        {
-                            <option value="Comments" selected>@localizer["Comments"]</option>
-                        }
-                        else
-                        {
-                            <option value="Comments">@localizer["Comments"]</option>
-                        }
-                        @if (Model.SortColumnCreated == "Likes")
-                        {
-                            <option value="Likes" selected>@localizer["Likes"]</option>
-                        }
-                        else
-                        {
-                            <option value="Likes">@localizer["Likes"]</option>
-                        }
-                        @if (Model.SortColumnCreated == "CreatedAt")
-                        {
-                            <option value="CreatedAt" selected>@localizer["CreatedAt"]</option>
-                        }
-                        else
-                        {
-                            <option value="CreatedAt">@localizer["CreatedAt"]</option>
-                        }
-                    </select>
-                    <button id="sortDirectionBtnCreated" class="btn btn-outline-secondary">
-                        @(Model.SortOrderCreated == "asc" ? @localizer["Ascending"] : @localizer["Descending"])
-                    </button>
+                    <form class="d-flex align-items-center gap-1" method="get" asp-controller="Account" asp-action="Index">
+                        <label for="sortColumnCreated">@localizer["SortBy"]:</label>
+                        <select id="sortColumnCreated" name="sortColumnCreated" class="form-select d-inline-block w-auto">
+                            @if (Model.SortColumnCreated == "Title")
+                            {
+                                <option value="Title" selected>@localizer["Title"]</option>
+                            }
+                            else
+                            {
+                                <option value="Title">@localizer["Title"]</option>
+                            }
+                            @if (Model.SortColumnCreated == "Topic")
+                            {
+                                <option value="Topic" selected>@localizer["Topic"]</option>
+                            }
+                            else
+                            {
+                                <option value="Topic">@localizer["Topic"]</option>
+                            }
+                            @if (Model.SortColumnCreated == "Author")
+                            {
+                                <option value="Author" selected>@localizer["Author"]</option>
+                            }
+                            else
+                            {
+                                <option value="Author">@localizer["Author"]</option>
+                            }
+                            @if (Model.SortColumnCreated == "Comments")
+                            {
+                                <option value="Comments" selected>@localizer["Comments"]</option>
+                            }
+                            else
+                            {
+                                <option value="Comments">@localizer["Comments"]</option>
+                            }
+                            @if (Model.SortColumnCreated == "Likes")
+                            {
+                                <option value="Likes" selected>@localizer["Likes"]</option>
+                            }
+                            else
+                            {
+                                <option value="Likes">@localizer["Likes"]</option>
+                            }
+                            @if (Model.SortColumnCreated == "CreatedAt")
+                            {
+                                <option value="CreatedAt" selected>@localizer["CreatedAt"]</option>
+                            }
+                            else
+                            {
+                                <option value="CreatedAt">@localizer["CreatedAt"]</option>
+                            }
+                        </select>
+
+                        <input type="hidden" name="sortOrderCreated" value="@(Model.SortOrderCreated == "asc" ? "desc" : "asc")" />
+                        <input type="hidden" name="sortColumnAnswered" value="@Model.SortColumnAnswered" />
+                        <input type="hidden" name="sortOrderAnswered" value="@Model.SortOrderAnswered" />
+                        <input type="hidden" name="viewModeCreated" value="Card" />
+                        <input type="hidden" name="viewModeAnswered" value="@Model.CurrentViewModeAnswered" />
+                        <input type="hidden" name="tab" value="Created" />
+                        <button type="submit" id="sortDirectionBtnCreated" class="btn btn-outline-secondary">
+                            @(Model.SortOrderCreated == "asc" ? @localizer["Ascending"] : @localizer["Descending"])
+                        </button>
+                    </form>
                 </div>
 
                 @if (Model.CreatedTemplates.Any())
@@ -336,99 +338,109 @@
 
             <div id="containerTableAnswered" class="@(Model.CurrentViewModeAnswered == "Table" ? "d-none" : "")">
                 <div class="mb-2">
-                    <label for="sortColumnAnswered">@localizer["SortBy"]:</label>
-                    <select id="sortColumnAnswered" class="form-select d-inline-block w-auto">
-                        @if (Model.SortColumnAnswered == "Title")
-                        {
-                            <option value="Title" selected>@localizer["Title"]</option>
-                        }
-                        else
-                        {
-                            <option value="Title">@localizer["Title"]</option>
-                        }
-                        @if (Model.SortColumnAnswered == "Topic")
-                        {
-                            <option value="Topic" selected>@localizer["Topic"]</option>
-                        }
-                        else
-                        {
-                            <option value="Topic">@localizer["Topic"]</option>
-                        }
-                        @if (Model.SortColumnAnswered == "Author")
-                        {
-                            <option value="Author" selected>@localizer["Author"]</option>
-                        }
-                        else
-                        {
-                            <option value="Author">@localizer["Author"]</option>
-                        }
-                        @if (Model.SortColumnAnswered == "Comments")
-                        {
-                            <option value="Comments" selected>@localizer["Comments"]</option>
-                        }
-                        else
-                        {
-                            <option value="Comments">@localizer["Comments"]</option>
-                        }
-                        @if (Model.SortColumnAnswered == "Likes")
-                        {
-                            <option value="Likes" selected>@localizer["Likes"]</option>
-                        }
-                        else
-                        {
-                            <option value="Likes">@localizer["Likes"]</option>
-                        }
-                        @if (Model.SortColumnAnswered == "CreatedAt")
-                        {
-                            <option value="CreatedAt" selected>@localizer["CreatedAt"]</option>
-                        }
-                        else
-                        {
-                            <option value="CreatedAt">@localizer["CreatedAt"]</option>
-                        }
-                        @if (Model.SortColumnAnswered == "SubmittedAt")
-                        {
-                            <option value="SubmittedAt" selected>@localizer["SubmittedAt"]</option>
-                        }
-                        else
-                        {
-                            <option value="SubmittedAt">@localizer["SubmittedAt"]</option>
-                        }
-                    </select>
-                    <button id="sortDirectionBtnAnswered" class="btn btn-outline-secondary">
-                        @(Model.SortOrderAnswered == "asc" ? @localizer["Ascending"] : @localizer["Descending"])
-                    </button>
+                    <form class="d-flex align-items-center gap-1" method="get" asp-controller="Account" asp-action="Index">
+                        <label for="sortColumnAnswered">@localizer["SortBy"]:</label>
+                        <select id="sortColumnAnswered" name="sortColumnAnswered" class="form-select d-inline-block w-auto">
+                            @if (Model.SortColumnAnswered == "Title")
+                            {
+                                <option value="Title" selected>@localizer["Title"]</option>
+                            }
+                            else
+                            {
+                                <option value="Title">@localizer["Title"]</option>
+                            }
+                            @if (Model.SortColumnAnswered == "Topic")
+                            {
+                                <option value="Topic" selected>@localizer["Topic"]</option>
+                            }
+                            else
+                            {
+                                <option value="Topic">@localizer["Topic"]</option>
+                            }
+                            @if (Model.SortColumnAnswered == "Author")
+                            {
+                                <option value="Author" selected>@localizer["Author"]</option>
+                            }
+                            else
+                            {
+                                <option value="Author">@localizer["Author"]</option>
+                            }
+                            @if (Model.SortColumnAnswered == "Comments")
+                            {
+                                <option value="Comments" selected>@localizer["Comments"]</option>
+                            }
+                            else
+                            {
+                                <option value="Comments">@localizer["Comments"]</option>
+                            }
+                            @if (Model.SortColumnAnswered == "Likes")
+                            {
+                                <option value="Likes" selected>@localizer["Likes"]</option>
+                            }
+                            else
+                            {
+                                <option value="Likes">@localizer["Likes"]</option>
+                            }
+                            @if (Model.SortColumnAnswered == "CreatedAt")
+                            {
+                                <option value="CreatedAt" selected>@localizer["CreatedAt"]</option>
+                            }
+                            else
+                            {
+                                <option value="CreatedAt">@localizer["CreatedAt"]</option>
+                            }
+                            @if (Model.SortColumnAnswered == "SubmittedAt")
+                            {
+                                <option value="SubmittedAt" selected>@localizer["SubmittedAt"]</option>
+                            }
+                            else
+                            {
+                                <option value="SubmittedAt">@localizer["SubmittedAt"]</option>
+                            }
+                        </select>
+
+                        <input type="hidden" name="sortOrderCreated" value="@Model.SortOrderCreated" />
+                        <input type="hidden" name="sortColumnCreated" value="@Model.SortColumnCreated" />
+                        <input type="hidden" name="sortOrderAnswered" value="@(Model.SortOrderAnswered == "asc" ? "desc" : "asc")" />
+                        <input type="hidden" name="viewModeCreated" value="@Model.CurrentViewModeCreated" />
+                        <input type="hidden" name="viewModeAnswered" value="Card" />
+                        <input type="hidden" name="tab" value="Answered" />
+                        <button id="sortDirectionBtnAnswered" class="btn btn-outline-secondary">
+                            @(Model.SortOrderAnswered == "asc" ? @localizer["Ascending"] : @localizer["Descending"])
+                        </button>
+                    </form>
                 </div>
 
-            @if (Model.AnsweredTemplates.Any())
-            {
-                <div id="cardViewAnswered" class="row row-cols-1 row-cols-md-3 g-4 mt-3 @(Model.CurrentViewModeAnswered == "Table" ? "d-none" : "")">
-                    @foreach (var answer in Model.AnsweredTemplates)
-                    {
-                        <div class="col-md-4 mb-4">
-                            <div class="card h-100">
-                                @if (!string.IsNullOrEmpty(answer.Template.ImageUrl))
-                                {
-                                    <img src="@answer.Template.ImageUrl" class="card-img-top" alt="template Image" style="max-height: 150px; object-fit: cover;" />
-                                }
-                                <div class="card-body">
-                                    <h5 class="card-title">@answer.Template.Title</h5>
-                                    <p class="card-text">@answer.Template.Description</p>
-                                    <a asp-controller="Form" asp-action="ViewAnswer" asp-route-id="@answer.Id" asp-route-returnUrl="@Url.Action("Index", "Account")" class="btn btn-primary">@localizer["View"]</a>
-                                </div>
-                                <div class="card-footer">
-                                    <small class="text-muted">@localizer["CreatedBy"]: @answer.Template.Author?.UserName</small>
-                                    <small class="text-muted">@localizer["SubmittedAt"]: @answer.SubmittedAt</small>
+                @if (Model.AnsweredTemplates.Any())
+                {
+                    <div id="cardViewAnswered" class="row row-cols-1 row-cols-md-3 g-4 mt-3 @(Model.CurrentViewModeAnswered == "Table" ? "d-none" : "")">
+                        @foreach (var answer in Model.AnsweredTemplates)
+                        {
+                            <div class="col-md-4 mb-4">
+                                <div class="card h-100">
+                                    @if (!string.IsNullOrEmpty(answer.Template.ImageUrl))
+                                    {
+                                        <img src="@answer.Template.ImageUrl" class="card-img-top" alt="template Image" style="max-height: 150px; object-fit: cover;" />
+                                    }
+                                    <div class="card-body">
+                                        <h5 class="card-title">@answer.Template.Title</h5>
+                                        <p class="card-text">@answer.Template.Description</p>
+                                        <a asp-controller="Form" asp-action="ViewAnswer" asp-route-id="@answer.Id" asp-route-returnUrl="@Url.Action("Index", "Account")" class="btn btn-primary">@localizer["View"]</a>
+                                    </div>
+                                    <div class="card-footer">
+                                        <small class="text-muted">@localizer["CreatedBy"]: @answer.Template.Author?.UserName</small>
+                                        <small class="text-muted">@localizer["SubmittedAt"]: @answer.SubmittedAt</small>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    }
-                </div>
-            }
-            else
-            {
-                <p class="mt-3">@localizer["NoAnswers"]</p>
-            }
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="mt-3">@localizer["NoAnswers"]</p>
+                }
+            </div>
         </div>
     </div>
 </div>
@@ -440,10 +452,6 @@
         const cardViewAnswered = document.getElementById("cardViewAnswered");
         const tableViewCreated = document.getElementById("tableViewCreated");
         const tableViewAnswered = document.getElementById("tableViewAnswered");
-        const sortColumnCreated = document.getElementById("sortColumnCreated");
-        const sortColumnAnswered = document.getElementById("sortColumnAnswered");
-        const sortDirectionBtnCreated = document.getElementById("sortDirectionBtnCreated");
-        const sortDirectionBtnAnswered = document.getElementById("sortDirectionBtnAnswered");
         const containerTableCreated = document.getElementById("containerTableCreated");
         const containerTableAnswered = document.getElementById("containerTableAnswered");
 
@@ -467,43 +475,5 @@
             toggleViewBtnAnswered.innerHTML = isCardViewAnswered ? '<i class="fa-solid fa-list"></i>' : '<i class="fa-solid fa-table"></i>';
         });
 
-        sortColumnCreated.addEventListener("change", function () {
-            const sortOrderCreated = sortDirectionBtnCreated.textContent.includes("@localizer["Ascending"]") ? "asc" : "desc";
-            const sortOrderAnswered = sortDirectionBtnAnswered.textContent.includes("@localizer["Ascending"]") ? "asc" : "desc";
-            const isCardViewCreated = !cardViewCreated.classList.contains("d-none");
-            const isCardViewAnswered = !cardViewAnswered.classList.contains("d-none");
-                window.location.href = `?sortColumnCreated=${sortColumnCreated.value}&sortOrderCreated=${sortOrderCreated}&sortColumnAnswered=${sortColumnAnswered.value}&sortOrderAnswered=${sortOrderAnswered}&viewModeCreated=${isCardViewCreated ? 'Card' : 'Table'}&viewModeAnswered=${isCardViewAnswered ? 'Card' : 'Table'}&tab=Created`;
-        });
-
-        sortColumnAnswered.addEventListener("change", function () {
-            const sortOrderCreated = sortDirectionBtnCreated.textContent.includes("@localizer["Ascending"]") ? "asc" : "desc";
-            const sortOrderAnswered = sortDirectionBtnAnswered.textContent.includes("@localizer["Ascending"]") ? "asc" : "desc";
-            const isCardViewCreated = !cardViewCreated.classList.contains("d-none");
-            const isCardViewAnswered = !cardViewAnswered.classList.contains("d-none");
-
-            window.location.href = `?sortColumnCreated=${sortColumnCreated.value}&sortOrderCreated=${sortOrderCreated}&sortColumnAnswered=${sortColumnAnswered.value}&sortOrderAnswered=${sortOrderAnswered}&viewModeCreated=${isCardViewCreated ? 'Card' : 'Table'}&viewModeAnswered=${isCardViewAnswered ? 'Card' : 'Table'}&tab=Answered`;
-        });
-
-        sortDirectionBtnCreated.addEventListener("click", function () {
-            const sortOrderCreated = sortDirectionBtnCreated.textContent.includes("@localizer["Ascending"]") ? "desc" : "asc";
-            const sortOrderAnswered = sortDirectionBtnAnswered.textContent.includes("@localizer["Ascending"]") ? "desc" : "asc";
-            sortDirectionBtnCreated.textContent = sortOrderCreated === "asc" ? "@localizer["Ascending"]" : "@localizer["Descending"]";
-            sortDirectionBtnAnswered.textContent = sortOrderAnswered === "asc" ? "@localizer["Ascending"]" : "@localizer["Descending"]";
-            const isCardViewCreated = !cardViewCreated.classList.contains("d-none");
-            const isCardViewAnswered = !cardViewAnswered.classList.contains("d-none");
-
-            window.location.href = `?sortColumnCreated=${sortColumnCreated.value}&sortOrderCreated=${sortOrderCreated}&sortColumnAnswered=${sortColumnAnswered.value}&sortOrderAnswered=${sortOrderAnswered}&viewModeCreated=${isCardViewCreated ? 'Card' : 'Table'}&viewModeAnswered=${isCardViewAnswered ? 'Card' : 'Table'}&tab=Created`;
-        });
-
-        sortDirectionBtnAnswered.addEventListener("click", function () {
-            const sortOrderCreated = sortDirectionBtnCreated.textContent.includes("@localizer["Ascending"]") ? "desc" : "asc";
-            const sortOrderAnswered = sortDirectionBtnAnswered.textContent.includes("@localizer["Ascending"]") ? "desc" : "asc";
-            sortDirectionBtnCreated.textContent = sortOrderCreated === "asc" ? "@localizer["Ascending"]" : "@localizer["Descending"]";
-            sortDirectionBtnAnswered.textContent = sortOrderAnswered === "asc" ? "@localizer["Ascending"]" : "@localizer["Descending"]";
-            const isCardViewCreated = !cardViewCreated.classList.contains("d-none");
-            const isCardViewAnswered = !cardViewAnswered.classList.contains("d-none");
-
-            window.location.href = `?sortColumnCreated=${sortColumnCreated.value}&sortOrderCreated=${sortOrderCreated}&sortColumnAnswered=${sortColumnAnswered.value}&sortOrderAnswered=${sortOrderAnswered}&viewModeCreated=${isCardViewCreated ? 'Card' : 'Table'}&viewModeAnswered=${isCardViewAnswered ? 'Card' : 'Table'}&tab=Answered`;
-        });
     });
 </script>

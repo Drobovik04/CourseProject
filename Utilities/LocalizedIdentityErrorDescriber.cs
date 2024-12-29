@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Localization;
 
-namespace CourseProject
+namespace CourseProject.Utilities
 {
-    public class LocalizedIdentityErrorDescriber:IdentityErrorDescriber
+    public class LocalizedIdentityErrorDescriber : IdentityErrorDescriber
     {
         private readonly IStringLocalizer<SharedResources> _localizer;
 

@@ -16,7 +16,7 @@
 
     public class IntegerAnswer : Answer
     {
-        public int? IntegerAnswerValue { get; set; }
+        public long? IntegerAnswerValue { get; set; }
     }
 
     public class CheckboxAnswer : Answer

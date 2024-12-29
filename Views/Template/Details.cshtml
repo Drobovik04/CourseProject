@@ -1,4 +1,5 @@
 ﻿@using CourseProject
+@using CourseProject.Utilities
 @using CourseProject.ViewModels
 @using CourseProject.ViewModels.Template
 @using Microsoft.Extensions.Localization
@@ -46,8 +47,8 @@
             {
                 <li class="list-group-item d-flex align-items-center" data-index="@item.i">
                     <div class="flex-grow-1">
-                        <label type="text" name="Questions[@item.i].Title" class="form-control mb-2">@item.q.Title</label>
-                        <p type="text" name="Questions[@item.i].Description" class="form-control mb-2" placeholder="@localizer["QuestionDescription"]">@item.q.Description</p>
+                        <label type="text" name="Questions[@item.i].Title" class="form-label fw-bold mb-2">@item.q.Title</label>
+                        <p type="text" name="Questions[@item.i].Description" class="fst-italic mb-2" placeholder="@localizer["QuestionDescription"]">@item.q.Description</p>
                         <label name="Questions[@item.i].Type" class="form-control mb-2">
                             @if (item.q.Type == QuestionType.SingleLineText)
                             {
@@ -85,26 +86,31 @@
             }
         }
     </ul>
-    <h3>@localizer["YourAnswers"]</h3>
-    @if (Model.UserAnswers.Any())
+    @if (User.Identity.IsAuthenticated)
     {
-        <ul class="list-group">
-            @foreach (var answer in Model.UserAnswers.OrderByDescending(x => x.SubmittedAt))
-            {
-                <li class="list-group-item">
-                    <strong>@localizer["SubmittedAt"]:</strong> @answer.SubmittedAt.ToString("g")
-                    <a asp-controller="Form" asp-action="ViewAnswer" asp-route-id="@answer.Id" asp-route-returnUrl="@Url.Action("Details", "Template", new { id = answer.TemplateId })" class="btn btn-link">@localizer["View"]</a>
-                </li>
-            }
-        </ul>
-    }
-    else
-    {
-        <p>@localizer["NoAnswers"]</p>
+        <h3>@localizer["YourAnswers"]</h3>
+        @if (Model.UserAnswers.Any())
+        {
+            <ul class="list-group">
+                @foreach (var answer in Model.UserAnswers.OrderByDescending(x => x.SubmittedAt))
+                {
+                    <li class="list-group-item">
+                        <strong>@localizer["SubmittedAt"]:</strong> @answer.SubmittedAt.ToString("g")
+                        <a asp-controller="Form" asp-action="ViewAnswer" asp-route-id="@answer.Id" asp-route-returnUrl="@Url.Action("Details", "Template", new { id = answer.TemplateId })" class="btn btn-link">@localizer["View"]</a>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p>@localizer["NoAnswers"]</p>
+        }
     }
     <h3>@localizer["Comments"]</h3>
-
-    <button id="add-comment-btn" class="btn btn-primary mt-3 mb-3">@localizer["AddComment"]</button>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <button id="add-comment-btn" class="btn btn-primary mt-3 mb-3">@localizer["AddComment"]</button>
+    }
 
     <div id="comments-container">
         @foreach (var comment in Model.Template.Comments.OrderByDescending(x => x.CreatedAt))
@@ -135,7 +141,7 @@
     const templateId = Number(new URLSearchParams(window.location.search).get('id'));
     const connection = new signalR.HubConnectionBuilder().withUrl("/CommentHub").build();
 
-    document.getElementById('add-comment-btn').addEventListener('click', () => {
+    document.getElementById('add-comment-btn')?.addEventListener('click', () => {
         const newCommentHtml = `
                     <div id="new-comment" class="comment-item p-3 rounded bg-light mb-2">
                         <textarea id="new-comment-text" class="form-control" placeholder=""></textarea>

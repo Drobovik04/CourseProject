@@ -3,16 +3,12 @@ using CourseProject.Hubs;
 using CourseProject.Utilities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.WebEncoders;
-using PuppeteerSharp;
 using System.Globalization;
-using System.Net;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
-using TheArtOfDev.HtmlRenderer.PdfSharp;
 
 namespace CourseProject
 {
@@ -58,6 +54,8 @@ namespace CourseProject
 
             builder.Services.AddSignalR();
 
+            builder.Services.AddSingleton<MailSender>();
+
             var app = builder.Build();
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -89,12 +87,9 @@ namespace CourseProject
                 var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
                 var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
                 var context = services.GetRequiredService<AppDbContext>();
-                //context.Database.EnsureDeleted();
-                //context.Database.EnsureCreated();
                 await DatabaseInitializer.SeedAsync(userManager, roleManager, context);
             }
 
-            //PdfGenerator.GeneratePdf(new WebClient().DownloadString("https://ru.wikipedia.org/wiki/Медведева,_Евгения_Армановна"), PdfSharp.PageSize.A4).Save("test.pdf");
             app.Run();
         }
     }

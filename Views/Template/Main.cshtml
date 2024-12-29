@@ -156,60 +156,70 @@
 
             <div id="containerTableTab1" class="@(Model.ViewModeTab1 == "Table" ? "d-none" : "")">
                 <div class="mb-2">
-                    <label for="sortColumnTab1">@localizer["SortBy"]:</label>
-                    <select id="sortColumnTab1" class="form-select d-inline-block w-auto">
-                        @if (Model.SortColumnTab1 == "Title")
-                        {
-                            <option value="Title" selected>@localizer["Title"]</option>
-                        }
-                        else
-                        {
-                            <option value="Title">@localizer["Title"]</option>
-                        }
-                        @if (Model.SortColumnTab1 == "Topic")
-                        {
-                            <option value="Topic" selected>@localizer["Topic"]</option>
-                        }
-                        else
-                        {
-                            <option value="Topic">@localizer["Topic"]</option>
-                        }
-                        @if (Model.SortColumnTab1 == "Author")
-                        {
-                            <option value="Author" selected>@localizer["Author"]</option>
-                        }
-                        else
-                        {
-                            <option value="Author">@localizer["Author"]</option>
-                        }
-                        @if (Model.SortColumnTab1 == "Comments")
-                        {
-                            <option value="Comments" selected>@localizer["Comments"]</option>
-                        }
-                        else
-                        {
-                            <option value="Comments">@localizer["Comments"]</option>
-                        }
-                        @if (Model.SortColumnTab1 == "Likes")
-                        {
-                            <option value="Likes" selected>@localizer["Likes"]</option>
-                        }
-                        else
-                        {
-                            <option value="Likes">@localizer["Likes"]</option>
-                        }
-                        @if (Model.SortColumnTab1 == "CreatedAt")
-                        {
-                            <option value="CreatedAt" selected>@localizer["CreatedAt"]</option>
-                        }
-                        else
-                        {
-                            <option value="CreatedAt">@localizer["CreatedAt"]</option>
-                        }
-                    </select>
-                    <button id="sortDirectionBtnTab1" class="btn btn-outline-secondary">
-                        @(Model.SortOrderTab1 == "asc" ? @localizer["Ascending"] : @localizer["Descending"])
-                    </button>
+                    <form class="d-flex align-items-center gap-1" asp-controller="Template" asp-action="Main">
+                        <label for="sortColumnTab1">@localizer["SortBy"]:</label>
+                        <select id="sortColumnTab1" name="sortColumnTab1" class="form-select d-inline-block w-auto">
+                            @if (Model.SortColumnTab1 == "Title")
+                            {
+                                <option value="Title" selected>@localizer["Title"]</option>
+                            }
+                            else
+                            {
+                                <option value="Title">@localizer["Title"]</option>
+                            }
+                            @if (Model.SortColumnTab1 == "Topic")
+                            {
+                                <option value="Topic" selected>@localizer["Topic"]</option>
+                            }
+                            else
+                            {
+                                <option value="Topic">@localizer["Topic"]</option>
+                            }
+                            @if (Model.SortColumnTab1 == "Author")
+                            {
+                                <option value="Author" selected>@localizer["Author"]</option>
+                            }
+                            else
+                            {
+                                <option value="Author">@localizer["Author"]</option>
+                            }
+                            @if (Model.SortColumnTab1 == "Comments")
+                            {
+                                <option value="Comments" selected>@localizer["Comments"]</option>
+                            }
+                            else
+                            {
+                                <option value="Comments">@localizer["Comments"]</option>
+                            }
+                            @if (Model.SortColumnTab1 == "Likes")
+                            {
+                                <option value="Likes" selected>@localizer["Likes"]</option>
+                            }
+                            else
+                            {
+                                <option value="Likes">@localizer["Likes"]</option>
+                            }
+                            @if (Model.SortColumnTab1 == "CreatedAt")
+                            {
+                                <option value="CreatedAt" selected>@localizer["CreatedAt"]</option>
+                            }
+                            else
+                            {
+                                <option value="CreatedAt">@localizer["CreatedAt"]</option>
+                            }
+                        </select>
+
+                        <input type="hidden" name="sortOrderTab1" value="@(Model.SortOrderTab1 == "asc" ? "desc" : "asc")" />
+                        <input type="hidden" name="sortColumnTab2" value="@Model.SortColumnTab2" />
+                        <input type="hidden" name="sortOrderTab2" value="@Model.SortOrderTab2" />
+                        <input type="hidden" name="viewModeTab1" value="Card" />
+                        <input type="hidden" name="viewModeTab2" value="@Model.ViewModeTab2" />
+                        <input type="hidden" name="currentTab" value="LatestTemplates" />
+                        <button type="submit" id="sortDirectionBtnTab1" class="btn btn-outline-secondary">
+                            @(Model.SortOrderTab1 == "asc" ? @localizer["Ascending"] : @localizer["Descending"])
+                        </button>
+                    </form>
+                    
                 </div>
 
                 @if (Model.LatestTemplates.Any())
@@ -347,68 +357,69 @@
 
             <div id="containerTableTab2" class="@(Model.ViewModeTab2 == "Table" ? "d-none" : "")">
                 <div class="mb-2">
-                    <label for="sortColumnTab2">@localizer["SortBy"]:</label>
-                    <select id="sortColumnTab2" class="form-select d-inline-block w-auto">
-                        @if (Model.SortColumnTab2 == "Title")
-                        {
-                            <option value="Title" selected>@localizer["Title"]</option>
-                        }
-                        else
-                        {
-                            <option value="Title">@localizer["Title"]</option>
-                        }
-                        @if (Model.SortColumnTab2 == "Topic")
-                        {
-                            <option value="Topic" selected>@localizer["Topic"]</option>
-                        }
-                        else
-                        {
-                            <option value="Topic">@localizer["Topic"]</option>
-                        }
-                        @if (Model.SortColumnTab2 == "Author")
-                        {
-                            <option value="Author" selected>@localizer["Author"]</option>
-                        }
-                        else
-                        {
-                            <option value="Author">@localizer["Author"]</option>
-                        }
-                        @if (Model.SortColumnTab2 == "Comments")
-                        {
-                            <option value="Comments" selected>@localizer["Comments"]</option>
-                        }
-                        else
-                        {
-                            <option value="Comments">@localizer["Comments"]</option>
-                        }
-                        @if (Model.SortColumnTab2 == "Likes")
-                        {
-                            <option value="Likes" selected>@localizer["Likes"]</option>
-                        }
-                        else
-                        {
-                            <option value="Likes">@localizer["Likes"]</option>
-                        }
-                        @if (Model.SortColumnTab2 == "CreatedAt")
-                        {
-                            <option value="CreatedAt" selected>@localizer["CreatedAt"]</option>
-                        }
-                        else
-                        {
-                            <option value="CreatedAt">@localizer["CreatedAt"]</option>
-                        }
-                        @if (Model.SortColumnTab2 == "SubmittedAt")
-                        {
-                            <option value="SubmittedAt" selected>@localizer["SubmittedAt"]</option>
-                        }
-                        else
-                        {
-                            <option value="SubmittedAt">@localizer["SubmittedAt"]</option>
-                        }
-                    </select>
-                    <button id="sortDirectionBtnTab2" class="btn btn-outline-secondary">
-                        @(Model.SortOrderTab2 == "asc" ? @localizer["Ascending"] : @localizer["Descending"])
-                    </button>
+                    <form class="d-flex align-items-center gap-1" asp-controller="Template" asp-action="Main">
+                        <label for="sortColumnTab2">@localizer["SortBy"]:</label>
+                        <select id="sortColumnTab2" name="sortColumnTab2" class="form-select d-inline-block w-auto">
+                            @if (Model.SortColumnTab2 == "Title")
+                            {
+                                <option value="Title" selected>@localizer["Title"]</option>
+                            }
+                            else
+                            {
+                                <option value="Title">@localizer["Title"]</option>
+                            }
+                            @if (Model.SortColumnTab2 == "Topic")
+                            {
+                                <option value="Topic" selected>@localizer["Topic"]</option>
+                            }
+                            else
+                            {
+                                <option value="Topic">@localizer["Topic"]</option>
+                            }
+                            @if (Model.SortColumnTab2 == "Author")
+                            {
+                                <option value="Author" selected>@localizer["Author"]</option>
+                            }
+                            else
+                            {
+                                <option value="Author">@localizer["Author"]</option>
+                            }
+                            @if (Model.SortColumnTab2 == "Comments")
+                            {
+                                <option value="Comments" selected>@localizer["Comments"]</option>
+                            }
+                            else
+                            {
+                                <option value="Comments">@localizer["Comments"]</option>
+                            }
+                            @if (Model.SortColumnTab2 == "Likes")
+                            {
+                                <option value="Likes" selected>@localizer["Likes"]</option>
+                            }
+                            else
+                            {
+                                <option value="Likes">@localizer["Likes"]</option>
+                            }
+                            @if (Model.SortColumnTab2 == "CreatedAt")
+                            {
+                                <option value="CreatedAt" selected>@localizer["CreatedAt"]</option>
+                            }
+                            else
+                            {
+                                <option value="CreatedAt">@localizer["CreatedAt"]</option>
+                            }
+                        </select>
+
+                        <input type="hidden" name="sortOrderTab1" value="@Model.SortOrderTab1" />
+                        <input type="hidden" name="sortColumnTab1" value="@Model.SortColumnTab1" />
+                        <input type="hidden" name="sortOrderTab2" value="@(Model.SortOrderTab2 == "asc" ? "desc" : "asc")" />
+                        <input type="hidden" name="viewModeTab1" value="@Model.ViewModeTab1" />
+                        <input type="hidden" name="viewModeTab2" value="Card" />
+                        <input type="hidden" name="currentTab" value="FiveMostPopularTemplates" />
+                        <button type="submit" id="sortDirectionBtnTab2" class="btn btn-outline-secondary">
+                            @(Model.SortOrderTab2 == "asc" ? @localizer["Ascending"] : @localizer["Descending"])
+                        </button>
+                    </form>
                 </div>
 
                 @if (Model.FiveMostPopularTemplates.Any())
@@ -443,9 +454,10 @@
             </div>
         </div>
         <div class="tab-pane fade @(Model.CurrentTab == "TagCloud" ? "show active" : "")" id="tag-cloud" role="tabpanel">
-            <canvas class="mt-3" id="tagCanvas" width="600" height="400">
-            </canvas>
-            <div id="tagCloud"></div>
+            <div class="d-block" id="tag-canvas-container"style="width:100%; height:500px">
+                <canvas class="mt-3" id="tag-canvas">
+                </canvas>
+            </div>
         </div>
     </div>
 </div>
@@ -468,137 +480,110 @@
         { 
                 text = x.Tag.Name, 
                 size = x.Frequency, 
-                url = Url.Action("Search", "Template", new { searchQuery = x.Tag.Name})
+                url = Url.Action("Search", "Template", new { searchQuery = x.Tag.Name, byTagOnly = true})
         })
     ));
-
-    const width = 800;
-    const height = 600;
 
     var style = getComputedStyle(document.body);
     var font = style.getPropertyValue('--bs-body-font-family')
 
-    const minSize = d3.min(tags, x => x.size);
-    const maxSize = d3.max(tags, x => x.size);
+    const canvas = document.getElementById('tag-canvas');
+    const container = document.getElementById('tag-canvas-container');
+    const tabWithTagCloud = document.getElementById('tag-cloud');
 
-    const fontSizeScale = d3.scaleLinear()
-        .domain([minSize, maxSize])
-        .range([10, 100]);
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.type === "attributes" && mutation.attributeName === "class") {
+                if (tabWithTagCloud.classList.contains("show") && tabWithTagCloud.classList.contains("active")) {
 
-    tags.forEach(tag => tag.scaledSize = fontSizeScale(tag.size));
+                    canvas.width = container.offsetWidth;
+                    canvas.height = container.offsetHeight;
+                    const canvasWidth = canvas.width;
+                    const canvasHeight = canvas.height;
+                    normalizeFontSize(tags, 10, 50);
 
-    const totalArea = tags.reduce((sum, tag) => {
-        const fontSize = tag.scaledSize;
-        const wordWidth = fontSize * tag.text.length * 3;
-        const wordHeight = fontSize;
-        return sum + wordWidth * wordHeight;
-    }, 0);
+                    const scaleFactor = calculateScaleFactor(canvasWidth, canvasHeight, tags);
 
-    const availableArea = width * height;
+                    tags.forEach(tag => {
+                        tag.size = Math.round(tag.size * scaleFactor);
+                    });
 
-    const scaleFactor = Math.sqrt(availableArea / totalArea);
-
-    tags.forEach(tag => tag.scaledSize *= scaleFactor);
-
-    const svg = d3
-        .select("#tagCloud")
-        .append("svg")
-        .attr("width", width)
-        .attr("height", height);
-
-    const layout = d3.layout.cloud()
-        .size([width, height])
-        .words(tags.map(tag => ({ text: tag.text, size: tag.scaledSize, url: tag.url })))
-        .padding(5)
-        .rotate(() => ~~(Math.random() * 2) * 90)
-        .font(font)
-        .fontSize(x => x.size)
-        .on("end", draw);
-
-    layout.start();
-
-    function draw(words) {
-        svg.append("g")
-            .attr("transform", `translate(${width / 2}, ${height / 2})`)
-            .selectAll("text")
-            .data(words)
-            .enter()
-            .append("text")
-            .style("font-size", x => `${x.size}px`)
-            .style("font-family", font)
-            .style("fill", () => d3.schemeCategory10[Math.floor(Math.random() * 10)])
-            .attr("text-anchor", "middle")
-            .attr("transform", x => `translate(${x.x}, ${x.y}) rotate(${x.rotate})`)
-            .text(x => x.text)
-            .on("click", function (item, index) {
-                if (item.url) {
-                    window.location.href = item.url;
+                    WordCloud(canvas, {
+                        list: tags.map(x => [x.text, x.size]),
+                        gridSize: 8,
+                        fontFamily: font,
+                        color: 'random-light',
+                        backgroundColor: '#00000000',
+                        click: (item, dimension, event) => {
+                            const clickedTag = tags.find(x => x.text === item[0]);
+                            if (clickedTag && clickedTag.url) {
+                                window.location.href = clickedTag.url;
+                            }
+                        }
+                    });
                 }
-            })
-            .style("cursor", "pointer");
-    }
-
-    const canvas = document.getElementById('tagCanvas');
-    const canvasWidth = canvas.width;
-    const canvasHeight = canvas.height;
-
-    function calculateScaleFactor(tags, canvasWidth, canvasHeight) {
-        const totalArea = tags.reduce((sum, tag) => sum + Math.pow(tag.size, 2), 0);
-        const canvasArea = canvasWidth * canvasHeight;
-
-        const scaleFactor = Math.sqrt(canvasArea / totalArea);
-
-        return Math.max(scaleFactor, 1);
-    }
-
-    const scaleFactor1 = calculateScaleFactor(tags, canvasWidth, canvasHeight);
-
-    WordCloud(canvas, {
-        list: tags.map(x => [x.text, x.size]),
-        gridSize: 8, 
-        weightFactor: function (size) {
-            return size * scaleFactor1 * 0.3; 
-        },
-        fontFamily: font,
-        color: 'random-light',
-        backgroundColor: '#00000000',
-        click: (item, dimension, event) => {
-            const clickedTag = tags.find(x => x.text === item[0]);
-            if (clickedTag && clickedTag.url) {
-                window.location.href = clickedTag.url;
             }
-        }
+        });
     });
+
+    observer.observe(tabWithTagCloud, { attributes: true });
+
+    function calculateTextArea(tags) {
+        return tags.reduce((area, tag) => {
+            const fontSize = tag.size;
+            const estimatedWidth = fontSize * tag.text.length * 1.3;
+            const estimatedHeight = fontSize;
+            return area + estimatedWidth * estimatedHeight;
+        }, 0);
+    }
+
+    function calculateScaleFactor(canvasWidth, canvasHeight, tags) {
+        const canvasArea = canvasWidth * canvasHeight;
+        const totalTextArea = calculateTextArea(tags);
+
+        return Math.sqrt(canvasArea / totalTextArea);
+    }
+
+    function normalizeFontSize(tags, minFontSize, maxFontSize) {
+        const minSize = Math.min(...tags.map(tag => tag.size));
+        const maxSize = Math.max(...tags.map(tag => tag.size));
+
+        tags.forEach(tag => {
+            tag.size = Math.round(((tag.size - minSize) / (maxSize - minSize)) * (maxFontSize - minFontSize) + minFontSize);
+        });
+    }
 </script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        const toggleViewBtn = document.getElementById("toggleViewBtn");
+        const toggleViewBtnTab1 = document.getElementById("toggleViewBtnTab1");
+        const toggleViewBtnTab2 = document.getElementById("toggleViewBtnTab2");
         const cardViewTab1 = document.getElementById("cardViewTab1");
         const tableViewTab1 = document.getElementById("tableViewTab1");
+        const containerTableTab1 = document.getElementById("containerTableTab1");
         const cardViewTab2 = document.getElementById("cardViewTab2");
         const tableViewTab2 = document.getElementById("tableViewTab2");
-        const sortColumn = document.getElementById("sortColumn");
+        const containerTableTab2 = document.getElementById("containerTableTab2");
+        const sortColumnTab1 = document.getElementById("sortColumnTab1");
+        const sortDirectionBtnTab1 = document.getElementById("sortDirectionBtnTab1");
+        const sortColumnTab2 = document.getElementById("sortColumnTab2");
+        const sortDirectionBtnTab2 = document.getElementById("sortDirectionBtnTab2");
 
-        toggleViewBtn.addEventListener("click", function () {
-            const isCardView = !cardView.classList.contains("d-none");
-            cardView.classList.toggle("d-none", isCardView);
-            tableView.classList.toggle("d-none", !isCardView);
-            containerTable.classList.toggle("d-none", isCardView);
+        toggleViewBtnTab1.addEventListener("click", function () {
+            const isCardView = !cardViewTab1.classList.contains("d-none");
+            cardViewTab1.classList.toggle("d-none", isCardView);
+            tableViewTab1.classList.toggle("d-none", !isCardView);
+            containerTableTab1.classList.toggle("d-none", isCardView);
 
-            toggleViewBtn.innerHTML = isCardView ? '<i class="fa-solid fa-list"></i>' : '<i class="fa-solid fa-table"></i>';
+            toggleViewBtnTab1.innerHTML = isCardView ? '<i class="fa-solid fa-list"></i>' : '<i class="fa-solid fa-table"></i>';
         });
 
-        // sortColumn.addEventListener("change", function () {
-        //     const sortOrder = sortDirectionBtn.textContent.includes("@localizer["Ascending"]") ? "asc" : "desc";
-        //     const isCardView = !cardView.classList.contains("d-none");
-        //     window.location.href = `?sortColumn=${sortColumn.value}&sortOrder=${sortOrder}&viewMode=${isCardView ? 'Card' : 'Table'}`;
-        // });
+        toggleViewBtnTab2.addEventListener("click", function () {
+            const isCardView = !cardViewTab2.classList.contains("d-none");
+            cardViewTab2.classList.toggle("d-none", isCardView);
+            tableViewTab2.classList.toggle("d-none", !isCardView);
+            containerTableTab2.classList.toggle("d-none", isCardView);
 
-        // sortDirectionBtn.addEventListener("click", function () {
-        //     const sortOrder = sortDirectionBtn.textContent.includes("@localizer["Ascending"]") ? "desc" : "asc";
-        //     sortDirectionBtn.textContent = sortOrder === "asc" ? "@localizer["Ascending"]" : "@localizer["Descending"]";
-
-        //     window.location.href = `?sortColumn=${sortColumn.value}&sortOrder=${sortOrder}&viewMode=${isCardView ? 'Card' : 'Table'}`;
-        // });
+            toggleViewBtnTab2.innerHTML = isCardView ? '<i class="fa-solid fa-list"></i>' : '<i class="fa-solid fa-table"></i>';
+        });
     });
 </script>

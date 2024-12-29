@@ -1,6 +1,4 @@
-﻿using Microsoft.SqlServer.Server;
-
-namespace CourseProject.Models
+﻿namespace CourseProject.Models
 {
     public class Tag
     {

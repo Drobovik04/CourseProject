@@ -144,6 +144,9 @@
   <data name="Answers" xml:space="preserve">
     <value>Answers</value>
   </data>
+  <data name="AnswersEmail" xml:space="preserve">
+    <value>Copy of your form</value>
+  </data>
   <data name="AreYouSure?" xml:space="preserve">
     <value>Are you sure?</value>
   </data>
@@ -155,6 +158,9 @@
   </data>
   <data name="Block" xml:space="preserve">
     <value>Block user</value>
+  </data>
+  <data name="BodyEmail" xml:space="preserve">
+    <value>You can download the file with your answers</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
@@ -469,7 +475,7 @@
     <value>Send answers on your email</value>
   </data>
   <data name="ShowInResults" xml:space="preserve">
-    <value>Show in results</value>
+    <value>Show in preview</value>
   </data>
   <data name="SingleLineText" xml:space="preserve">
     <value>Single-line text</value>
@@ -500,6 +506,9 @@
   </data>
   <data name="Tags" xml:space="preserve">
     <value>Tags</value>
+  </data>
+  <data name="Template" xml:space="preserve">
+    <value>Template</value>
   </data>
   <data name="Templates" xml:space="preserve">
     <value>Templates</value>

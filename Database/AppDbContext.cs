@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CourseProject.Database
 {
-    public class AppDbContext: IdentityDbContext<IdentityUser>
+    public class AppDbContext : IdentityDbContext<IdentityUser>
     {
         public DbSet<Template> Templates { get; set; }
         public DbSet<Question> Questions { get; set; }
@@ -20,7 +20,7 @@ namespace CourseProject.Database
         public DbSet<TemplateTag> TemplateTags { get; set; }
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
-            //Database.EnsureCreated();
+            
         }
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -1,29 +1,41 @@
-﻿using System;
-using System.IO;
-using RestSharp;
-using RestSharp.Authenticators;
+﻿using Microsoft.Extensions.Localization;
+using System.Net;
+using System.Net.Mail;
 
 namespace CourseProject.Utilities
 {
     public class MailSender
     {
-        public static RestResponse SendMessage(string emailReceiver, string filePath)
+        private readonly IConfiguration _configuration;
+        private readonly IStringLocalizer<SharedResources> _localizer;
+        public MailSender(IConfiguration configuration, IStringLocalizer<SharedResources> localizer)
         {
-            RestClientOptions options = new RestClientOptions("https://api.mailgun.net/v3")
+            _configuration = configuration;
+            _localizer = localizer;
+        }
+        public async Task SendMessage(string emailReceiver, byte[] pdfBytes, byte[] htmlBytes)
+        {
+            SmtpClient smtp = new SmtpClient()
             {
-                Authenticator = new HttpBasicAuthenticator("api", "0861e3a008b27be980a2b985d4787756-2e68d0fb-3afd8e8e")
+                Host = "smtp.gmail.com",
+                Port = 587,
+                EnableSsl = true,
+                UseDefaultCredentials = false,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                Credentials = new NetworkCredential(_configuration.GetValue<string>("Mail:Login"), _configuration.GetValue<string>("Mail:Password"))
             };
-            RestClient client = new RestClient(options);
+            MailMessage message = new MailMessage(new MailAddress(_configuration.GetValue<string>("Mail:Login"), "Info"), new MailAddress(emailReceiver))
+            {
+                Subject = _localizer["AnswersEmail"],
+                Body = _localizer["BodyEmail"],
+            };
 
-            RestRequest request = new RestRequest();
-            request.AddParameter("domain", "sandboxc20f2e0511a6418b8c32c9ecc47ccb8d.mailgun.org", ParameterType.UrlSegment);
-            request.Resource = "{domain}/messages";
-            request.AddParameter("from", "Excited User <mailgun@sandboxc20f2e0511a6418b8c32c9ecc47ccb8d.mailgun.org>");
-            request.AddParameter("to", emailReceiver);
-            request.AddParameter("subject", "Your answers");
-            request.AddFile("attachment", filePath);
-            request.Method = Method.Post;
-            return client.Execute(request);
+            var htmlStream = new MemoryStream(htmlBytes);
+            var pdfStream = new MemoryStream(pdfBytes);
+
+            message.Attachments.Add(new Attachment(pdfStream, "Answers.pdf", "application/pdf"));
+            message.Attachments.Add(new Attachment(htmlStream, "Answers.html", "text/html"));
+            await smtp.SendMailAsync(message);
         }
     }
 }

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CourseProject.Attributes
 {
-    public class LocalizedCompareAttribute:CompareAttribute
+    public class LocalizedCompareAttribute : CompareAttribute
     {
         public string ResourceKey { get; set; }
 

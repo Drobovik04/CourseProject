@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CourseProject.Controllers
 {
-    public class CommentController:Controller
+    public class CommentController : Controller
     {
         private readonly AppDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;

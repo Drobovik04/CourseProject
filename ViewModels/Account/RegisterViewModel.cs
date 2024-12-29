@@ -1,7 +1,5 @@
 ﻿using CourseProject.Attributes;
-using Microsoft.Extensions.Localization;
 using System.ComponentModel.DataAnnotations;
-using System.Reflection;
 
 namespace CourseProject.ViewModels.Account
 {

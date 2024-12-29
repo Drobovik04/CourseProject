@@ -20,7 +20,7 @@
     <div class="container-fluid" id="main-content">
         <main role="main" class="pb-3">
             <div class="container mt-5">
-                <h2>@Model.Template.Title</h2>
+                <h2>@localizer["Template"]: @Model.Template.Title</h2>
                 <h5>@localizer["User"]: @Model.User.UserName</h5>
                 <p><strong>@localizer["SubmittedAt"]:</strong> @Model.SubmittedAt.ToString("g")</p>
                 <h3>@localizer["Answers"]</h3>

@@ -1,6 +1,4 @@
-﻿using CourseProject.Models;
-
-namespace CourseProject.ViewModels.Template
+﻿namespace CourseProject.ViewModels.Template
 {
     public class TemplateAnswersViewModel
     {

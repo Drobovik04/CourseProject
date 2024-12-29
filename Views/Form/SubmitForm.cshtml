@@ -15,8 +15,6 @@
             <label class="form-label fw-bold">@localizer["SendOnEmail"]</label>
             <input type="checkbox" asp-for="SendCopyOnEmail" value="true" />
         </div>
-@*         <input class="form-control" value="@User.FindFirstValue(ClaimTypes.Name)" readonly />
-        <input class="form-control" value="@DateTime.UtcNow" /> *@
         @foreach (var question in Model.Questions)
         {
             <div class="mb-3">

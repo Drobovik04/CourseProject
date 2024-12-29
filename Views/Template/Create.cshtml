@@ -41,9 +41,6 @@
                     </div>
 
                     <div class="mb-3">
-@*                         <label asp-for="ImageFile" class="form-label">@localizer["UploadImage"]</label>
-                        <input type="file" accept="image/*" asp-for="ImageFile" class="form-control" id="fileInput" />
-                        <span asp-validation-for="ImageFile" class="text-danger"></span> *@
                         <label asp-for="ImageFile" class="form-label">@localizer["UploadImage"]</label>
                         <div class="input-group custom-file-button">
                             <label asp-for="ImageFile" class="input-group-text" for="review-image" role="button">@localizer["ChooseFile"]</label>

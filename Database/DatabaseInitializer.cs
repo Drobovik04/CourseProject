@@ -1,6 +1,5 @@
 ﻿using CourseProject.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace CourseProject.Database
 {
@@ -75,8 +74,8 @@ namespace CourseProject.Database
                     new Topic { Name = "Health" },
                     new Topic { Name = "Technology" },
                     new Topic { Name = "Science" },
-                    new Topic { Name = "Quiz"},
-                    new Topic { Name = "Other"}
+                    new Topic { Name = "Quiz" },
+                    new Topic { Name = "Other" }
                 );
 
                 await context.SaveChangesAsync();

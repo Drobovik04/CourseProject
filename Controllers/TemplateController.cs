@@ -1,13 +1,12 @@
 ﻿using CourseProject.Database;
 using CourseProject.Models;
+using CourseProject.Utilities;
 using CourseProject.ViewModels;
 using CourseProject.ViewModels.Template;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
 using System.Text.Json;
 
 namespace CourseProject.Controllers
@@ -46,7 +45,7 @@ namespace CourseProject.Controllers
                 "Comments" => sortOrder == "asc" ? templates.OrderBy(x => x.Comments.Count) : templates.OrderByDescending(x => x.Comments.Count),
                 "Likes" => sortOrder == "asc" ? templates.OrderBy(x => x.Likes.Count) : templates.OrderByDescending(x => x.Likes.Count),
                 "CreatedAt" => sortOrder == "asc" ? templates.OrderBy(x => x.CreatedAt) : templates.OrderByDescending(x => x.CreatedAt),
-                
+
                 _ => templates
             };
 
@@ -60,7 +59,7 @@ namespace CourseProject.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> Search(string searchQuery = "", string sortColumn = "Title", string sortOrder = "asc", string viewMode = "Table")
+        public async Task<IActionResult> Search(string searchQuery = "", string sortColumn = "Title", string sortOrder = "asc", string viewMode = "Table", bool byTagOnly = false)
         {
             var templates = _context.Templates
                 .Include(x => x.Author)
@@ -71,8 +70,15 @@ namespace CourseProject.Controllers
 
             if (!string.IsNullOrEmpty(searchQuery))
             {
-                var searchProcedure = _context.Database.SqlQuery<int>($"EXEC SearchTemplates {"\"" + searchQuery + "\""}").ToList();
-                templates = templates.Where(x => searchProcedure.Contains(x.Id));
+                if (byTagOnly)
+                {
+                    templates = templates.Where(x => x.TemplateTags.Where(y => y.Tag.Name == searchQuery).Count() != 0);
+                }
+                else
+                {
+                    var searchProcedure = _context.Database.SqlQuery<int>($"EXEC SearchTemplates {"\"" + searchQuery + "\""}").ToList();
+                    templates = templates.Where(x => searchProcedure.Contains(x.Id));
+                }
             }
 
             templates = sortColumn switch
@@ -92,12 +98,14 @@ namespace CourseProject.Controllers
                 Templates = await templates.ToListAsync(),
                 CurrentViewMode = viewMode,
                 SortColumn = sortColumn,
-                SortOrder = sortOrder
+                SortOrder = sortOrder,
+                ByTagOnly = byTagOnly,
+                SearchQuery = searchQuery
             };
             return View(model);
         }
 
-        public async Task<IActionResult> Main(string searchQuery, string sortColumnTab1 = "Title", string sortOrderTab1 = "asc", string sortColumnTab2 = "Title", string sortOrderTab2 = "asc", string viewModeTab1 = "Table", string viewModeTab2 = "Table", string currentTab = "LatestTemplates")
+        public async Task<IActionResult> Main(string searchQuery, string sortColumnTab1 = "Title", string sortOrderTab1 = "asc", string sortColumnTab2 = "Title", string sortOrderTab2 = "asc", string viewModeTab1 = "Table", string viewModeTab2 = "Card", string currentTab = "LatestTemplates")
         {
             var latestTemplates = _context.Templates
                 .Include(x => x.Author)
@@ -155,10 +163,10 @@ namespace CourseProject.Controllers
             };
 
             var tagInfo = await _context.Tags
-                .Select(x => new TagForCloud() 
-                { 
-                    Tag = x, 
-                    Frequency = x.TemplateTags.Count() 
+                .Select(x => new TagForCloud()
+                {
+                    Tag = x,
+                    Frequency = x.TemplateTags.Count()
                 })
                 .Where(x => x.Frequency != 0)
                 .ToListAsync();
@@ -526,7 +534,7 @@ namespace CourseProject.Controllers
                 switch (question.Type)
                 {
                     case QuestionType.Integer:
-                        var integerAnswers = answers.OfType<IntegerAnswer>().Select(a => (int)a.IntegerAnswerValue).ToList();
+                        var integerAnswers = answers.OfType<IntegerAnswer>().Select(a => (long)a.IntegerAnswerValue).ToList();
                         result.IntegerStats = integerAnswers.Any() ? new IntegerStatistics
                         {
                             Min = integerAnswers.Min(),
@@ -586,7 +594,6 @@ namespace CourseProject.Controllers
             }
 
             _context.Answers.RemoveRange(template.Forms.SelectMany(x => x.Answers));
-            //_context.FormAnswers.Remove(formAnswer);
             _context.Templates.Remove(template);
             await _context.SaveChangesAsync();
 
@@ -745,9 +752,9 @@ namespace CourseProject.Controllers
             return await _context.Topics.ToListAsync();
         }
 
-        private double CalculateMean(List<int> numbers)
+        private double CalculateMean(List<long> numbers)
         {
-            Dictionary<int, double> xAndFreq = new Dictionary<int, double>();
+            Dictionary<long, double> xAndFreq = new Dictionary<long, double>();
             for (int i = 0; i < numbers.Count; i++)
             {
                 if (!xAndFreq.ContainsKey(numbers[i]))
@@ -769,7 +776,7 @@ namespace CourseProject.Controllers
             }
             return mean;
         }
-        private double CalculateMedian(List<int> numbers)
+        private double CalculateMedian(List<long> numbers)
         {
             var sorted = numbers.OrderBy(n => n).ToList();
             int count = sorted.Count;
@@ -781,7 +788,7 @@ namespace CourseProject.Controllers
             return sorted[count / 2];
         }
 
-        private double CalculateStandardDeviation(List<int> numbers)
+        private double CalculateStandardDeviation(List<long> numbers)
         {
             var mean = CalculateMean(numbers);
             var dispersion = CalculateMean(numbers.Select(x => x * x).ToList()) - (mean * mean);

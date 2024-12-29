@@ -1,6 +1,4 @@
-﻿using CourseProject.Models;
-
-namespace CourseProject.ViewModels.Form
+﻿namespace CourseProject.ViewModels.Form
 {
     public class AnswerUpdate
     {

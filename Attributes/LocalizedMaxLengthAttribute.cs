@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CourseProject.Attributes
 {
-    public class LocalizedMaxLengthAttribute:MaxLengthAttribute
+    public class LocalizedMaxLengthAttribute : MaxLengthAttribute
     {
         public string ResourceKey { get; set; }
 

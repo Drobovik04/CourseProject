@@ -1,7 +1,6 @@
 ﻿using Markdig;
-using Markdig.Renderers;
 
-namespace CourseProject
+namespace CourseProject.Utilities
 {
     public static class MarkdownHelper
     {

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CourseProject.Attributes
 {
-    public class LocalizedRequiredAttribute:RequiredAttribute
+    public class LocalizedRequiredAttribute : RequiredAttribute
     {
         public string ResourceKey { get; set; }
 

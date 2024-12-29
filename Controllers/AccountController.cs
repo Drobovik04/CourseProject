@@ -1,12 +1,10 @@
 ﻿using CourseProject;
 using CourseProject.Database;
-using CourseProject.Models;
 using CourseProject.ViewModels.Account;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
-using System.Formats.Asn1;
 
 public class AccountController : Controller
 {

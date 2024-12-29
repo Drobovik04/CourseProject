@@ -1,15 +1,13 @@
-using CourseProject.Models;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 
 namespace CourseProject.Controllers
 {
-    public class HomeController : Controller
+    public class LanguageController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<LanguageController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public LanguageController(ILogger<LanguageController> logger)
         {
             _logger = logger;
         }
