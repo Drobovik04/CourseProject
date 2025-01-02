@@ -1,6 +1,6 @@
 ﻿namespace CourseProject.ViewModels.Comment
 {
-    public class UpdateCommentModel
+    public class CommentUpdateViewModel
     {
         public string Text { get; set; }
     }

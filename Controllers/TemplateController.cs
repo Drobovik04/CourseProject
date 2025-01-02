@@ -1,11 +1,14 @@
 ﻿using CourseProject.Database;
 using CourseProject.Models;
+using CourseProject.SupportClasses.Template;
+using CourseProject.SupportClasses.Template.Statistics;
 using CourseProject.Utilities;
 using CourseProject.ViewModels;
 using CourseProject.ViewModels.Template;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 
@@ -190,7 +193,7 @@ namespace CourseProject.Controllers
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            var viewModel = new TemplateViewModel
+            var viewModel = new TemplateCreateViewModel
             {
                 Topics = await GetTopicsAsync(),
                 AllowedUserNames = null,
@@ -202,7 +205,7 @@ namespace CourseProject.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Create(TemplateViewModel model)
+        public async Task<IActionResult> Create(TemplateCreateViewModel model)
         {
             if (!ModelState.IsValid) return View(model);
 
@@ -297,7 +300,7 @@ namespace CourseProject.Controllers
                 return Forbid();
             }
 
-            var model = new TemplateUpdateViewModel
+            var model = new TemplateEditViewModel
             {
                 Id = template.Id,
                 Author = template.Author,
@@ -306,7 +309,7 @@ namespace CourseProject.Controllers
                 DescriptionWithMarkdown = template.DescriptionWithMarkdown,
                 CurrentImageUrl = template.ImageUrl,
                 AccessType = template.AccessType,
-                Questions = template.Questions.Select(q => new QuestionUpdateViewModel
+                Questions = template.Questions.Select(q => new QuestionUpdate
                 {
                     Id = q.Id,
                     Title = q.Title,
@@ -317,7 +320,7 @@ namespace CourseProject.Controllers
                 }).ToList(),
 
                 Tags = template.TemplateTags.Select(x => x.Tag.Name).ToList(),
-                AllowedUserNames = template.AllowedUsers.Select(x => new TemplateUserNameAndEmail() { UserName = x.User.UserName, Email = x.User.Email }).ToList()!,
+                AllowedUserNames = template.AllowedUsers.Select(x => new UserNameAndEmail() { UserName = x.User.UserName, Email = x.User.Email }).ToList()!,
                 TopicId = template.TopicId,
                 Topics = await GetTopicsAsync()
             };
@@ -327,8 +330,9 @@ namespace CourseProject.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Edit(TemplateUpdateViewModel model)
+        public async Task<IActionResult> Edit(TemplateEditViewModel model)
         {
+
             var template = await _context.Templates
                 .Include(x => x.Questions.OrderBy(x => x.Order))
                 .Include(x => x.Author)
@@ -341,6 +345,20 @@ namespace CourseProject.Controllers
             if (template == null)
             {
                 return NotFound();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                model.Questions = template.Questions.Select(q => new QuestionUpdate
+                {
+                    Id = q.Id,
+                    Title = q.Title,
+                    Description = q.Description,
+                    Type = q.Type,
+                    ShowInResults = q.ShowInResults,
+                    Order = q.Order
+                }).ToList();
+                return View(model);
             }
 
             model.Tags = model.Tags?.Where(tag => !string.IsNullOrWhiteSpace(tag)).ToList() ?? new List<string>();
@@ -524,7 +542,7 @@ namespace CourseProject.Controllers
                     .Where(a => a.QuestionId == question.Id)
                     .ToList();
 
-                var result = new QuestionStatisticsViewModel
+                var result = new TemplateStatisticsViewModel
                 {
                     QuestionTitle = question.Title,
                     QuestionDescription = question.Description,
@@ -626,10 +644,14 @@ namespace CourseProject.Controllers
             var currentUser = await _userManager.GetUserAsync(User);
             bool isOwner = false;
             bool isAdmin = false;
+            var isAnswerExists = false;
+
             if (currentUser != null)
             {
                 isAdmin = await _userManager.IsInRoleAsync(currentUser, "Admin");
                 isOwner = template.Author.Id == currentUser.Id;
+
+                isAnswerExists = template.Forms.FirstOrDefault(x => x.TemplateId == template.Id && x.User == currentUser) != null;
             }
 
             var model = new TemplateDetailsViewModel
@@ -638,7 +660,8 @@ namespace CourseProject.Controllers
                 IsEditable = isOwner || isAdmin,
                 UserAnswers = template.Forms.Where(x => x.UserId == currentUser?.Id).ToList(),
                 Questions = template.Questions.ToList(),
-                UserHasLiked = template.Likes.Any(x => x.UserId == currentUser?.Id)
+                UserHasLiked = template.Likes.Any(x => x.UserId == currentUser?.Id),
+                IsAnswerExists = isAnswerExists
             };
 
             return View(model);

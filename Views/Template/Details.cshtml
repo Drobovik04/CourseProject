@@ -20,7 +20,10 @@
         <span class="ms-2">@localizer["LikesCount"]:</span>
         <span id="likes-count" class="ms-2">@Model.Template.Likes.Count</span>
     </div>
-    <a asp-controller="Form" asp-action="SubmitForm" asp-route-id="@Model.Template.Id" class="btn btn-primary mb-3">@localizer["FillForm"]</a>
+    @if (!Model.IsAnswerExists && User.Identity.IsAuthenticated)
+    {
+        <a asp-controller="Form" asp-action="SubmitForm" asp-route-id="@Model.Template.Id" class="btn btn-primary mb-3">@localizer["FillForm"]</a>
+    }
     @if (Model.IsEditable)
     {
         <a asp-controller="Template" asp-action="Edit" asp-route-id="@Model.Template.Id" class="btn btn-primary mb-3">@localizer["EditTemplate"]</a>
@@ -88,9 +91,10 @@
     </ul>
     @if (User.Identity.IsAuthenticated)
     {
-        <h3>@localizer["YourAnswers"]</h3>
+        <h3>@localizer["YourAnswer"]</h3>
         @if (Model.UserAnswers.Any())
         {
+            <p>@localizer["AnswerExistsMessage"]</p>
             <ul class="list-group">
                 @foreach (var answer in Model.UserAnswers.OrderByDescending(x => x.SubmittedAt))
                 {

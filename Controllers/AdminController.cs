@@ -1,5 +1,5 @@
 ﻿using CourseProject.Database;
-using CourseProject.ViewModels;
+using CourseProject.ViewModels.Admin;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -27,12 +27,12 @@ namespace CourseProject.Controllers
         public async Task<IActionResult> Index(string sortColumn, string sortOrder)
         {
             var users = _userManager.Users.ToList();
-            var model = new List<UserViewModel>();
+            var model = new List<AdminIndexViewModel>();
 
             foreach (var user in users)
             {
                 var roles = await _userManager.GetRolesAsync(user);
-                model.Add(new UserViewModel
+                model.Add(new AdminIndexViewModel
                 {
                     UserId = user.Id,
                     UserName = user.UserName,

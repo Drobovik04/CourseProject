@@ -141,6 +141,9 @@
   <data name="AnsweredTemplates" xml:space="preserve">
     <value>Заполненные формы</value>
   </data>
+  <data name="AnswerExistsMessage" xml:space="preserve">
+    <value>У вас может быть только один ответ. Удалите или измените текущий ответ</value>
+  </data>
   <data name="Answers" xml:space="preserve">
     <value>Ответы</value>
   </data>
@@ -548,6 +551,9 @@
   </data>
   <data name="View" xml:space="preserve">
     <value>Посмотреть</value>
+  </data>
+  <data name="YourAnswer" xml:space="preserve">
+    <value>Ваш ответ</value>
   </data>
   <data name="YourAnswers" xml:space="preserve">
     <value>Ваши ответы</value>

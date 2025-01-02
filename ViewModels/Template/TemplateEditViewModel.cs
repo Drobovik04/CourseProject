@@ -1,10 +1,11 @@
 ﻿using CourseProject.Attributes;
 using CourseProject.Models;
+using CourseProject.SupportClasses.Template;
 using Microsoft.AspNetCore.Identity;
 
 namespace CourseProject.ViewModels.Template
 {
-    public class TemplateUpdateViewModel
+    public class TemplateEditViewModel
     {
         public int Id { get; set; }
         public IdentityUser Author { get; set; }
@@ -15,9 +16,9 @@ namespace CourseProject.ViewModels.Template
         public IFormFile? NewImageFile { get; set; }
         public AccessType AccessType { get; set; }
         public List<string>? Tags { get; set; } = new();
-        public List<TemplateUserNameAndEmail>? AllowedUserNames { get; set; } = new();
+        public List<UserNameAndEmail>? AllowedUserNames { get; set; } = new();
         [LocalizedMinLength(1, "MinLengthArray")]
-        public List<QuestionUpdateViewModel> Questions { get; set; } = new();
+        public List<QuestionUpdate> Questions { get; set; } = new();
         public int? TopicId { get; set; }
         public List<Topic> Topics { get; set; } = new();
     }

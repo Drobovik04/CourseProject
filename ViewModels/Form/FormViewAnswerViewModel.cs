@@ -1,6 +1,8 @@
-﻿namespace CourseProject.ViewModels.Form
+﻿using CourseProject.SupportClasses.Form;
+
+namespace CourseProject.ViewModels.Form
 {
-    public class ViewAnswerViewModel
+    public class FormViewAnswerViewModel
     {
         public Models.Template Template { get; set; }
         public Models.Form Form { get; set; }

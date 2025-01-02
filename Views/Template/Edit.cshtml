@@ -1,8 +1,9 @@
-﻿@using CourseProject.ViewModels
+﻿@using CourseProject.SupportClasses.Template
+@using CourseProject.ViewModels
 @using CourseProject.ViewModels.Template
 @using Microsoft.Extensions.Localization
 @using System.Globalization
-@model TemplateUpdateViewModel
+@model TemplateEditViewModel
 @inject IStringLocalizer<SharedResources> localizer
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.33.0/tagify.css">
@@ -21,6 +22,7 @@
         <div class="tab-content mt-4">
             <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
                 <div>
+                    <span asp-validation-for="Questions" class="text-danger"></span>
                     <div class="mb-3">
                         <label asp-for="Id" class="form-label">@localizer["Id"]</label>
                         <input asp-for="Id" class="form-control" readonly value="@Model.Id"/>
@@ -163,7 +165,7 @@
                                 <div class="flex-grow-1">
                                     <input type="hidden" name="Questions[@item.i].Id" value="@item.q.Id" />
                                     <input type="text" name="Questions[@item.i].Title" class="form-control mb-2" placeholder="@localizer["QuestionTitle"]" value="@item.q.Title" />
-                                    <input type="text" name="Questions[@item.i].Description" class="form-control mb-2" placeholder="@localizer["QuestionDescription"]" value ="@item.q.Description"/>
+                                    <input type="text" name="Questions[@item.i].Description" class="form-control mb-2" placeholder="@localizer["QuestionDescription"]" value="@item.q.Description" />
                                     <input type="hidden" name="Questions[@item.i].Order" value="@item.i" />
                                     <select name="Questions[@item.i].Type" class="form-select">
                                         @if (item.q.Type == QuestionType.SingleLineText)
@@ -425,7 +427,7 @@
 
         var currentSort;
 
-        var selectedUsers = @Html.Raw(Json.Serialize(Model.AllowedUserNames ?? new List<TemplateUserNameAndEmail>()));
+        var selectedUsers = @Html.Raw(Json.Serialize(Model.AllowedUserNames ?? new List<UserNameAndEmail>()));
 
         renderSelectedUsers();
 

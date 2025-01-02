@@ -1,4 +1,6 @@
-﻿namespace CourseProject.ViewModels.Template
+﻿using CourseProject.SupportClasses.Template;
+
+namespace CourseProject.ViewModels.Template
 {
     public class TemplateMainViewModel
     {

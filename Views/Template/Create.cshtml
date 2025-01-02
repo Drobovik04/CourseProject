@@ -3,7 +3,7 @@
 @using CourseProject.ViewModels.Template
 @using Microsoft.EntityFrameworkCore
 @using Microsoft.Extensions.Localization
-@model TemplateViewModel
+@model TemplateCreateViewModel
 @inject IStringLocalizer<SharedResources> localizer
 @inject AppDbContext _context
 
@@ -23,6 +23,7 @@
         <div class="tab-content mt-4">
             <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
                 <div>
+                    <span asp-validation-for="Questions" class="text-danger"></span>
                     <div class="mb-3">
                         <label asp-for="Title" class="form-label">@localizer["Title"]</label>
                         <input asp-for="Title" class="form-control" />

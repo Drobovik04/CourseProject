@@ -1,4 +1,4 @@
-﻿namespace CourseProject.ViewModels.Form
+﻿namespace CourseProject.SupportClasses.Form
 {
     public class AnswerUpdate
     {

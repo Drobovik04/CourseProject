@@ -1,6 +1,8 @@
-﻿namespace CourseProject.ViewModels.Form
+﻿using CourseProject.SupportClasses.Form;
+
+namespace CourseProject.ViewModels.Form
 {
-    public class UpdateAnswerViewModel
+    public class FormUpdateAnswerViewModel
     {
         public int FormId { get; set; }
         public List<AnswerUpdate> Answers { get; set; }

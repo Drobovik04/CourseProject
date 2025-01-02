@@ -1,7 +1,7 @@
 ﻿using CourseProject.Database;
 using CourseProject.Models;
+using CourseProject.SupportClasses.Form;
 using CourseProject.Utilities;
-using CourseProject.ViewModels;
 using CourseProject.ViewModels.Form;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -47,7 +47,7 @@ namespace CourseProject.Controllers
                 .ToList();
 
             ViewData["returnUrl"] = returnUrl;
-            return View(new ViewAnswerViewModel
+            return View(new FormViewAnswerViewModel
             {
                 Template = form.Template,
                 Form = form,
@@ -70,7 +70,7 @@ namespace CourseProject.Controllers
                 return NotFound();
             }
 
-            var currentUser = await _userManager.GetUserAsync(User); ;
+            var currentUser = await _userManager.GetUserAsync(User);
 
             if (template.AccessType == AccessType.Restricted)
             {
@@ -82,10 +82,10 @@ namespace CourseProject.Controllers
                 }
             }
 
-            var model = new SubmitFormViewModel
+            var model = new FormSubmitFormViewModel
             {
                 TemplateId = template.Id,
-                Questions = template.Questions.Select(x => new KeyValuePair<int, QuestionAnswerViewModel>(x.Id, new QuestionAnswerViewModel
+                Questions = template.Questions.Select(x => new KeyValuePair<int, QuestionAnswer>(x.Id, new QuestionAnswer
                 {
                     QuestionId = x.Id,
                     Title = x.Title,
@@ -98,7 +98,7 @@ namespace CourseProject.Controllers
         }
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> SubmitForm(SubmitFormViewModel model)
+        public async Task<IActionResult> SubmitForm(FormSubmitFormViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -106,6 +106,29 @@ namespace CourseProject.Controllers
             }
 
             var currentUser = await _userManager.GetUserAsync(User);
+
+            var template = await _context.Templates
+                .Include(x => x.Questions.OrderBy(x => x.Order))
+                .Include(x => x.Author)
+                .Include(x => x.Likes)
+                .Include(x => x.Topic)
+                .Include(x => x.Comments)
+                    .ThenInclude(x => x.User)
+                .Include(x => x.Forms)
+                    .ThenInclude(x => x.Answers)
+                .FirstOrDefaultAsync(x => x.Id == model.TemplateId);
+
+            if (template == null)
+            {
+                return NotFound();
+            }
+
+            var isAnswerExists = template.Forms.FirstOrDefault(x => x.TemplateId == template.Id && x.User == currentUser) != null;
+
+            if (isAnswerExists)
+            {
+                return Forbid();
+            }
 
             var form = new Form
             {
@@ -116,7 +139,7 @@ namespace CourseProject.Controllers
 
             foreach (var (questionId, userAnswer) in model.Answers)
             {
-                KeyValuePair<int, QuestionAnswerViewModel>? question = model.Questions.First(x => x.Key == questionId);
+                KeyValuePair<int, QuestionAnswer>? question = model.Questions.First(x => x.Key == questionId);
 
                 if (question == null)
                 {
@@ -177,7 +200,7 @@ namespace CourseProject.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> UpdateAnswer([FromBody] UpdateAnswerViewModel model)
+        public async Task<IActionResult> UpdateAnswer([FromBody] FormUpdateAnswerViewModel model)
         {
             var form = await _context.Forms
                 .Include(x => x.Answers)

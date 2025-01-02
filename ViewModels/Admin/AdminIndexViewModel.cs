@@ -1,6 +1,6 @@
-﻿namespace CourseProject.ViewModels
+﻿namespace CourseProject.ViewModels.Admin
 {
-    public class UserViewModel
+    public class AdminIndexViewModel
     {
         public string UserId { get; set; }
         public string UserName { get; set; }

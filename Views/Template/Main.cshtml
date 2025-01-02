@@ -519,6 +519,13 @@
                             if (clickedTag && clickedTag.url) {
                                 window.location.href = clickedTag.url;
                             }
+                        },
+                        hover: function (item) {
+                            if (item) {
+                                canvas.style.cursor = "pointer";
+                            } else {
+                                canvas.style.cursor = "default";
+                            }
                         }
                     });
                 }

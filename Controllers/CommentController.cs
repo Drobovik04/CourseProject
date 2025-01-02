@@ -39,7 +39,7 @@ namespace CourseProject.Controllers
             return Ok(comments);
         }
         [HttpPost]
-        public async Task<IActionResult> AddComment([FromBody] AddCommentModel model)
+        public async Task<IActionResult> AddComment([FromBody] CommentAddViewModel model)
         {
             var currentUser = await _userManager.GetUserAsync(User);
 
@@ -71,7 +71,7 @@ namespace CourseProject.Controllers
             return Ok();
         }
         [HttpPut]
-        public async Task<IActionResult> UpdateComment(int id, [FromBody] UpdateCommentModel model)
+        public async Task<IActionResult> UpdateComment(int id, [FromBody] CommentUpdateViewModel model)
         {
             var comment = await _context.Comments.Include(x => x.User).FirstOrDefaultAsync(x => x.Id == id);
 

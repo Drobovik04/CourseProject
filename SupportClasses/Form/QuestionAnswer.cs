@@ -1,8 +1,8 @@
 ﻿using CourseProject.Models;
 
-namespace CourseProject.ViewModels
+namespace CourseProject.SupportClasses.Form
 {
-    public class QuestionAnswerViewModel
+    public class QuestionAnswer
     {
         public int QuestionId { get; set; }
         public string Title { get; set; }

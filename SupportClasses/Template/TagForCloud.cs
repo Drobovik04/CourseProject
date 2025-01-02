@@ -1,6 +1,6 @@
 ﻿using CourseProject.Models;
 
-namespace CourseProject.ViewModels.Template
+namespace CourseProject.SupportClasses.Template
 {
     public class TagForCloud
     {

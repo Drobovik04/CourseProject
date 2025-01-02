@@ -9,5 +9,6 @@ namespace CourseProject.ViewModels.Template
         public bool IsEditable { get; set; }
         public List<Question> Questions { get; set; }
         public bool UserHasLiked { get; set; }
+        public bool IsAnswerExists { get; set; }
     }
 }

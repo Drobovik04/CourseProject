@@ -141,6 +141,9 @@
   <data name="AnsweredTemplates" xml:space="preserve">
     <value>Your forms</value>
   </data>
+  <data name="AnswerExistsMessage" xml:space="preserve">
+    <value>You can only have one answer. Delete or edit your current answer</value>
+  </data>
   <data name="Answers" xml:space="preserve">
     <value>Answers</value>
   </data>
@@ -548,6 +551,9 @@
   </data>
   <data name="View" xml:space="preserve">
     <value>View</value>
+  </data>
+  <data name="YourAnswer" xml:space="preserve">
+    <value>Your answer</value>
   </data>
   <data name="YourAnswers" xml:space="preserve">
     <value>Your answers</value>

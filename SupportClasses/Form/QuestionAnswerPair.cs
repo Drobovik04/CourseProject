@@ -1,6 +1,6 @@
 ﻿using CourseProject.Models;
 
-namespace CourseProject.ViewModels.Form
+namespace CourseProject.SupportClasses.Form
 {
     public class QuestionAnswerPair
     {
