@@ -538,7 +538,7 @@
     function calculateTextArea(tags) {
         return tags.reduce((area, tag) => {
             const fontSize = tag.size;
-            const estimatedWidth = fontSize * tag.text.length * 1.3;
+            const estimatedWidth = fontSize * tag.text.length * 3;
             const estimatedHeight = fontSize;
             return area + estimatedWidth * estimatedHeight;
         }, 0);
@@ -554,10 +554,16 @@
     function normalizeFontSize(tags, minFontSize, maxFontSize) {
         const minSize = Math.min(...tags.map(tag => tag.size));
         const maxSize = Math.max(...tags.map(tag => tag.size));
-
-        tags.forEach(tag => {
-            tag.size = Math.round(((tag.size - minSize) / (maxSize - minSize)) * (maxFontSize - minFontSize) + minFontSize);
-        });
+        if (minSize == maxSize) {
+            tags.forEach(tag => {
+                tag.size = minFontSize;
+            });
+        }
+        else {
+            tags.forEach(tag => {
+                tag.size = Math.round(((tag.size - minSize) / (maxSize - minSize)) * (maxFontSize - minFontSize) + minFontSize);
+            });
+        }
     }
 </script>
 <script>
