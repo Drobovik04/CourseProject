@@ -195,7 +195,7 @@ namespace CourseProject.Controllers
                 await _mailSender.SendMessage(formToSend.User.Email, pdfBytes, htmlBytes);
             }
 
-            return RedirectToAction("Details", "Template", new { id = model.TemplateId });
+            return RedirectToAction("Info", "Template", new { id = model.TemplateId });
         }
 
         [Authorize]
@@ -303,7 +303,7 @@ namespace CourseProject.Controllers
                 return Redirect(returnUrl);
             }
 
-            return RedirectToAction("Details", "Template", new { id = form.TemplateId });
+            return RedirectToAction("Info", "Template", new { id = form.TemplateId });
         }
     }
 

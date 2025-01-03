@@ -508,11 +508,54 @@ namespace CourseProject.Controllers
 
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Details", new { id = template.Id });
+            return RedirectToAction("Info", new { id = template.Id });
         }
-        [Authorize]
+
         [HttpGet]
-        public async Task<IActionResult> Statistics(int id)
+        public async Task<IActionResult> Info(int id, string sortOrderAnswers, string sortColumnAnswers, string currentTab = "Details")
+        {
+            var template = await _context.Templates
+                .Include(x => x.Questions.OrderBy(x => x.Order))
+                .Include(x => x.Author)
+                .Include(x => x.Likes)
+                .Include(x => x.Topic)
+                .Include(x => x.Comments)
+                    .ThenInclude(x => x.User)
+                .Include(x => x.Forms)
+                    .ThenInclude(x => x.Answers)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (template == null)
+            {
+                return NotFound();
+            }
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            bool isOwner = false;
+            bool isAdmin = false;
+            var isAnswerExists = false;
+
+            if (currentUser != null)
+            {
+                isAdmin = await _userManager.IsInRoleAsync(currentUser, "Admin");
+                isOwner = template.Author.Id == currentUser.Id;
+
+                isAnswerExists = template.Forms.FirstOrDefault(x => x.TemplateId == template.Id && x.User == currentUser) != null;
+            }
+
+            var model = new TemplateInfoViewModel
+            {
+                Details = await Details(id),
+                Answers = await Answers(id, sortColumnAnswers, sortOrderAnswers),
+                Statistics = await Statistics(id),
+                CurrentTab = currentTab
+            };
+
+            return View(model);
+        }
+        
+        [Authorize]
+        private async Task<TemplateStatisticsViewModel> Statistics(int id)
         {
             var template = await _context.Templates
                 .Include(x => x.Questions)
@@ -521,20 +564,6 @@ namespace CourseProject.Controllers
                     .ThenInclude(x => x.Answers)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
-            var currentUser = await _userManager.GetUserAsync(User);
-            var isAdmin = await _userManager.IsInRoleAsync(currentUser, "Admin");
-
-            if (!isAdmin && currentUser != template.Author)
-            {
-                return Forbid();
-            }
-
-            if (template == null)
-            {
-                return NotFound();
-            }
-
-
             var statistics = template.Questions.Select(question =>
             {
                 var answers = template.Forms
@@ -542,7 +571,7 @@ namespace CourseProject.Controllers
                     .Where(a => a.QuestionId == question.Id)
                     .ToList();
 
-                var result = new TemplateStatisticsViewModel
+                var result = new QuestionStats
                 {
                     QuestionTitle = question.Title,
                     QuestionDescription = question.Description,
@@ -586,7 +615,12 @@ namespace CourseProject.Controllers
                 return result;
             }).ToList();
 
-            return View(statistics);
+            var model = new TemplateStatisticsViewModel
+            {
+                QuestionsStatistic = statistics
+            };
+
+            return model;
         }
         [Authorize]
         [HttpPost]
@@ -623,7 +657,7 @@ namespace CourseProject.Controllers
             return RedirectToAction("Main", "Template");
         }
 
-        public async Task<IActionResult> Details(int id)
+        private async Task<TemplateDetailsViewModel> Details(int id)
         {
             var template = await _context.Templates
                 .Include(x => x.Questions.OrderBy(x => x.Order))
@@ -635,11 +669,6 @@ namespace CourseProject.Controllers
                 .Include(x => x.Forms)
                     .ThenInclude(x => x.Answers)
                 .FirstOrDefaultAsync(x => x.Id == id);
-
-            if (template == null)
-            {
-                return NotFound();
-            }
 
             var currentUser = await _userManager.GetUserAsync(User);
             bool isOwner = false;
@@ -664,23 +693,11 @@ namespace CourseProject.Controllers
                 IsAnswerExists = isAnswerExists
             };
 
-            return View(model);
+            return model;
         }
         [Authorize]
-        public async Task<ActionResult> Answers(int id, string sortColumn = "UserName", string sortOrder = "asc")
+        private async Task<TemplateAnswersViewModel> Answers(int id, string sortColumn = "UserName", string sortOrder = "asc")
         {
-            var currentUser = await _userManager.GetUserAsync(User);
-
-            var isAdmin = await _userManager.IsInRoleAsync(currentUser, "Admin");
-
-            var template = await _context.Templates
-                .Include(x => x.Author)
-                .FirstOrDefaultAsync(x => x.Id == id);
-
-            if (!isAdmin && currentUser != template.Author)
-            {
-                return Forbid();
-            }
 
             var forms = _context.Forms
                 .Include(x => x.User)
@@ -702,7 +719,7 @@ namespace CourseProject.Controllers
                 SortOrder = sortOrder
             };
 
-            return View(model);
+            return model;
         }
         [HttpGet]
         public IActionResult GetTags(string begin)

@@ -12,7 +12,7 @@
             <thead>
                 <tr>
                     <th>
-                        <a asp-controller="Template" asp-action="Answers" asp-route-id="@Model.TemplateId" asp-route-sortColumn="UserName" asp-route-sortOrder="@(Model.SortOrder == "asc" ? "desc" : "asc")">
+                        <a asp-controller="Template" asp-action="Info" asp-route-id="@Model.TemplateId" asp-route-sortColumnAnswers="UserName" asp-route-sortOrderAnswers="@(Model.SortOrder == "asc" ? "desc" : "asc")" asp-route-currentTab="Answers">
                             @localizer["UserName"]
                             @if (Model.SortColumn == "UserName")
                             {
@@ -23,7 +23,7 @@
                         </a>
                     </th>
                     <th>
-                        <a asp-controller="Template" asp-action="Answers" asp-route-id="@Model.TemplateId" asp-route-sortColumn="SubmittedAt" asp-route-sortOrder="@(Model.SortOrder == "asc" ? "desc" : "asc")">
+                        <a asp-controller="Template" asp-action="Info" asp-route-id="@Model.TemplateId" asp-route-sortColumnAnswers="SubmittedAt" asp-route-sortOrderAnswers="@(Model.SortOrder == "asc" ? "desc" : "asc")" asp-route-currentTab="Answers">
                             @localizer["SubmittedAt"]
                             @if (Model.SortColumn == "SubmittedAt")
                             {

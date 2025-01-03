@@ -234,6 +234,9 @@
   <data name="Description" xml:space="preserve">
     <value>Description</value>
   </data>
+  <data name="Details" xml:space="preserve">
+    <value>Details</value>
+  </data>
   <data name="DuplicateEmail" xml:space="preserve">
     <value>Email "{0}" is already taken</value>
   </data>

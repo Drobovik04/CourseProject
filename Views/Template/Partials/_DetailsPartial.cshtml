@@ -27,8 +27,6 @@
     @if (Model.IsEditable)
     {
         <a asp-controller="Template" asp-action="Edit" asp-route-id="@Model.Template.Id" class="btn btn-primary mb-3">@localizer["EditTemplate"]</a>
-        <a asp-controller="Template" asp-action="Answers" asp-route-id="@Model.Template.Id" class="btn btn-primary mb-3">@localizer["Answers"]</a>
-        <a asp-controller="Template" asp-action="Statistics" asp-route-id="@Model.Template.Id" class="btn btn-primary mb-3">@localizer["Statistics"]</a>
         <form class="d-inline-block" asp-controller="Template" asp-action="Delete" asp-route-id="@Model.Template.Id">
             <button type="submit" class="btn btn-primary mb-3">@localizer["DeleteTemplate"]</button>
         </form>

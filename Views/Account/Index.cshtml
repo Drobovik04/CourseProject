@@ -117,7 +117,7 @@
                             <td>@template.Comments.Count</td>
                             <td>@template.Likes.Count</td>
                             <td>@template.CreatedAt.ToString("g")</td>
-                            <td><a class="btn btn-sm btn-primary" asp-controller="Template" asp-action="Details" asp-route-id="@template.Id"><i class="fa-solid fa-eye"></i></a></td>
+                            <td><a class="btn btn-sm btn-primary" asp-controller="Template" asp-action="Info" asp-route-id="@template.Id"><i class="fa-solid fa-eye"></i></a></td>
                         </tr>
                     }
                 </tbody>
@@ -204,7 +204,7 @@
                                     <div class="card-body">
                                         <h5 class="card-title">@template.Title</h5>
                                         <p class="card-text">@template.Description</p>
-                                        <a asp-controller="Template" asp-action="Details" asp-route-id="@template.Id" class="btn btn-primary">@localizer["View"]</a>
+                                        <a asp-controller="Template" asp-action="Info" asp-route-id="@template.Id" class="btn btn-primary">@localizer["View"]</a>
                                     </div>
                                     <div class="card-footer">
                                         <small class="text-muted">@localizer["CreatedBy"]: @template.Author?.UserName</small>

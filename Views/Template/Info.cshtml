@@ -1,0 +1,44 @@
+﻿@using CourseProject.ViewModels
+@using CourseProject.ViewModels.Template
+@using Microsoft.Extensions.Localization
+@using System.Text.Json
+@using System.Security.Claims
+@model TemplateInfoViewModel
+@inject IStringLocalizer<SharedResources> localizer
+
+<div class="container mt-5">
+    <ul class="nav nav-tabs" id="profile-tabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link @(Model.CurrentTab == "Details" ? "active" : "")" id="tab1" data-bs-toggle="tab" data-bs-target="#tab1-details" type="button" role="tab" aria-selected="@(Model.CurrentTab == "Details" ? true : false)">
+                @localizer["Details"]
+            </button>
+        </li>
+        @if (Model.Details.Template.Author.Id == User.FindFirstValue(ClaimTypes.NameIdentifier) || User.IsInRole("Admin"))
+        {
+            <li class="nav-item" role="presentation">
+                <button class="nav-link @(Model.CurrentTab == "Answers" ? "active" : "")" id="tab2" data-bs-toggle="tab" data-bs-target="#tab2-answers" type="button" role="tab" aria-selected="@(Model.CurrentTab == "Answers" ? true : false)">
+                    @localizer["Answers"]
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link @(Model.CurrentTab == "Statistics" ? "active" : "")" id="tab3" data-bs-toggle="tab" data-bs-target="#tab3-statistics" type="button" role="tab" aria-selected="@(Model.CurrentTab == "Statistics" ? true : false)">
+                    @localizer["Statistics"]
+                </button>
+            </li>
+        }
+    </ul>
+    <div class="tab-content" id="tabs-content">
+        <div class="tab-pane fade @(Model.CurrentTab == "Details" ? "show active" : "")" id="tab1-details" role="tabpanel">
+            @await Html.PartialAsync("Partials/_DetailsPartial", Model.Details)
+        </div>
+        @if (Model.Details.Template.Author.Id == User.FindFirstValue(ClaimTypes.NameIdentifier) || User.IsInRole("Admin"))
+        {
+            <div class="tab-pane fade @(Model.CurrentTab == "Answers" ? "show active" : "")" id="tab2-answers" role="tabpanel">
+                @await Html.PartialAsync("Partials/_AnswersPartial", Model.Answers)
+            </div>
+            <div class="tab-pane fade @(Model.CurrentTab == "Statistics" ? "show active" : "")" id="tab3-statistics" role="tabpanel">
+                @await Html.PartialAsync("Partials/_StatisticsPartial", Model.Statistics)
+            </div>
+        }
+    </div>
+</div>

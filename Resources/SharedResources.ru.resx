@@ -234,6 +234,9 @@
   <data name="Description" xml:space="preserve">
     <value>Описание</value>
   </data>
+  <data name="Details" xml:space="preserve">
+    <value>Подробности</value>
+  </data>
   <data name="DuplicateEmail" xml:space="preserve">
     <value>Почта "{0}" уже используется</value>
   </data>
