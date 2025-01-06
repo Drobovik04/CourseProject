@@ -114,7 +114,29 @@
                     <h4>@localizer["Questions"]</h4>
                     <span asp-validation-for="Questions" class="text-danger"></span>
                     <ul id="questions-container" class="list-group">
-
+                        @for (var i = 0; i < Model.Questions.Count; i++)
+                        {
+                            <li class="list-group-item d-flex align-items-center" data-index="@i" draggable="true">
+                                <div class="flex-grow-1">
+                                    <input type="text" asp-for="Questions[i].Title" class="form-control mb-2" placeholder="@localizer["QuestionTitle"]" />
+                                    <span asp-validation-for="Questions[i].Title" class="text-danger"></span>
+                                    <input type="text" asp-for="Questions[i].Description" class="form-control mb-2" placeholder="@localizer["QuestionDescription"]" />
+                                    <input type="hidden" asp-name="Questions[@i].Order" value="@i" />
+                                    <select asp-for="Questions[i].Type" class="form-select">
+                                        <option value="SingleLineText">@localizer["SingleLineText"]</option>
+                                        <option value="MultiLineText">@localizer["MultiLineText"]</option>
+                                        <option value="Checkbox">@localizer["Checkbox"]</option>
+                                        <option value="Integer">@localizer["Number"]</option>
+                                    </select>
+                                    <div class="form-check">
+                                        <input type="checkbox" name="Questions[@i].ShowInResults" class="form-check-input" value="true" />
+                                        <input type="hidden" name="Questions[@i].ShowInResults" value="false" />
+                                        <label class="form-check-label">@localizer["ShowInResults"]</label>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-danger btn-sm ms-2" onclick="removeQuestion(this)">@localizer["Remove"]</button>
+                            </li>
+                        }
                     </ul>
                     <button type="button" id="add-question" class="btn btn-secondary mt-2">@localizer["AddQuestion"]</button>
                 </div>
@@ -149,7 +171,7 @@
                                 <label class="form-check-label">@localizer["ShowInResults"]</label>
                             </div>
                         </div>
-                        <button type="button" class="btn btn-danger btn-sm ms-2" onclick="this.parentElement.remove()">@localizer["Remove"]</button>
+                        <button type="button" class="btn btn-danger btn-sm ms-2" onclick="removeQuestion(this)">@localizer["Remove"]</button>
                     </li>`;
         questionsContainer.insertAdjacentHTML("beforeend", questionHTML);
     });
@@ -160,6 +182,11 @@
             e.preventDefault();
         });
     });
+
+    function removeQuestion(button) {
+        button.parentElement.remove();
+        updateIndexes();
+    }
 
     function canDrag(target, event) {
         const elementAtPoint = document.elementFromPoint(event.clientX, event.clientY);

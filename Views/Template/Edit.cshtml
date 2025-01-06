@@ -47,7 +47,7 @@
 
                     <div class="mb-3">
                         <label class="form-label">@localizer["PreviewMarkdown"]</label>
-                        <div id="markdownPreview" class="form-control bg-light"></div>
+                        <div id="markdownPreview" class="border rounded p-1"></div>
                     </div>
 
                     <div class="mb-3">
@@ -163,45 +163,19 @@
                         {
                             <li class="list-group-item d-flex align-items-center" data-index="@item.i" draggable="true">
                                 <div class="flex-grow-1">
-                                    <input type="hidden" name="Questions[@item.i].Id" value="@item.q.Id" />
-                                    <input type="text" name="Questions[@item.i].Title" class="form-control mb-2" placeholder="@localizer["QuestionTitle"]" value="@item.q.Title" />
-                                    <input type="text" name="Questions[@item.i].Description" class="form-control mb-2" placeholder="@localizer["QuestionDescription"]" value="@item.q.Description" />
+                                    <input type="hidden" asp-for="Questions[item.i].Id" />
+                                    <input type="text" asp-for="Questions[item.i].Title" class="form-control mb-2" placeholder="@localizer["QuestionTitle"]" />
+                                    <span asp-validation-for="Questions[item.i].Title" class="text-danger"></span>
+                                    <input type="text" asp-for="Questions[item.i].Description" class="form-control mb-2" placeholder="@localizer["QuestionDescription"]" />
                                     <input type="hidden" name="Questions[@item.i].Order" value="@item.i" />
-                                    <select name="Questions[@item.i].Type" class="form-select">
-                                        @if (item.q.Type == QuestionType.SingleLineText)
-                                        {
-                                            <option selected value="SingleLineText">@localizer["SingleLineText"]</option>
-                                        }
-                                        else
-                                        {
-                                            <option value="SingleLineText">@localizer["SingleLineText"]</option>
-                                        }
-                                        @if (item.q.Type == QuestionType.MultiLineText)
-                                        {
-                                            <option selected value="MultiLineText">@localizer["MultiLineText"]</option>
-                                        }
-                                        else
-                                        {
-                                            <option value="MultiLineText">@localizer["MultiLineText"]</option>
-                                        }
-                                        @if (item.q.Type == QuestionType.Checkbox)
-                                        {
-                                            <option selected value="Checkbox">@localizer["Checkbox"]</option>
-                                        }
-                                        else
-                                        {
-                                            <option value="Checkbox">@localizer["Checkbox"]</option>
-                                        }
-                                        @if (item.q.Type == QuestionType.Integer)
-                                        {
-                                            <option selected value="Integer">@localizer["Number"]</option>
-                                        }
-                                        else
-                                        {
-                                            <option value="Integer">@localizer["Number"]</option>
-                                        }
+                                    <select asp-for="Questions[item.i].Type" class="form-select">
+                                        <option value="SingleLineText">@localizer["SingleLineText"]</option>
+                                        <option value="MultiLineText">@localizer["MultiLineText"]</option>
+                                        <option value="Checkbox">@localizer["Checkbox"]</option>
+                                        <option value="Integer">@localizer["Number"]</option>
                                     </select>
                                     <div class="form-check">
+                                        @* <input type="checkbox" asp-for="Questions[item.i].ShowInResults" class="form-check-input" value="true" /> *@
                                         @if (item.q.ShowInResults)
                                         {
                                             <input type="checkbox" name="Questions[@item.i].ShowInResults" class="form-check-input" value="true" checked />
@@ -214,7 +188,7 @@
                                         <label class="form-check-label">@localizer["ShowInResults"]</label>
                                     </div>
                                 </div>
-                                <button type="button" class="btn btn-danger btn-sm ms-2" onclick="this.parentElement.remove()">@localizer["Remove"]</button>
+                                <button type="button" class="btn btn-danger btn-sm ms-2" onclick="removeQuestion(this)">@localizer["Remove"]</button>
                             </li>
                         }
                     </ul>
@@ -251,7 +225,7 @@
                                 <label class="form-check-label">@localizer["ShowInResults"]</label>
                             </div>
                         </div>
-                        <button type="button" class="btn btn-danger btn-sm ms-2" onclick="this.parentElement.remove()">@localizer["Remove"]</button>
+                        <button type="button" class="btn btn-danger btn-sm ms-2" onclick="removeQuestion(this)">@localizer["Remove"]</button>
                     </li>`;
         questionsContainer.insertAdjacentHTML("beforeend", questionHTML);
     });
@@ -262,6 +236,11 @@
             e.preventDefault();
         });
     });
+
+    function removeQuestion(button) {
+        button.parentElement.remove();
+        updateIndexes();
+    }
 
     function canDrag(target, event) {
         const elementAtPoint = document.elementFromPoint(event.clientX, event.clientY);

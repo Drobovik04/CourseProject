@@ -471,7 +471,7 @@
   <data name="SelectFile" xml:space="preserve">
     <value>Select a file</value>
   </data>
-  <data name="SelectionPrecentage" xml:space="preserve">
+  <data name="SelectionPercentage" xml:space="preserve">
     <value>Percentage of selection</value>
   </data>
   <data name="SelectTopic" xml:space="preserve">

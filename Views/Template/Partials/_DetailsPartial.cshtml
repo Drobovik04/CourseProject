@@ -15,7 +15,7 @@
     <div class="d-flex align-items-center mb-3">
         <button id="like-btn" class="btn btn-outline-primary" data-template-id="@Model.Template.Id">
             <i id="like-icon" class="fa @(Model.UserHasLiked ? "fa-solid fa-thumbs-up" : "fa-regular fa-thumbs-up")"></i>
-            <span id="like-text">@localizer["Like"]</span>
+            <span id="like-text">@(Model.UserHasLiked ? localizer["Unlike"] : localizer["Like"])</span>
         </button>
         <span class="ms-2">@localizer["LikesCount"]:</span>
         <span id="likes-count" class="ms-2">@Model.Template.Likes.Count</span>
@@ -117,7 +117,7 @@
     <div id="comments-container">
         @foreach (var comment in Model.Template.Comments.OrderByDescending(x => x.CreatedAt))
         {
-            <div id="comment-@comment.Id" class="comment-item p-3 rounded bg-light mb-2">
+            <div id="comment-@comment.Id" class="comment-item p-3 rounded border mb-2">
                 <div class="d-flex justify-content-between">
                     <strong>@comment.User.UserName</strong>
                     <div>
@@ -141,11 +141,12 @@
     const isAdmin = @User.IsInRole("Admin").ToString().ToLower();
 
     const templateId = Number(new URLSearchParams(window.location.search).get('id'));
-    const connection = new signalR.HubConnectionBuilder().withUrl("/CommentHub").build();
+    const connectionCommentHub = new signalR.HubConnectionBuilder().withUrl("/CommentHub").build();
+    const connectionLikeHub = new signalR.HubConnectionBuilder().withUrl("/LikeHub").build();
 
     document.getElementById('add-comment-btn')?.addEventListener('click', () => {
         const newCommentHtml = `
-                    <div id="new-comment" class="comment-item p-3 rounded bg-light mb-2">
+                    <div id="new-comment" class="comment-item p-3 rounded border mb-2">
                         <textarea id="new-comment-text" class="form-control" placeholder=""></textarea>
                         <div class="mt-2 d-flex justify-content-end">
                             <button id="cancel-comment-btn" class="btn btn-secondary me-2">@localizer["Cancel"]</button>
@@ -201,27 +202,27 @@
             })
     }
 
-    connection.on("ReceiveComment", (comment) => {
+    connectionCommentHub.on("ReceiveComment", (comment) => {
         addCommentToPage(comment);
     });
 
-    connection.on("UpdateComment", (updatedComment) => {
+    connectionCommentHub.on("UpdateComment", (updatedComment) => {
         updateCommentOnPage(updatedComment);
     });
 
-    connection.on("DeleteComment", (commentId) => {
+    connectionCommentHub.on("DeleteComment", (commentId) => {
         removeCommentFromPage(commentId);
     });
 
-    connection.start().then(() => {
-        connection.invoke("JoinTemplateGroup", templateId);
+    connectionCommentHub.start().then(() => {
+        connectionCommentHub.invoke("JoinTemplateGroup", templateId);
     });
 
     function addCommentToPage(comment) {
         const commentsContainer = document.getElementById("comments-container");
         const localTime = formatDateToShort(comment.createdAt).replace(',', '');
         const commentHtml = `
-                    <div id="comment-${comment.id}" class="comment-item p-3 rounded bg-light mb-2">
+                    <div id="comment-${comment.id}" class="comment-item p-3 rounded border mb-2">
                         <div class="d-flex justify-content-between">
                             <strong>${comment.author}</strong>
                             <div>
@@ -320,36 +321,48 @@
 
         likeButton.addEventListener("click", async () => {
             const templateId = likeButton.dataset.templateId;
-            const response = await fetch(`/Template/ToggleLike?templateId=${templateId}`, {
-                method: "POST",
+
+            const response = await fetch(`/Like/ToggleLike?templateId=${templateId}`, {
+                method: 'POST',
                 headers: {
-                    "Content-Type": "application/json",
+                    'Content-Type': 'application/json'
                 },
             });
 
             if (response.ok) {
-                try {
-                    const data = await response.json();
-                    likesCount.textContent = data.likesCount;
 
-                    if (data.userHasLiked) {
-                        likeIcon.classList.remove("fa-regular");
-                        likeIcon.classList.add("fa-solid");
-                        likeText.textContent = "@localizer["Unlike"]";
-                    } else {
-                        likeIcon.classList.remove("fa-solid");
-                        likeIcon.classList.add("fa-regular");
-                        likeText.textContent = "@localizer["Like"]";
-                    }
-                }
-                catch {
-                    console.log("@localizer["NoPermission"]");
-                }
             } 
             else {
-                alert("@localizer["ErrorProcessingLike"]");
+                alert('@localizer["ErrorProcessingLike"]');
             }
+
         });
+
+        connectionLikeHub.on("ReceiveLike", () => {
+            addLikeToPage();
+        });
+
+        connectionLikeHub.on("DeleteLike", () => {
+            removeLikeFromPage();
+        });
+
+        connectionLikeHub.start().then(() => {
+            connectionLikeHub.invoke("JoinTemplateGroup", templateId);
+        });
+
+        function addLikeToPage() {
+            likeIcon.classList.remove("fa-regular");
+            likeIcon.classList.add("fa-solid");
+            likeText.textContent = "@localizer["Unlike"]";
+            likesCount.textContent++;
+        }
+
+        function removeLikeFromPage() {
+            likeIcon.classList.remove("fa-solid");
+            likeIcon.classList.add("fa-regular");
+            likeText.textContent = "@localizer["Like"]";
+            likesCount.textContent--;
+        }
     });
 
 </script>

@@ -75,6 +75,7 @@ namespace CourseProject
             app.UseAuthorization();
 
             app.MapHub<CommentHub>("/CommentHub");
+            app.MapHub<LikeHub>("/LikeHub");
 
             app.MapControllerRoute(
                 name: "default",

@@ -6,12 +6,13 @@ namespace CourseProject.Attributes
     public class LocalizedRequiredAttribute : RequiredAttribute
     {
         public string ResourceKey { get; set; }
+        public string DisplayName { get; set; }
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             var localizer = (IStringLocalizer)validationContext.GetService(typeof(IStringLocalizer<SharedResources>));
 
-            var fieldName = localizer?[validationContext.MemberName] ?? validationContext.MemberName;
+            var fieldName = localizer?[DisplayName != null ? DisplayName : validationContext.MemberName] ?? validationContext.MemberName;
 
             var errorMessage = localizer?[ResourceKey ?? "Required"];
 

@@ -4,6 +4,8 @@
     --placeholder-color-focus: none;
     --tags-border-color: var(--bs-border-color);
     --tags-hover-border-color: var(--bs-border-color);
+    /*--tag-bg: var(--bs-tertiary-bg);*/
+    --tag-hover: var(--bs-secondary-bg);
 }
 
 .tagify__input {
@@ -26,13 +28,13 @@
 }
 
 .tagify__tag > div {
-    background-color: var(--vs-body-bg);
-    color: var(--bs-body-color);
+/*    background-color: var(--bs-body-bg);
+    color: var(--bs-body-color);*/
 }
 
 .tagify.form-control:has(.tagify__input:focus) {
     box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-    background-color: var(--vs-body-bg);
+    background-color: var(--bs-body-bg);
     color: var(--bs-body-color);
     background-color: var(--bs-body-bg);
     border-color: #86b7fe;
@@ -43,6 +45,8 @@
     color: var(--bs-body-color);
 }
 
-[data-bs-theme=dark] {
+html[data-bs-theme="dark"] .tagify {
     --tag-bg: #474747;
+    /*--tag-bg: var(--bs-tertiary-bg);*/
 }
+
