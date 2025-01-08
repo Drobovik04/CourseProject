@@ -457,6 +457,7 @@ namespace CourseProject.Controllers
                             switch (questionModel.Type)
                             {
                                 case QuestionType.SingleLineText:
+                                case QuestionType.MultiLineText:
                                     _context.Answers.Add(new TextAnswer
                                     {
                                         QuestionId = answer.QuestionId,
