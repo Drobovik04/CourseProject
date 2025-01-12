@@ -17,9 +17,9 @@ namespace CourseProject.Controllers
     public class TemplateController : Controller
     {
         private readonly AppDbContext _context;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<AppUser> _userManager;
 
-        public TemplateController(AppDbContext context, UserManager<IdentityUser> userManager)
+        public TemplateController(AppDbContext context, UserManager<AppUser> userManager)
         {
             _context = context;
             _userManager = userManager;
@@ -349,15 +349,6 @@ namespace CourseProject.Controllers
 
             if (!ModelState.IsValid)
             {
-                //model.Questions = template.Questions.Select(q => new QuestionUpdate
-                //{
-                //    Id = q.Id,
-                //    Title = q.Title,
-                //    Description = q.Description,
-                //    Type = q.Type,
-                //    ShowInResults = q.ShowInResults,
-                //    Order = q.Order
-                //}).ToList();
                 return View(model);
             }
 

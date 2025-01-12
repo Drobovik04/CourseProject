@@ -1,5 +1,6 @@
 using CourseProject.Database;
 using CourseProject.Hubs;
+using CourseProject.Models;
 using CourseProject.Utilities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
@@ -21,7 +22,7 @@ namespace CourseProject
             // Add services to the container.
             builder.Services.AddControllersWithViews().AddDataAnnotationsLocalization();
             builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-            builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+            builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
             {
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireDigit = false;
@@ -55,6 +56,8 @@ namespace CourseProject
             builder.Services.AddSignalR();
 
             builder.Services.AddSingleton<MailSender>();
+            builder.Services.AddTransient<SalesforceInteraction>();
+            builder.Services.AddTransient<OdooIntegration>();
 
             var app = builder.Build();
             // Configure the HTTP request pipeline.
@@ -85,7 +88,7 @@ namespace CourseProject
             {
                 var services = scope.ServiceProvider;
 
-                var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
+                var userManager = services.GetRequiredService<UserManager<AppUser>>();
                 var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
                 var context = services.GetRequiredService<AppDbContext>();
                 await DatabaseInitializer.SeedAsync(userManager, roleManager, context);

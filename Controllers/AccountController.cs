@@ -1,6 +1,8 @@
 ﻿using CourseProject;
 using CourseProject.Database;
+using CourseProject.Models;
 using CourseProject.ViewModels.Account;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,11 +11,11 @@ using Microsoft.Extensions.Localization;
 public class AccountController : Controller
 {
     private readonly AppDbContext _context;
-    private readonly UserManager<IdentityUser> _userManager;
-    private readonly SignInManager<IdentityUser> _signInManager;
+    private readonly UserManager<AppUser> _userManager;
+    private readonly SignInManager<AppUser> _signInManager;
     private readonly IStringLocalizer<SharedResources> _localizer;
 
-    public AccountController(AppDbContext context, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IStringLocalizer<SharedResources> localizer)
+    public AccountController(AppDbContext context, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IStringLocalizer<SharedResources> localizer)
     {
         _context = context;
         _userManager = userManager;
@@ -56,7 +58,7 @@ public class AccountController : Controller
         if (!ModelState.IsValid) return View(model);
 
 
-        var user = new IdentityUser { UserName = model.UserName, Email = model.Email };
+        var user = new AppUser { UserName = model.UserName, Email = model.Email };
         var result = await _userManager.CreateAsync(user, model.Password);
 
         if (result.Succeeded)
@@ -83,6 +85,7 @@ public class AccountController : Controller
     }
 
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> Index(string sortColumnCreated = "Title", string sortOrderCreated = "asc", string sortColumnAnswered = "Title", string sortOrderAnswered = "asc", string viewModeCreated = "Table", string viewModeAnswered = "Table", string tab = "Created")
     {
         var currentUser = await _userManager.GetUserAsync(User);
@@ -138,6 +141,8 @@ public class AccountController : Controller
             SortColumnAnswered = sortColumnAnswered,
             SortOrderAnswered = sortOrderAnswered,
             Tab = tab,
+            UserId = currentUser.Id,
+            HasAccountOnSalesforce = currentUser.SalesforceAccountId != null
         };
 
         return View(model);

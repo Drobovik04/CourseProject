@@ -1,4 +1,5 @@
 ﻿using CourseProject.Database;
+using CourseProject.Models;
 using CourseProject.ViewModels.Admin;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -12,11 +13,11 @@ namespace CourseProject.Controllers
     public class AdminController : Controller
     {
         private readonly AppDbContext _context;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<AppUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IStringLocalizer<SharedResources> _localizer;
 
-        public AdminController(AppDbContext context, UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, IStringLocalizer<SharedResources> localizer)
+        public AdminController(AppDbContext context, UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, IStringLocalizer<SharedResources> localizer)
         {
             _context = context;
             _userManager = userManager;

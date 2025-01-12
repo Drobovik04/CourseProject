@@ -14,10 +14,10 @@ namespace CourseProject.Controllers
     public class FormController : Controller
     {
         private readonly AppDbContext _context;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<AppUser> _userManager;
         private readonly MailSender _mailSender;
 
-        public FormController(AppDbContext context, UserManager<IdentityUser> userManager, MailSender mailSender)
+        public FormController(AppDbContext context, UserManager<AppUser> userManager, MailSender mailSender)
         {
             _context = context;
             _userManager = userManager;

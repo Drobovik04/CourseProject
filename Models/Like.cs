@@ -8,6 +8,6 @@ namespace CourseProject.Models
         public int TemplateId { get; set; }
         public Template Template { get; set; }
         public string UserId { get; set; }
-        public IdentityUser User { get; set; }
+        public AppUser User { get; set; }
     }
 }

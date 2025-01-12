@@ -5,7 +5,7 @@ namespace CourseProject.Database
 {
     public static class DatabaseInitializer
     {
-        public static async Task SeedAsync(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, AppDbContext context)
+        public static async Task SeedAsync(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, AppDbContext context)
         {
             string[] roleNames = { "Admin", "User" };
             foreach (var roleName in roleNames)
@@ -20,7 +20,7 @@ namespace CourseProject.Database
 
             if (await userManager.FindByEmailAsync(adminEmail) == null)
             {
-                var adminUser = new IdentityUser
+                var adminUser = new AppUser
                 {
                     UserName = "Admin",
                     Email = adminEmail,
@@ -37,7 +37,7 @@ namespace CourseProject.Database
 
             if (await userManager.FindByNameAsync(userName) == null)
             {
-                var newUser = new IdentityUser
+                var newUser = new AppUser
                 {
                     UserName = userName,
                     Email = "test@example.com",
@@ -54,7 +54,7 @@ namespace CourseProject.Database
 
             if (await userManager.FindByNameAsync(userName1) == null)
             {
-                var newUser = new IdentityUser
+                var newUser = new AppUser
                 {
                     UserName = userName1,
                     Email = "test1@example.com",

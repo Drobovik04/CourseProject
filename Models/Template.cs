@@ -17,7 +17,7 @@ namespace CourseProject.Models
         public Topic? Topic { get; set; }
         public string? ImageUrl { get; set; }
         public AccessType AccessType { get; set; }
-        public IdentityUser Author { get; set; }
+        public AppUser Author { get; set; }
         public ICollection<Question> Questions { get; set; } = new List<Question>();
         public ICollection<Form> Forms { get; set; } = new List<Form>();
         public ICollection<Comment> Comments { get; set; } = new List<Comment>();

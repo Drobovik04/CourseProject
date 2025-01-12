@@ -11,5 +11,7 @@
         public string SortColumnAnswered { get; set; }
         public string SortOrderAnswered { get; set; }
         public string Tab { get; set; }
+        public string UserId { get; set; }
+        public bool HasAccountOnSalesforce { get; set; }
     }
 }

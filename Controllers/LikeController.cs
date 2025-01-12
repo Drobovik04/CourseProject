@@ -12,10 +12,10 @@ namespace CourseProject.Controllers
     public class LikeController : Controller
     {
         private readonly AppDbContext _context;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<AppUser> _userManager;
         private readonly IHubContext<LikeHub> _hubContext;
 
-        public LikeController(AppDbContext context, UserManager<IdentityUser> userManager, IHubContext<LikeHub> hubContext)
+        public LikeController(AppDbContext context, UserManager<AppUser> userManager, IHubContext<LikeHub> hubContext)
         {
             _context = context;
             _userManager = userManager;

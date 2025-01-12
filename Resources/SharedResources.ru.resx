@@ -120,6 +120,9 @@
   <data name="AccessType" xml:space="preserve">
     <value>Тип доступа</value>
   </data>
+  <data name="AccountName" xml:space="preserve">
+    <value>Имя аккаунта</value>
+  </data>
   <data name="Actions" xml:space="preserve">
     <value>Действия</value>
   </data>
@@ -207,6 +210,9 @@
   <data name="CreateForm" xml:space="preserve">
     <value>Создать форму</value>
   </data>
+  <data name="CreateSalesforceAccount" xml:space="preserve">
+    <value>Создать аккаунт на Salesforce</value>
+  </data>
   <data name="CreateTemplate" xml:space="preserve">
     <value>Создать шаблон</value>
   </data>
@@ -249,6 +255,9 @@
   <data name="EditForm" xml:space="preserve">
     <value>Изменить форму</value>
   </data>
+  <data name="EditSalesforceAccount" xml:space="preserve">
+    <value>Изменить данные аккаунта на Salesforce</value>
+  </data>
   <data name="EditTemplate" xml:space="preserve">
     <value>Изменить шаблон</value>
   </data>
@@ -288,6 +297,9 @@
   <data name="FillForm" xml:space="preserve">
     <value>Заполнить форму</value>
   </data>
+  <data name="FirstName" xml:space="preserve">
+    <value>Имя</value>
+  </data>
   <data name="FiveMostPopularTemplates" xml:space="preserve">
     <value>Пять самых популярных шаблонов</value>
   </data>
@@ -317,6 +329,9 @@
   </data>
   <data name="IsLockedOut" xml:space="preserve">
     <value>Заблокирован?</value>
+  </data>
+  <data name="LastName" xml:space="preserve">
+    <value>Фамилия</value>
   </data>
   <data name="LatestTemplates" xml:space="preserve">
     <value>Последние шаблоны</value>
@@ -410,6 +425,9 @@
   </data>
   <data name="PasswordTooShort" xml:space="preserve">
     <value>Пароль должен быть не менее {0} символов</value>
+  </data>
+  <data name="Phone" xml:space="preserve">
+    <value>Телефон</value>
   </data>
   <data name="PreviewMarkdown" xml:space="preserve">
     <value>Предосмотр с markdown</value>

@@ -8,7 +8,7 @@ namespace CourseProject.ViewModels.Template
     public class TemplateEditViewModel
     {
         public int Id { get; set; }
-        public IdentityUser Author { get; set; }
+        public AppUser Author { get; set; }
         public string Title { get; set; }
         public string? Description { get; set; }
         public string? DescriptionWithMarkdown { get; set; }

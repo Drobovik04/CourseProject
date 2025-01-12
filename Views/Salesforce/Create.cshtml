@@ -1,0 +1,35 @@
+﻿@using CourseProject.ViewModels.Salesforce
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> localizer
+@model SalesforceFormViewModel
+
+<div class="container mt-5">
+    <form method="post" asp-action="Create">
+        <input type="hidden" asp-for="UserId" class="form-control" />
+        <div class="mb-3">
+            <label asp-for="AccountName" class="form-label">@localizer["AccountName"]</label>
+            <input asp-for="AccountName" class="form-control" />
+            <span asp-validation-for="AccountName" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="FirstName" class="form-label">@localizer["FirstName"]</label>
+            <input asp-for="FirstName" class="form-control" />
+            <span asp-validation-for="FirstName" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="LastName" class="form-label">@localizer["LastName"]</label>
+            <input asp-for="LastName" class="form-control" />
+            <span asp-validation-for="LastName" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Email" class="form-label">@localizer["Email"]</label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Phone" class="form-label">@localizer["Phone"]</label>
+            <input asp-for="Phone" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-primary">@localizer["Save"]</button>
+    </form>
+</div>

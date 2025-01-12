@@ -12,10 +12,10 @@ namespace CourseProject.Controllers
     public class CommentController : Controller
     {
         private readonly AppDbContext _context;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<AppUser> _userManager;
         private readonly IHubContext<CommentHub> _hubContext;
 
-        public CommentController(AppDbContext context, UserManager<IdentityUser> userManager, IHubContext<CommentHub> hubContext)
+        public CommentController(AppDbContext context, UserManager<AppUser> userManager, IHubContext<CommentHub> hubContext)
         {
             _context = context;
             _userManager = userManager;
