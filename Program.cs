@@ -57,7 +57,6 @@ namespace CourseProject
 
             builder.Services.AddSingleton<MailSender>();
             builder.Services.AddTransient<SalesforceInteraction>();
-            builder.Services.AddTransient<OdooIntegration>();
 
             var app = builder.Build();
             // Configure the HTTP request pipeline.
