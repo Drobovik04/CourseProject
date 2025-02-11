@@ -142,7 +142,7 @@ public class AccountController : Controller
             SortOrderAnswered = sortOrderAnswered,
             Tab = tab,
             UserId = currentUser.Id,
-            HasAccountOnSalesforce = currentUser.SalesforceAccountId != null
+            HasAccountOnSalesforce = !string.IsNullOrEmpty(currentUser.SalesforceAccountId)
         };
 
         return View(model);
