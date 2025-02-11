@@ -21,10 +21,7 @@ namespace CourseProject.Utilities
         }
         public async Task<(string AccountId, string ContactId)> Create(SalesforceFormViewModel model)
         {
-            //if (string.IsNullOrEmpty(accessToken) || !await CheckToken(accessToken))
-            //{
-                accessToken = await GetSalesforceAccessToken();
-            //}
+            accessToken = await GetSalesforceAccessToken();
 
             var userData = _context.Users.FirstOrDefault(x => x.Id == model.UserId);
 
@@ -165,14 +162,12 @@ namespace CourseProject.Utilities
             var client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
-            // 1. Получение данных Account
             var accountResponse = await client.GetAsync($"https://karagos-dev-ed.develop.my.salesforce.com/services/data/v62.0/sobjects/Account/{accountId}");
             accountResponse.EnsureSuccessStatusCode();
 
             var accountJson = await accountResponse.Content.ReadAsStringAsync();
             var accountData = JsonSerializer.Deserialize<Dictionary<string, object>>(accountJson);
 
-            // 2. Поиск связанного Contact
             var contactQuery = $"SELECT Id, FirstName, LastName, Email FROM Contact WHERE AccountId = '{accountId}' LIMIT 1";
             var contactResponse = await client.GetAsync($"https://karagos-dev-ed.develop.my.salesforce.com/services/data/v62.0/query?q={Uri.EscapeDataString(contactQuery)}");
             contactResponse.EnsureSuccessStatusCode();
@@ -180,7 +175,6 @@ namespace CourseProject.Utilities
             var contactJson = await contactResponse.Content.ReadAsStringAsync();
             var contactData = JsonSerializer.Deserialize<Dictionary<string, object>>(contactJson);
 
-            // Проверяем наличие записей Contact
             var contactRecords = contactData["records"] as JsonElement?;
             var firstContact = contactRecords?.EnumerateArray().FirstOrDefault();
 
