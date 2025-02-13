@@ -98,7 +98,7 @@
                 {
                     <li class="list-group-item">
                         <strong>@localizer["SubmittedAt"]:</strong> @answer.SubmittedAt.ToString("g")
-                        <a asp-controller="Form" asp-action="ViewAnswer" asp-route-id="@answer.Id" asp-route-returnUrl="@Url.Action("Details", "Template", new { id = answer.TemplateId })" class="btn btn-link">@localizer["View"]</a>
+                        <a asp-controller="Form" asp-action="ViewAnswer" asp-route-id="@answer.Id" asp-route-returnUrl="@Url.Action("Info", "Template", new { id = answer.TemplateId })" class="btn btn-link">@localizer["View"]</a>
                     </li>
                 }
             </ul>
